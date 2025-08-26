@@ -1,3 +1,14 @@
 body {
-    background-color: skyblue;
+    background-color: #fff;
 }
+body.home_index {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+    body.home_index img {
+        height: 90vh;
+        max-width: 90vw;
+    }
+
