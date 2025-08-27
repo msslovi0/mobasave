@@ -1,13 +1,13 @@
 body {
     background-color: #fff;
 }
-body.home_index {
+body.mbs_home {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
-    body.home_index img {
+    body.mbs_home img {
         height: 90vh;
         max-width: 90vw;
     }
