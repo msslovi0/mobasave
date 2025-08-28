@@ -3,20 +3,38 @@
 {% block title %}Reset your password{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('reset_password_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
-    <h1>Reset your password</h1>
-
-    {{ form_start(requestForm) }}
-        {{ form_row(requestForm.email) }}
-        <div>
-            <small>
-                Enter your email address, and we will send you a
-                link to reset your password.
-            </small>
+    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <img src="{{ asset('images/mobasave-notext.svg') }}" alt="mobasave" class="mx-auto h-auto w-200" />
+            <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">Reset your password</h2>
         </div>
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+            {% for flash_error in app.flashes('reset_password_error') %}
+            <div class="border-l-4 border-red-400 bg-red-50 p-4 dark:border-red-500 dark:bg-red-500/10">
+                <div class="flex">
+                    <div class="shrink-0">
+                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-red-400">
+                            <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" fill-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700 dark:text-red-300">
+                            {{ flash_error }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {{ form_start(requestForm, {'attr': {'class': 'space-y-6'}}) }}
+                {{ form_row(requestForm.email, {'attr': {'class': 'form-control block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-green-700'}, 'label_attr': {'class': 'block text-sm/6 font-medium text-gray-900 dark:text-gray-100'}}) }}
+                <p class="text-sm/6">
+                    Enter your email address, and we will send you a link to reset your password.
+                </p>
 
-        <button class="btn btn-primary">Send password reset email</button>
-    {{ form_end(requestForm) }}
+                <div>
+                    <button type="submit" class="flex w-full justify-center rounded-md bg-green-800 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:hover:bg-green-+00 dark:focus-visible:outline-green-700">Send password reset email</button>
+                </div>
+            {{ form_end(requestForm) }}
+        </div>
+    </div>
 {% endblock %}
