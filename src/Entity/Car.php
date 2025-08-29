@@ -37,6 +37,9 @@ class Car
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'car')]
     private Collection $models;
 
+    #[ORM\Column(length: 10)]
+    private ?string $import = null;
+
     public function __construct()
     {
         $this->models = new ArrayCollection();
@@ -133,6 +136,18 @@ class Car
                 $model->setCar(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImport(): ?string
+    {
+        return $this->import;
+    }
+
+    public function setImport(string $import): static
+    {
+        $this->import = $import;
 
         return $this;
     }

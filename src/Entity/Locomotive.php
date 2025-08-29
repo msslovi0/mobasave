@@ -56,6 +56,12 @@ class Locomotive
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'locomotive')]
     private Collection $models;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nickname = null;
+
+    #[ORM\Column(length: 10)]
+    private ?string $import = null;
+
     public function __construct()
     {
         $this->models = new ArrayCollection();
@@ -224,6 +230,30 @@ class Locomotive
                 $model->setLocomotive(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(?string $nickname): static
+    {
+        $this->nickname = $nickname;
+
+        return $this;
+    }
+
+    public function getImport(): ?string
+    {
+        return $this->import;
+    }
+
+    public function setImport(string $import): static
+    {
+        $this->import = $import;
 
         return $this;
     }

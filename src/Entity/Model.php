@@ -113,6 +113,18 @@ class Model
     #[ORM\ManyToOne(inversedBy: 'models')]
     private ?Country $country = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $import = null;
+
+    #[ORM\Column]
+    private ?\DateTime $created = null;
+
+    #[ORM\Column]
+    private ?\DateTime $updated = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
     public function __construct()
     {
         $this->modelLoaditems = new ArrayCollection();
@@ -509,6 +521,54 @@ class Model
     public function setCountry(?Country $country): static
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    public function getImport(): ?string
+    {
+        return $this->import;
+    }
+
+    public function setImport(?string $import): static
+    {
+        $this->import = $import;
+
+        return $this;
+    }
+
+    public function getCreated(): ?\DateTime
+    {
+        return $this->created;
+    }
+
+    public function setCreated(\DateTime $created): static
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    public function getUpdated(): ?\DateTime
+    {
+        return $this->updated;
+    }
+
+    public function setUpdated(\DateTime $updated): static
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }
