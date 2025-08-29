@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -34,6 +36,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, Database>
+     */
+    #[ORM\OneToMany(targetEntity: Database::class, mappedBy: 'user')]
+    private Collection $userdatabases;
+
+    public function __construct()
+    {
+        $this->userdatabases = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -114,5 +127,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    /**
+     * @return Collection<int, Database>
+     */
+    public function getUserdatabases(): Collection
+    {
+        return $this->userdatabases;
+    }
+
+    public function addUserdatabase(Database $userdatabase): static
+    {
+        if (!$this->userdatabases->contains($userdatabase)) {
+            $this->userdatabases->add($userdatabase);
+            $userdatabase->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserdatabase(Database $userdatabase): static
+    {
+        if ($this->userdatabases->removeElement($userdatabase)) {
+            // set the owning side to null (unless already changed)
+            if ($userdatabase->getUser() === $this) {
+                $userdatabase->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
