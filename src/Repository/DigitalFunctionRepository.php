@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\Waggon;
+use App\Entity\DigitalFunction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Waggon>
+ * @extends ServiceEntityRepository<DigitalFunction>
  */
-class WaggonRepository extends ServiceEntityRepository
+class DigitalFunctionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Waggon::class);
+        parent::__construct($registry, DigitalFunction::class);
     }
 
     //    /**
-    //     * @return Waggon[] Returns an array of Waggon objects
+    //     * @return DigitalFunction[] Returns an array of DigitalFunction objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('w')
-    //            ->andWhere('w.exampleField = :val')
+    //        return $this->createQueryBuilder('d')
+    //            ->andWhere('d.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('w.id', 'ASC')
+    //            ->orderBy('d.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Waggon
+    //    public function findOneBySomeField($value): ?DigitalFunction
     //    {
-    //        return $this->createQueryBuilder('w')
-    //            ->andWhere('w.exampleField = :val')
+    //        return $this->createQueryBuilder('d')
+    //            ->andWhere('d.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()

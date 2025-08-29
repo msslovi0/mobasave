@@ -46,12 +46,19 @@ class Country
     #[ORM\OneToMany(targetEntity: Company::class, mappedBy: 'country')]
     private Collection $companies;
 
+    /**
+     * @var Collection<int, Model>
+     */
+    #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'country')]
+    private Collection $models;
+
     public function __construct()
     {
         $this->states = new ArrayCollection();
         $this->dealers = new ArrayCollection();
         $this->manufacturers = new ArrayCollection();
         $this->companies = new ArrayCollection();
+        $this->models = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -197,6 +204,36 @@ class Country
             // set the owning side to null (unless already changed)
             if ($company->getCountry() === $this) {
                 $company->setCountry(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Model>
+     */
+    public function getModels(): Collection
+    {
+        return $this->models;
+    }
+
+    public function addModel(Model $model): static
+    {
+        if (!$this->models->contains($model)) {
+            $this->models->add($model);
+            $model->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModel(Model $model): static
+    {
+        if ($this->models->removeElement($model)) {
+            // set the owning side to null (unless already changed)
+            if ($model->getCountry() === $this) {
+                $model->setCountry(null);
             }
         }
 

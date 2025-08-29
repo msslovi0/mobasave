@@ -38,11 +38,18 @@ class Maker
     #[ORM\OneToMany(targetEntity: Tram::class, mappedBy: 'maker')]
     private Collection $trams;
 
+    /**
+     * @var Collection<int, Locomotive>
+     */
+    #[ORM\OneToMany(targetEntity: Locomotive::class, mappedBy: 'maker')]
+    private Collection $locomotives;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
         $this->vehicles = new ArrayCollection();
         $this->trams = new ArrayCollection();
+        $this->locomotives = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -140,6 +147,36 @@ class Maker
             // set the owning side to null (unless already changed)
             if ($tram->getMaker() === $this) {
                 $tram->setMaker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Locomotive>
+     */
+    public function getLocomotives(): Collection
+    {
+        return $this->locomotives;
+    }
+
+    public function addLocomotive(Locomotive $locomotive): static
+    {
+        if (!$this->locomotives->contains($locomotive)) {
+            $this->locomotives->add($locomotive);
+            $locomotive->setMaker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLocomotive(Locomotive $locomotive): static
+    {
+        if ($this->locomotives->removeElement($locomotive)) {
+            // set the owning side to null (unless already changed)
+            if ($locomotive->getMaker() === $this) {
+                $locomotive->setMaker(null);
             }
         }
 

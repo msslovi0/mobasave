@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CarRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
@@ -28,6 +30,17 @@ class Car
 
     #[ORM\ManyToOne(inversedBy: 'cars')]
     private ?Coupler $coupler = null;
+
+    /**
+     * @var Collection<int, Model>
+     */
+    #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'car')]
+    private Collection $models;
+
+    public function __construct()
+    {
+        $this->models = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -90,6 +103,36 @@ class Car
     public function setCoupler(?Coupler $coupler): static
     {
         $this->coupler = $coupler;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Model>
+     */
+    public function getModels(): Collection
+    {
+        return $this->models;
+    }
+
+    public function addModel(Model $model): static
+    {
+        if (!$this->models->contains($model)) {
+            $this->models->add($model);
+            $model->setCar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModel(Model $model): static
+    {
+        if ($this->models->removeElement($model)) {
+            // set the owning side to null (unless already changed)
+            if ($model->getCar() === $this) {
+                $model->setCar(null);
+            }
+        }
 
         return $this;
     }

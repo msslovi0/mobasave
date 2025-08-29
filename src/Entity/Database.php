@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DatabaseRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DatabaseRepository::class)]
@@ -25,6 +27,17 @@ class Database
 
     #[ORM\ManyToOne(inversedBy: 'userdatabases')]
     private ?User $user = null;
+
+    /**
+     * @var Collection<int, Model>
+     */
+    #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'modeldatabase')]
+    private Collection $models;
+
+    public function __construct()
+    {
+        $this->models = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -75,6 +88,36 @@ class Database
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Model>
+     */
+    public function getModels(): Collection
+    {
+        return $this->models;
+    }
+
+    public function addModel(Model $model): static
+    {
+        if (!$this->models->contains($model)) {
+            $this->models->add($model);
+            $model->setModeldatabase($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModel(Model $model): static
+    {
+        if ($this->models->removeElement($model)) {
+            // set the owning side to null (unless already changed)
+            if ($model->getModeldatabase() === $this) {
+                $model->setModeldatabase(null);
+            }
+        }
 
         return $this;
     }

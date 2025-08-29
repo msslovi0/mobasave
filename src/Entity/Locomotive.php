@@ -2,14 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\TramRepository;
+use App\Repository\LocomotiveRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TramRepository::class)]
-#[ORM\Table(name: 'mbs_tram')]
-class Tram
+#[ORM\Entity(repositoryClass: LocomotiveRepository::class)]
+#[ORM\Table(name: 'mbs_locomotive')]
+class Locomotive
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -25,25 +26,34 @@ class Tram
     #[ORM\Column(nullable: true)]
     private ?float $length = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $nickname = null;
+    #[ORM\Column(type: Types::BINARY)]
+    private $digital = null;
 
-    #[ORM\ManyToOne(inversedBy: 'trams')]
+    #[ORM\Column(type: Types::BINARY)]
+    private $sound = null;
+
+    #[ORM\Column(type: Types::BINARY)]
+    private $smoke = null;
+
+    #[ORM\Column(type: Types::BINARY)]
+    private $dccready = null;
+
+    #[ORM\ManyToOne(inversedBy: 'locomotives')]
     private ?Maker $maker = null;
 
-    #[ORM\ManyToOne(inversedBy: 'trams')]
+    #[ORM\ManyToOne(inversedBy: 'locomotives')]
     private ?Axle $axle = null;
 
-    #[ORM\ManyToOne(inversedBy: 'trams')]
+    #[ORM\ManyToOne(inversedBy: 'locomotives')]
     private ?Power $power = null;
 
-    #[ORM\ManyToOne(inversedBy: 'trams')]
+    #[ORM\ManyToOne(inversedBy: 'locomotives')]
     private ?Coupler $coupler = null;
 
     /**
      * @var Collection<int, Model>
      */
-    #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'tram')]
+    #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'locomotive')]
     private Collection $models;
 
     public function __construct()
@@ -92,14 +102,50 @@ class Tram
         return $this;
     }
 
-    public function getNickname(): ?string
+    public function getDigital()
     {
-        return $this->nickname;
+        return $this->digital;
     }
 
-    public function setNickname(?string $nickname): static
+    public function setDigital($digital): static
     {
-        $this->nickname = $nickname;
+        $this->digital = $digital;
+
+        return $this;
+    }
+
+    public function getSound()
+    {
+        return $this->sound;
+    }
+
+    public function setSound($sound): static
+    {
+        $this->sound = $sound;
+
+        return $this;
+    }
+
+    public function getSmoke()
+    {
+        return $this->smoke;
+    }
+
+    public function setSmoke($smoke): static
+    {
+        $this->smoke = $smoke;
+
+        return $this;
+    }
+
+    public function getDccready()
+    {
+        return $this->dccready;
+    }
+
+    public function setDccready($dccready): static
+    {
+        $this->dccready = $dccready;
 
         return $this;
     }
@@ -164,7 +210,7 @@ class Tram
     {
         if (!$this->models->contains($model)) {
             $this->models->add($model);
-            $model->setTram($this);
+            $model->setLocomotive($this);
         }
 
         return $this;
@@ -174,8 +220,8 @@ class Tram
     {
         if ($this->models->removeElement($model)) {
             // set the owning side to null (unless already changed)
-            if ($model->getTram() === $this) {
-                $model->setTram(null);
+            if ($model->getLocomotive() === $this) {
+                $model->setLocomotive(null);
             }
         }
 

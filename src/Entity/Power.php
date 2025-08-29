@@ -20,12 +20,6 @@ class Power
     private ?string $name = null;
 
     /**
-     * @var Collection<int, Waggon>
-     */
-    #[ORM\OneToMany(targetEntity: Waggon::class, mappedBy: 'power')]
-    private Collection $waggons;
-
-    /**
      * @var Collection<int, Tram>
      */
     #[ORM\OneToMany(targetEntity: Tram::class, mappedBy: 'power')]
@@ -37,11 +31,17 @@ class Power
     #[ORM\OneToMany(targetEntity: Car::class, mappedBy: 'power')]
     private Collection $cars;
 
+    /**
+     * @var Collection<int, Locomotive>
+     */
+    #[ORM\OneToMany(targetEntity: Locomotive::class, mappedBy: 'power')]
+    private Collection $locomotives;
+
     public function __construct()
     {
-        $this->waggons = new ArrayCollection();
         $this->trams = new ArrayCollection();
         $this->cars = new ArrayCollection();
+        $this->locomotives = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -57,36 +57,6 @@ class Power
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Waggon>
-     */
-    public function getWaggons(): Collection
-    {
-        return $this->waggons;
-    }
-
-    public function addWaggon(Waggon $waggon): static
-    {
-        if (!$this->waggons->contains($waggon)) {
-            $this->waggons->add($waggon);
-            $waggon->setPower($this);
-        }
-
-        return $this;
-    }
-
-    public function removeWaggon(Waggon $waggon): static
-    {
-        if ($this->waggons->removeElement($waggon)) {
-            // set the owning side to null (unless already changed)
-            if ($waggon->getPower() === $this) {
-                $waggon->setPower(null);
-            }
-        }
 
         return $this;
     }
@@ -145,6 +115,36 @@ class Power
             // set the owning side to null (unless already changed)
             if ($car->getPower() === $this) {
                 $car->setPower(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Locomotive>
+     */
+    public function getLocomotives(): Collection
+    {
+        return $this->locomotives;
+    }
+
+    public function addLocomotive(Locomotive $locomotive): static
+    {
+        if (!$this->locomotives->contains($locomotive)) {
+            $this->locomotives->add($locomotive);
+            $locomotive->setPower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLocomotive(Locomotive $locomotive): static
+    {
+        if ($this->locomotives->removeElement($locomotive)) {
+            // set the owning side to null (unless already changed)
+            if ($locomotive->getPower() === $this) {
+                $locomotive->setPower(null);
             }
         }
 

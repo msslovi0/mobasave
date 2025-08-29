@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DecoderfuntionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,6 +25,17 @@ class Decoderfuntion
 
     #[ORM\Column(type: Types::BINARY)]
     private $light;
+
+    /**
+     * @var Collection<int, DigitalFunction>
+     */
+    #[ORM\OneToMany(targetEntity: DigitalFunction::class, mappedBy: 'decoderfunction')]
+    private Collection $digitalFunctions;
+
+    public function __construct()
+    {
+        $this->digitalFunctions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,6 +74,36 @@ class Decoderfuntion
     public function setLight($light): static
     {
         $this->light = $light;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DigitalFunction>
+     */
+    public function getDigitalFunctions(): Collection
+    {
+        return $this->digitalFunctions;
+    }
+
+    public function addDigitalFunction(DigitalFunction $digitalFunction): static
+    {
+        if (!$this->digitalFunctions->contains($digitalFunction)) {
+            $this->digitalFunctions->add($digitalFunction);
+            $digitalFunction->setDecoderfunction($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDigitalFunction(DigitalFunction $digitalFunction): static
+    {
+        if ($this->digitalFunctions->removeElement($digitalFunction)) {
+            // set the owning side to null (unless already changed)
+            if ($digitalFunction->getDecoderfunction() === $this) {
+                $digitalFunction->setDecoderfunction(null);
+            }
+        }
 
         return $this;
     }

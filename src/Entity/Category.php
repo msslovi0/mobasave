@@ -34,10 +34,17 @@ class Category
     #[ORM\ManyToMany(targetEntity: Maker::class, mappedBy: 'category')]
     private Collection $makers;
 
+    /**
+     * @var Collection<int, Model>
+     */
+    #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'category')]
+    private Collection $models;
+
     public function __construct()
     {
         $this->makers = new ArrayCollection();
         $this->subcategories = new ArrayCollection();
+        $this->models = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -121,6 +128,36 @@ class Category
     {
         if ($this->makers->removeElement($maker)) {
             $maker->removeCategory($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Model>
+     */
+    public function getModels(): Collection
+    {
+        return $this->models;
+    }
+
+    public function addModel(Model $model): static
+    {
+        if (!$this->models->contains($model)) {
+            $this->models->add($model);
+            $model->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModel(Model $model): static
+    {
+        if ($this->models->removeElement($model)) {
+            // set the owning side to null (unless already changed)
+            if ($model->getCategory() === $this) {
+                $model->setCategory(null);
+            }
         }
 
         return $this;

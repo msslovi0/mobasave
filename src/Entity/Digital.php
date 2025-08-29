@@ -25,9 +25,23 @@ class Digital
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $decoder = null;
 
-    public function __construct()
-    {
-    }
+    /**
+     * @var Collection<int, DigitalFunction>
+     */
+    #[ORM\OneToMany(targetEntity: DigitalFunction::class, mappedBy: 'digital')]
+    private Collection $digitalFunctions;
+
+    /**
+     * @var Collection<int, Model>
+     */
+    #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'digital')]
+    private Collection $models;
+
+        public function __construct()
+        {
+            $this->digitalFunctions = new ArrayCollection();
+            $this->models = new ArrayCollection();
+        }
 
     public function getId(): ?int
     {
@@ -69,4 +83,65 @@ class Digital
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, DigitalFunction>
+     */
+    public function getDigitalFunctions(): Collection
+    {
+        return $this->digitalFunctions;
+    }
+
+    public function addDigitalFunction(DigitalFunction $digitalFunction): static
+    {
+        if (!$this->digitalFunctions->contains($digitalFunction)) {
+            $this->digitalFunctions->add($digitalFunction);
+            $digitalFunction->setDigital($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDigitalFunction(DigitalFunction $digitalFunction): static
+    {
+        if ($this->digitalFunctions->removeElement($digitalFunction)) {
+            // set the owning side to null (unless already changed)
+            if ($digitalFunction->getDigital() === $this) {
+                $digitalFunction->setDigital(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Model>
+     */
+    public function getModels(): Collection
+    {
+        return $this->models;
+    }
+
+    public function addModel(Model $model): static
+    {
+        if (!$this->models->contains($model)) {
+            $this->models->add($model);
+            $model->setDigital($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModel(Model $model): static
+    {
+        if ($this->models->removeElement($model)) {
+            // set the owning side to null (unless already changed)
+            if ($model->getDigital() === $this) {
+                $model->setDigital(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
