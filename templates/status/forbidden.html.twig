@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<main class="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8 dark:bg-gray-900">
+  <div class="text-center">
+    <p class="text-base font-semibold text-green-800 dark:text-green-600">{{ 'status.forbidden.code'|trans }}</p>
+    <h1 class="mt-4 text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl dark:text-white">{{ 'status.forbidden.headline'|trans }}</h1>
+    <p class="mt-6 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8 dark:text-gray-400">{{ 'status.forbidden.subline'|trans }}</p>
+    <div class="mt-10 flex items-center justify-center gap-x-6">
+      <a href="{{ path('mbs_home') }}" class="rounded-md bg-green-800 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'status.forbidden.button'|trans }}</a>
+    </div>
+  </div>
+</main>
+{% endblock %}

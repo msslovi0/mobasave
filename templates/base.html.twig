@@ -12,7 +12,8 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="{{ app.request.attributes.get("_route") }} h-full ml-100 mr-100">
+    <body class="{{ app.request.attributes.get("_route") }} mx-100 md:mx-50">
+        {%  include 'nav.html.twig' %}
         {% block body %}{% endblock %}
         <footer>
         <div class="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24 dark:border-white/10">
@@ -46,7 +47,7 @@
                     </svg>
                 </a>
             </div>
-            <p class="mt-8 text-sm/6 text-gray-600 md:order-1 md:mt-0 dark:text-gray-400">&copy; {{ 'now' | date('Y') }} Modellbahnerei. Ein F&amp;W-Projekt. Made with <span class="text-red-500">♥</span> in Mainz.</p>
+            <p class="mt-8 text-sm/6 text-gray-600 md:order-1 md:mt-0 dark:text-gray-400">{{ 'footer.claim'|trans({'year': 'now' | date('Y')})|raw }}</p>
         </div>
         </div>
         </footer>

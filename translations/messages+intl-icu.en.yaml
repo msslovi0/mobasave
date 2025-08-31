@@ -1,0 +1,33 @@
+footer:
+    claim: © {year} Modellbahnerei. A F&amp;W project. Made with <span class="text-red-500">♥</span> in Mainz.
+collection:
+    no-collection:
+        fact: No collection
+        claim: Get started by creating a new collection.
+    new: New collection
+    count: >-
+        {count, plural,
+            =0    {No collections}
+            =1    {One collection}
+            other {# collections}
+        }
+    models: >-
+        {count, plural,
+            =0    {No models}
+            =1    {One model}
+            other {# models}
+        }
+global:
+    collections: Collections
+    logout: Logout
+status:
+    notfound:
+        code: 404
+        headline: Page not found
+        subline: Sorry, we couldn’t find the page you’re looking for.
+        button: Go back home
+    forbidden:
+        code: 403
+        headline: Forbidden
+        subline: You are not allowed to access this page.
+        button: Go back home
