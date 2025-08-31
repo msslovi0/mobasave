@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <div class="py-10">
+    <header>
+      <div class="mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ 'collection.name'|trans({'name': models[0].modeldatabase.name}) }}</h1>
+      </div>
+    </header>
+    <main>
+      <div class="mx-auto max-w-10xl px-4 py-8 sm:px-6 lg:px-8">
+        <div class="px-4 sm:px-6 lg:px-8">
+          <div class="sm:flex sm:items-center">
+            <div class="sm:flex-auto">
+            </div>
+            <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+              <button type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">Add user</button>
+            </div>
+          </div>
+          <div class="mt-8 flow-root">
+            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0">
+                          <span class="sr-only">Image</span>
+                      </th>
+                      <th scope="col" class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0 dark:text-white">Name</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Category</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Subcategory</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Role</th>
+                      <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0">
+                        <span class="sr-only">Edit</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
+                  {% for model in models %}
+                  <tr class="even:bg-gray-50 dark:even:bg-gray-800/50">
+                      <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                          <div class="flex items-center">
+                              <div class="size-11 shrink-0">
+                                  <img src="/data/image/{{ model.image }}" alt="" class="size-11 rounded-full dark:outline dark:outline-white/10" />
+                              </div>
+                          </div>
+                      </td>
+                      <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                          <div class="ml-4">
+                              <div class="font-medium text-gray-900 dark:text-white">{{ model.name }}</div>
+                          </div>
+                      </td>
+                      <td class="px-3 py-5 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                          <div class="text-gray-900 dark:text-white">{{ model.category.name }}</div>
+                      </td>
+                      <td class="px-3 py-5 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                          <div class="text-gray-900 dark:text-white">{% if model.subcategory is defined and model.subcategory is not null %}{{ model.subcategory.name }}{% endif %}</div>
+                      </td>
+                      <td class="px-3 py-5 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                          <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset dark:bg-green-900/30 dark:text-green-400 dark:ring-green-500/50">Active</span>
+                      </td>
+                      <td class="px-3 py-5 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">Member</td>
+                      <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
+                          <a href="#" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">Edit<span class="sr-only">, Lindsay Walton</span></a>
+                      </td>
+                  </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {{ knp_pagination_render(models) }}
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+{% endblock %}

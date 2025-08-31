@@ -1,6 +1,7 @@
 footer:
     claim: © {year} Modellbahnerei. A F&amp;W project. Made with <span class="text-red-500">♥</span> in Mainz.
 collection:
+    name: Collection “{name}”
     no-collection:
         fact: No collection
         claim: Get started by creating a new collection.
@@ -31,3 +32,5 @@ status:
         headline: Forbidden
         subline: You are not allowed to access this page.
         button: Go back home
+pagination:
+    results: Showing <span class="font-medium">{ start }</span> to <span class="font-medium">{ end }</span> of <span class="font-medium">{ total }</span> results

@@ -23,3 +23,6 @@
 /.idea/workspace.xml
 *.DS_Store
 php.ini
+/data/*
+.idea
+.DS_Store
