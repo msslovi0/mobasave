@@ -15,7 +15,7 @@
             <div class="sm:flex-auto">
             </div>
             <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-              <button type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'model.list.add'|trans }}</button>
+              <a href="{{ path('mbs_model_add') }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'model.list.add'|trans }}</a>
             </div>
           </div>
             {{ knp_pagination_render(models) }}

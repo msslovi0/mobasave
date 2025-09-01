@@ -70,6 +70,7 @@ model:
         quantity: Quantity
         status: Status
     saved: Your changes to “{name}” where saved successfully
+    created: Your model “{name}” was created successfully
 
 status:
     notfound:

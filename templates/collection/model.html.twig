@@ -5,7 +5,7 @@
     <header>
       <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ model.name }}</h1>
-        <a href="{{ path('mbs_database', {id: model.modeldatabase.id}) }}" type="button" class="block rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'global.back'|trans }}</a>
+        <a href="{{ path('mbs_database', {id: app.session.get('database')}) }}" type="button" class="block rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'global.back'|trans }}</a>
       </div>
     </header>
     <main>
@@ -13,7 +13,9 @@
   <div class="space-y-12">
     <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
       <div>
+          {% if model.image!="" %}
           <img src="{{ asset('data/image/' ~ model.image) }}" alt="{{ model.name }}" class="mx-auto h-auto w-200" />
+          {% endif %}
           <div class="col-span-full">
               <label for="form_image" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.image'|trans }}</label>
               <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 dark:border-white/25">
