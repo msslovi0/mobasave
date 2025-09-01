@@ -28,6 +28,7 @@ global:
     logout: Logout
     title:
         index: MoBaSaVe - Welcome!
+    back: Back
 model:
     list:
         add: Add model

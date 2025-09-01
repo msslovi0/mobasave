@@ -39,6 +39,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Validator\Constraints\File;
 
 class DatabaseController extends AbstractController
 {
@@ -52,14 +55,12 @@ class DatabaseController extends AbstractController
         $user = $this->security->getUser();
 
         $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
-        if(!$database)
-        {
+        if(!$database) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
             return $this->render('status/notfound.html.twig', response: $response);
         }
-        if(is_object($user) and $database->getUser()->getId()!=$user->getId())
-        {
+        if(is_object($user) and $database->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
             return $this->render('status/forbidden.html.twig', response: $response);
@@ -77,20 +78,21 @@ class DatabaseController extends AbstractController
         ]);
     }
     #[Route('/model/{id}', name: 'mbs_model', methods: ['GET','POST'])]
-    public function model(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    public function model(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/image')] string $imageDirectory): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
 
         $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
-        if(!$model)
-        {
+        if($model->getImage()!="") {
+            $currentImage = $model->getImage();
+        }
+        if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
             return $this->render('status/notfound.html.twig', response: $response);
         }
-        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId())
-        {
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
             return $this->render('status/forbidden.html.twig', response: $response);
@@ -112,7 +114,6 @@ class DatabaseController extends AbstractController
         $country        = $entityManager->getRepository(Country::class)->findAll();
 
         $form = $this->createFormBuilder($model)
-//            ->setAction($this->generateUrl('mbs_model_update'))
             ->add('name', TextType::class)
             ->add('status', ChoiceType::class, ['choices' => $status, 'choice_label' => 'name'])
             ->add('category', ChoiceType::class, ['choices' => $category, 'choice_label' => 'name'])
@@ -144,13 +145,37 @@ class DatabaseController extends AbstractController
             ->add('msrp', MoneyType::class)
             ->add('price', MoneyType::class)
             ->add('notes', TextareaType::class, ['required' => false])
-            ->add('image', FileType::class, ['data_class' => null, 'required' => false])
+            ->add('image', FileType::class, ['data_class' => null, 'required' => false, 'constraints' => [
+                new File(
+                    extensions: ['jpg','webp','png']
+                )
+            ]])
             ->add('save', SubmitType::class, ['label' => 'Save']);
 
         $form = $form->getForm();
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                try {
+                    $imageFile->move($imageDirectory, $newFilename);
+                } catch (FileException $e) {
+                $this->addFlash(
+                    'error',
+                    $translator->trans('upload.failed', ['message' => $e->getMessage()])
+                );
+                return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
+                    // ... handle exception if something happens during file upload
+                }
+                $model->setImage($newFilename);
+            } elseif($currentImage!="") {
+                $model->setImage($currentImage);
+            }
             $entityManager->persist($model);
             $entityManager->flush();
             $this->addFlash(
