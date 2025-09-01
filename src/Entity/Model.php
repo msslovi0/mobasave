@@ -125,6 +125,24 @@ class Model
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[ORM\Column]
+    private ?bool $instructions = null;
+
+    #[ORM\Column]
+    private ?bool $parts = null;
+
+    #[ORM\Column]
+    private ?bool $displaycase = null;
+
+    #[ORM\Column]
+    private ?bool $weathered = null;
+
+    #[ORM\Column]
+    private ?bool $enhanced = null;
+
+    #[ORM\ManyToOne(inversedBy: 'models')]
+    private ?Status $status = null;
+
     public function __construct()
     {
         $this->modelLoaditems = new ArrayCollection();
@@ -569,6 +587,78 @@ class Model
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function isInstructions(): ?bool
+    {
+        return $this->instructions;
+    }
+
+    public function setInstructions(bool $instructions): static
+    {
+        $this->instructions = $instructions;
+
+        return $this;
+    }
+
+    public function isParts(): ?bool
+    {
+        return $this->parts;
+    }
+
+    public function setParts(bool $parts): static
+    {
+        $this->parts = $parts;
+
+        return $this;
+    }
+
+    public function isDisplaycase(): ?bool
+    {
+        return $this->displaycase;
+    }
+
+    public function setDisplaycase(bool $displaycase): static
+    {
+        $this->displaycase = $displaycase;
+
+        return $this;
+    }
+
+    public function isWeathered(): ?bool
+    {
+        return $this->weathered;
+    }
+
+    public function setWeathered(bool $weathered): static
+    {
+        $this->weathered = $weathered;
+
+        return $this;
+    }
+
+    public function isEnhanced(): ?bool
+    {
+        return $this->enhanced;
+    }
+
+    public function setEnhanced(bool $enhanced): static
+    {
+        $this->enhanced = $enhanced;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

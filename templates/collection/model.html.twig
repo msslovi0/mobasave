@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(model) }}
+    {{ form_widget(model.color1, {'attr': {'class': 'task_field'}}) }}
+    {{ form_end(model) }}
+{% endblock %}

@@ -20,7 +20,19 @@ collection:
         }
 global:
     collections: Collections
+    login: Login
     logout: Logout
+    title:
+        index: MoBaSaVe - Welcome!
+model:
+    list:
+        add: Add model
+        edit: Edit
+    field:
+        name: Name
+        category: Category
+        subcategory: Subcategory
+        status: Status
 status:
     notfound:
         code: 404
