@@ -28,6 +28,9 @@ class Storage
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'storage')]
     private Collection $models;
 
+    #[ORM\ManyToOne(inversedBy: 'storages')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->models = new ArrayCollection();
@@ -88,6 +91,18 @@ class Storage
                 $model->setStorage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

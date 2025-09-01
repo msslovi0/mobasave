@@ -35,6 +35,9 @@ class ScaleTrack
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'track')]
     private Collection $models;
 
+    #[ORM\ManyToOne(inversedBy: 'scaleTracks')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->models = new ArrayCollection();
@@ -119,6 +122,18 @@ class ScaleTrack
                 $model->setTrack(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

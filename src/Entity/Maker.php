@@ -44,6 +44,9 @@ class Maker
     #[ORM\OneToMany(targetEntity: Locomotive::class, mappedBy: 'maker')]
     private Collection $locomotives;
 
+    #[ORM\ManyToOne(inversedBy: 'makers')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
@@ -179,6 +182,18 @@ class Maker
                 $locomotive->setMaker(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

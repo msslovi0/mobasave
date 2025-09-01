@@ -20,6 +20,10 @@ collection:
         }
 global:
     collections: Collections
+    upload:
+        file: Upload a file
+        drag-n-drop: or drag and drop
+        filetypes: PNG, JPG, WebP
     login: Login
     logout: Logout
     title:
@@ -30,9 +34,42 @@ model:
         edit: Edit
     field:
         name: Name
+        model: Model
+        image: Image
+        gtin13: EAN/GTIN13
         category: Category
         subcategory: Subcategory
+        manufacturer: Manufacturer
+        company: Company
+        country: Country
+        color1: Color 1
+        color2: Color 2
+        color3: Color 3
+        colors: Colors
+        gauge: Gauge
+        scale: Scale
+        track: Track
+        epoch: Epoch
+        subepoch: Subepoch
+        storage: Storage
+        project: Project
+        condition: Condition
+        conditiondetails: Condition Details
+        instructions: Instructions
+        parts: Spare Parts
+        displaycase: Display Case
+        weathered: Weathered
+        enhanced: Enhanced
+        purchased: Purchase Date
+        dealer: Dealer
+        msrp: MSRP
+        notes: Notes
+        box: Box
+        price: Price
+        quantity: Quantity
         status: Status
+    saved: Your changes to “{name}” where saved successfully
+
 status:
     notfound:
         code: 404

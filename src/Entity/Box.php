@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\StatusRepository;
+use App\Repository\BoxRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: StatusRepository::class)]
-#[ORM\Table(name: 'mbs_status')]
-class Status
+#[ORM\Entity(repositoryClass: BoxRepository::class)]
+#[ORM\Table(name: 'mbs_box')]
+class Box
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,17 +19,14 @@ class Status
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\ManyToOne(inversedBy: 'boxes')]
+    private ?User $user = null;
+
     /**
      * @var Collection<int, Model>
      */
-    #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'status')]
+    #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'box')]
     private Collection $models;
-
-    #[ORM\Column(length: 10)]
-    private ?string $color = null;
-
-    #[ORM\ManyToOne(inversedBy: 'statuses')]
-    private ?User $user = null;
 
     public function __construct()
     {
@@ -53,6 +50,18 @@ class Status
         return $this;
     }
 
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Model>
      */
@@ -65,7 +74,7 @@ class Status
     {
         if (!$this->models->contains($model)) {
             $this->models->add($model);
-            $model->setStatus($this);
+            $model->setBox($this);
         }
 
         return $this;
@@ -75,34 +84,10 @@ class Status
     {
         if ($this->models->removeElement($model)) {
             // set the owning side to null (unless already changed)
-            if ($model->getStatus() === $this) {
-                $model->setStatus(null);
+            if ($model->getBox() === $this) {
+                $model->setBox(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getColor(): ?string
-    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): static
-    {
-        $this->color = $color;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }

@@ -34,6 +34,9 @@ class Subepoch
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'subepoch')]
     private Collection $models;
 
+    #[ORM\ManyToOne(inversedBy: 'subepoches')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->models = new ArrayCollection();
@@ -118,6 +121,18 @@ class Subepoch
                 $model->setSubepoch(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

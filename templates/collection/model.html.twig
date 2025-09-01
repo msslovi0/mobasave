@@ -1,7 +1,338 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}{{ model.name }} ({{ model.model }}){% endblock %}
 {% block body %}
-    {{ form_start(model) }}
-    {{ form_widget(model.color1, {'attr': {'class': 'task_field'}}) }}
-    {{ form_end(model) }}
+  <div class="py-10">
+    <header>
+      <div class="mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ model.name }}</h1>
+      </div>
+    </header>
+    <main>
+        {{ form_start(modelform, {'attr': {'class': 'mx-auto max-w-10xl px-4 py-8 sm:px-6 lg:px-8'}}) }}
+  <div class="space-y-12">
+    <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
+      <div>
+          <img src="{{ asset('data/image/' ~ model.image) }}" alt="{{ model.name }}" class="mx-auto h-auto w-200" />
+          <div class="col-span-full">
+              <label for="form_image" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.image'|trans }}</label>
+              <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 dark:border-white/25">
+                  <div class="text-center">
+                      <svg viewBox="0 0 24 24" fill="currentColor" data-slot="icon" aria-hidden="true" class="mx-auto size-12 text-gray-300 dark:text-gray-500">
+                          <path d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clip-rule="evenodd" fill-rule="evenodd" />
+                      </svg>
+                      <div class="mt-4 flex text-sm/6 text-gray-600 dark:text-gray-400">
+                          <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-green-800 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-green-800 hover:text-green-700 dark:bg-transparent dark:text-green-600 dark:focus-within:outline-green-700 dark:hover:text-green-600">
+                              <span>{{ 'global.upload.file'|trans }}</span>
+                              {{ form_widget(modelform.image, {'attr': {'class': 'sr-only'}}) }}
+                          </label>
+                          <p class="pl-1">{{ 'global.upload.drag-n-drop'|trans }}</p>
+                      </div>
+                      <p class="text-xs/5 text-gray-600 dark:text-gray-400">{{ 'global.upload.filetypes'|trans }}</p>
+                  </div>
+              </div>
+          </div>
+
+      </div>
+
+      <div class="grid max-w-2xl grid-cols-2 gap-2 sm:grid-cols-6 md:col-span-2">
+          <div class="col-span-full">
+          {% for message in app.flashes('success') %}
+              <div class="border-l-4 border-green-400 bg-green-50 p-4 dark:border-green-500 dark:bg-green-500/10">
+                  <div class="flex">
+                      <div class="shrink-0">
+                          <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-green-400">
+                              <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill-rule="evenodd" />
+                          </svg>
+                      </div>
+                      <div class="ml-3">
+                          <p class="text-sm text-green-700 dark:text-green-300">
+                              {{ message }}
+                          </p>
+                      </div>
+                  </div>
+              </div>
+          {% endfor %}
+          </div>
+        <div class="sm:col-span-3">
+          <label for="form_category" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.category'|trans }}</label>
+          <div class="grid grid-cols-1">
+              {{ form_widget(modelform.category, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+            <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+              <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_subcategory" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.subcategory'|trans }}</label>
+          <div class="grid grid-cols-1">
+              {{ form_widget(modelform.subcategory, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+            <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+              <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_name" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.name'|trans }}</label>
+          <div>
+              {{ form_widget(modelform.name, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_model" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.model'|trans }}</label>
+          <div>
+              {{ form_widget(modelform.model, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_manufacturer" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.manufacturer'|trans }}</label>
+          <div class="grid grid-cols-1">
+              {{ form_widget(modelform.manufacturer, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+            <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+              <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_gtin13" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.gtin13'|trans }}</label>
+          <div>
+              {{ form_widget(modelform.gtin13, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_company" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.company'|trans }}</label>
+          <div class="grid grid-cols-1">
+              {{ form_widget(modelform.company, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+            <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+              <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <span class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.colors'|trans }}</span>
+            <div class="grid grid-cols-3 gap-2">
+                <label for="form_color1" class="sr-only">{{ 'model.field.color1'|trans }}</label>
+                {%  set color1 = model.color1=='' ? 'rgba(255,255,255,0)' : model.color1  %}
+                {%  set color2 = model.color2=='' ? 'rgba(255,255,255,0)' : model.color2  %}
+                {%  set color3 = model.color3=='' ? 'rgba(255,255,255,0)' : model.color3  %}
+                {{ form_widget(modelform.color1, {'attr': {'value': color1, 'class': 'p-1 h-9 w-25 appearance-none rounded-md bg-white text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                <label for="form_color2" class="sr-only">{{ 'model.field.color1'|trans }}</label>
+                {{ form_widget(modelform.color2, {'attr': {'value': color2, 'class': 'p-1 h-9 w-25 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700'}}) }}
+                <label for="form_color3" class="sr-only">{{ 'model.field.color1'|trans }}</label>
+                {{ form_widget(modelform.color3, {'attr': {'value': color3, 'class': 'p-1 h-9 w-25 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700'}}) }}
+            </div>
+        </div>
+        <div class="sm:col-span-3">
+            <label for="form_country" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.country'|trans }}</label>
+            <div class="grid grid-cols-1">
+                {{ form_widget(modelform.country, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                    <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                </svg>
+            </div>
+        </div>
+        <div class="sm:col-span-3">
+        </div>
+        <div class="sm:col-span-3">
+          <span class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.gauge'|trans }}</span>
+            <div class="grid grid-cols-2 gap-2">
+                <label for="form_scale" class="sr-only">{{ 'model.field.scale'|trans }}</label>
+                <div class="grid grid-cols-1">
+                    {{ form_widget(modelform.scale, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                    <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                    </svg>
+                </div>
+                <label for="form_track" class="sr-only">{{ 'model.field.track'|trans }}</label>
+                <div class="grid grid-cols-1">
+                    {{ form_widget(modelform.track, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                    <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="sm:col-span-3">
+          <span class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.epoch'|trans }}</span>
+            <div class="grid grid-cols-2 gap-2">
+                <label for="form_epoch" class="sr-only">{{ 'model.field.scale'|trans }}</label>
+                <div class="grid grid-cols-1">
+                    {{ form_widget(modelform.epoch, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                    <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                    </svg>
+                </div>
+                <label for="form_subepoch" class="sr-only">{{ 'model.field.track'|trans }}</label>
+                <div class="grid grid-cols-1">
+                    {{ form_widget(modelform.subepoch, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                    <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_storage" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.storage'|trans }}</label>
+          <div class="grid grid-cols-1">
+              {{ form_widget(modelform.storage, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+              <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                  <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+              </svg>
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_box" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.box'|trans }}</label>
+          <div class="grid grid-cols-1">
+              {{ form_widget(modelform.box, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+              <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                  <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+              </svg>
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_project" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.project'|trans }}</label>
+          <div class="grid grid-cols-1">
+              {{ form_widget(modelform.project, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+              <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                  <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+              </svg>
+          </div>
+        </div>
+        <div class="sm:col-span-3 row-span-3">
+            <span class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.conditiondetails'|trans }}</span>
+            <div class="flex items-center gap-3 mb-3">
+                <div class="group relative inline-flex w-11 shrink-0 rounded-full bg-gray-200 p-0.5 inset-ring inset-ring-gray-900/5 outline-offset-2 outline-green-800 transition-colors duration-200 ease-in-out has-checked:bg-green-800 has-focus-visible:outline-2 dark:bg-white/5 dark:inset-ring-white/10 dark:outline-green-700 dark:has-checked:bg-green-700">
+                    <span class="size-5 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-5"></span>
+                    {{ form_widget(modelform.instructions, {'attr': {'class': 'absolute inset-0 appearance-none focus:outline-hidden'}}) }}
+                </div>
+
+                <div class="text-sm">
+                    <label for="form_instructions" class="font-medium text-gray-900 dark:text-white">{{ 'model.field.instructions'|trans }}</label>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 mb-3">
+                <div class="group relative inline-flex w-11 shrink-0 rounded-full bg-gray-200 p-0.5 inset-ring inset-ring-gray-900/5 outline-offset-2 outline-green-800 transition-colors duration-200 ease-in-out has-checked:bg-green-800 has-focus-visible:outline-2 dark:bg-white/5 dark:inset-ring-white/10 dark:outline-green-700 dark:has-checked:bg-green-700">
+                    <span class="size-5 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-5"></span>
+                    {{ form_widget(modelform.parts, {'attr': {'class': 'absolute inset-0 appearance-none focus:outline-hidden'}}) }}
+                </div>
+
+                <div class="text-sm">
+                    <label for="form_parts" class="font-medium text-gray-900 dark:text-white">{{ 'model.field.parts'|trans }}</label>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 mb-3">
+                <div class="group relative inline-flex w-11 shrink-0 rounded-full bg-gray-200 p-0.5 inset-ring inset-ring-gray-900/5 outline-offset-2 outline-green-800 transition-colors duration-200 ease-in-out has-checked:bg-green-800 has-focus-visible:outline-2 dark:bg-white/5 dark:inset-ring-white/10 dark:outline-green-700 dark:has-checked:bg-green-700">
+                    <span class="size-5 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-5"></span>
+                    {{ form_widget(modelform.displaycase, {'attr': {'class': 'absolute inset-0 appearance-none focus:outline-hidden'}}) }}
+                </div>
+
+                <div class="text-sm">
+                    <label for="form_displaycase" class="font-medium text-gray-900 dark:text-white">{{ 'model.field.displaycase'|trans }}</label>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 mb-3">
+                <div class="group relative inline-flex w-11 shrink-0 rounded-full bg-gray-200 p-0.5 inset-ring inset-ring-gray-900/5 outline-offset-2 outline-green-800 transition-colors duration-200 ease-in-out has-checked:bg-green-800 has-focus-visible:outline-2 dark:bg-white/5 dark:inset-ring-white/10 dark:outline-green-700 dark:has-checked:bg-green-700">
+                    <span class="size-5 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-5"></span>
+                    {{ form_widget(modelform.weathered, {'attr': {'class': 'absolute inset-0 appearance-none focus:outline-hidden'}}) }}
+                </div>
+
+                <div class="text-sm">
+                    <label for="form_weathered" class="font-medium text-gray-900 dark:text-white">{{ 'model.field.weathered'|trans }}</label>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 mb-3">
+                <div class="group relative inline-flex w-11 shrink-0 rounded-full bg-gray-200 p-0.5 inset-ring inset-ring-gray-900/5 outline-offset-2 outline-green-800 transition-colors duration-200 ease-in-out has-checked:bg-green-800 has-focus-visible:outline-2 dark:bg-white/5 dark:inset-ring-white/10 dark:outline-green-700 dark:has-checked:bg-green-700">
+                    <span class="size-5 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-5"></span>
+                    {{ form_widget(modelform.enhanced, {'attr': {'class': 'absolute inset-0 appearance-none focus:outline-hidden'}}) }}
+                </div>
+
+                <div class="text-sm">
+                    <label for="form_enhanced" class="font-medium text-gray-900 dark:text-white">{{ 'model.field.enhanced'|trans }}</label>
+                </div>
+            </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_modelcondition" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.condition'|trans }}</label>
+          <div class="grid grid-cols-1">
+              {{ form_widget(modelform.modelcondition, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+              <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                  <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+              </svg>
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_status" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.status'|trans }}</label>
+          <div class="grid grid-cols-1">
+              {{ form_widget(modelform.status, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+              <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                  <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+              </svg>
+          </div>
+        </div>
+        <div class="col-span-full">
+          <div class="flex items-center">
+              <div aria-hidden="true" class="w-full mt-3 border-t border-gray-300 dark:border-white/15"></div>
+          </div>
+        </div>
+        <div class="col-span-full">
+          <label for="form_notes" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.notes'|trans }}</label>
+          <div>
+              {{ form_widget(modelform.notes, {'attr': {'class': 'block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-green-700'}}) }}
+          </div>
+        </div>
+        <div class="col-span-full">
+          <div class="flex items-center">
+              <div aria-hidden="true" class="w-full mt-3 border-t border-gray-300 dark:border-white/15"></div>
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_purchased" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.purchased'|trans }}</label>
+          <div class="grid grid-cols-1">
+              {{ form_widget(modelform.purchased, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+              <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                  <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+              </svg>
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_dealer" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.dealer'|trans }}</label>
+          <div class="grid grid-cols-1">
+              {{ form_widget(modelform.dealer, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+              <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                  <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+              </svg>
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_msrp" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.msrp'|trans }}</label>
+          <div class="grid grid-cols-2 items-center gap-3">
+              {{ form_widget(modelform.msrp, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_price" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.price'|trans }}</label>
+          <div class="grid grid-cols-2 items-center gap-3">
+              {{ form_widget(modelform.price, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+          </div>
+        </div>
+        <div class="sm:col-span-3">
+          <label for="form_quantity" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.quantity'|trans }}</label>
+          <div class="grid grid-cols-2 items-center gap-3">
+              {{ form_widget(modelform.quantity, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Information section -->
+  </div>
+
+  <div class="mt-6 flex items-center justify-end gap-x-6">
+      {{ form_widget(modelform.save, {'attr': {'class': 'rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:focus-visible:outline-green-700'}}) }}
+  </div>
+{{ form_end(modelform) }}
+
+    </main>
+  </div>
+
+
 {% endblock %}

@@ -25,7 +25,7 @@ class Scale
     /**
      * @var Collection<int, ScaleTrack>
      */
-    #[ORM\OneToMany(targetEntity: ScaleTrack::class, mappedBy: 'Scale')]
+    #[ORM\OneToMany(targetEntity: ScaleTrack::class, mappedBy: 'scale')]
     private Collection $scaleTracks;
 
     /**
@@ -33,6 +33,9 @@ class Scale
      */
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'scale')]
     private Collection $models;
+
+    #[ORM\ManyToOne(inversedBy: 'scales')]
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -125,6 +128,18 @@ class Scale
                 $model->setScale(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

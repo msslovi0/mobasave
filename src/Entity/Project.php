@@ -28,6 +28,9 @@ class Project
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'project')]
     private Collection $models;
 
+    #[ORM\ManyToOne(inversedBy: 'projects')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->models = new ArrayCollection();
@@ -88,6 +91,18 @@ class Project
                 $model->setProject(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

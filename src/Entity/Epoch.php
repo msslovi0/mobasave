@@ -37,6 +37,9 @@ class Epoch
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'epoch')]
     private Collection $models;
 
+    #[ORM\ManyToOne(inversedBy: 'epochs')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->subepoches = new ArrayCollection();
@@ -140,6 +143,18 @@ class Epoch
                 $model->setEpoch(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

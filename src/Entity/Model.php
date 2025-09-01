@@ -143,6 +143,12 @@ class Model
     #[ORM\ManyToOne(inversedBy: 'models')]
     private ?Status $status = null;
 
+    #[ORM\ManyToOne(inversedBy: 'models')]
+    private ?Box $box = null;
+
+    #[ORM\ManyToOne(inversedBy: 'models')]
+    private ?Condition $modelcondition = null;
+
     public function __construct()
     {
         $this->modelLoaditems = new ArrayCollection();
@@ -659,6 +665,30 @@ class Model
     public function setStatus(?Status $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getBox(): ?Box
+    {
+        return $this->box;
+    }
+
+    public function setBox(?Box $box): static
+    {
+        $this->box = $box;
+
+        return $this;
+    }
+
+    public function getModelcondition(): ?Condition
+    {
+        return $this->modelcondition;
+    }
+
+    public function setModelcondition(?Condition $modelcondition): static
+    {
+        $this->modelcondition = $modelcondition;
 
         return $this;
     }

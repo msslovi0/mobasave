@@ -32,6 +32,9 @@ class Subcategory
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'subcategory')]
     private Collection $models;
 
+    #[ORM\ManyToOne(inversedBy: 'subcategories')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->models = new ArrayCollection();
@@ -104,6 +107,18 @@ class Subcategory
                 $model->setSubcategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
