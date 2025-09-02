@@ -20,11 +20,15 @@ use App\Entity\Dealer;
 use App\Entity\Country;
 use App\Entity\Box;
 use App\Entity\Condition;
-use App\Entity\Tram;
 use App\Entity\Maker;
 use App\Entity\Axle;
 use App\Entity\Power;
 use App\Entity\Coupler;
+use App\Entity\Locomotive;
+use App\Entity\Car;
+use App\Entity\Container;
+use App\Entity\Vehicle;
+use App\Entity\Tram;
 use BcMath\Number;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,6 +89,62 @@ class DatabaseController extends AbstractController
         return $this->render('collection/list.html.twig', [
             "models" => $pagination
         ]);
+    }
+    #[Route('/model/search/', name: 'mbs_model_search', methods: ['GET'])]
+    public function search(EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request)
+    {
+        $query = $request->get('search');
+        $qb = $entityManager->createQueryBuilder();
+        $result = $qb->select('m')->from(Model::class, 'm')
+            ->leftJoin('m.locomotive','l','WITH','m.locomotive = l.id')
+            ->leftJoin('m.car','c','WITH','m.car = c.id')
+            ->leftJoin('m.container','o','WITH','m.container = o.id')
+            ->leftJoin('m.vehicle','v','WITH','m.vehicle = v.id')
+            ->leftJoin('m.tram','t','WITH','m.tram = t.id')
+            ->leftJoin('l.maker','lm','WITH','l.maker = lm.id')
+            ->leftJoin('v.maker','vm','WITH','v.maker = vm.id')
+            ->leftJoin('t.maker','tm','WITH','t.maker = tm.id')
+            ->leftJoin('o.containertype','ot','WITH','o.containertype = ot.id')
+            ->where(
+                $qb->expr()->like('m.name', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('l.class', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('l.registration', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('l.nickname', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('c.class', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('c.registration', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('o.registration', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('v.class', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('v.registration', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('t.class', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('t.registration', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('t.nickname', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('lm.name', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('ot.name', $qb->expr()->literal('%' . $query . '%')),
+            )->getQuery()->getResult();
+
+        $pagination = $paginator->paginate(
+            $result,
+            $request->query->getInt('page', 1), /* page number */
+            100 /* limit per page */
+        );
+
+        return $this->render('collection/list.html.twig', [
+            "models" => $pagination
+        ]);
+
     }
     #[Route('/model/add/', name: 'mbs_model_add', methods: ['GET','POST'])]
     public function add(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
@@ -178,6 +238,28 @@ class DatabaseController extends AbstractController
                     // ... handle exception if something happens during file upload
                 }
                 $model->setImage($newFilename);
+            }
+            switch($model->getCategory()->getId()) {
+                case 1:
+                $detail = new Locomotive();
+                $model->setLocomotive($detail);
+                break;
+                case 2:
+                $detail = new Car();
+                $model->setCar($detail);
+                break;
+                case 3:
+                $detail = new Container();
+                $model->setContainer($detail);
+                break;
+                case 6:
+                $detail = new Vehicle();
+                $model->setVehicle($detail);
+                break;
+                case 7:
+                $detail = new Tram();
+                $model->setTram($detail);
+                break;
             }
             $model->setCreated(new \DateTime('now'));
             $model->setUpdated(new \DateTime('now'));

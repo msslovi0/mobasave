@@ -14,12 +14,12 @@
         </div>
         <div class="hidden sm:ml-6 sm:flex sm:items-center">
             <div class="flex flex-1 items-center justify-center px-2 lg:ml-6 lg:justify-end">
-                <div class="grid w-full max-w-lg grid-cols-1 lg:max-w-xs">
-                    <input type="search" name="search" placeholder="Search" class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pr-3 pl-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500" />
+                <form method="get" action="{{path('mbs_model_search')}}" class="grid w-full max-w-lg grid-cols-1 lg:max-w-xs">
+                    <input type="search" name="search" placeholder="Search" class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pr-3 pl-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-green-700" />
                     <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400">
                         <path d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" fill-rule="evenodd" />
                     </svg>
-                </div>
+                </form>
             </div>
           <button type="button" class="relative rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-2 focus:outline-offset-2 focus:outline-green-700 dark:text-gray-400 dark:hover:text-white dark:focus:outline-green-700">
             <span class="absolute -inset-1.5"></span>
