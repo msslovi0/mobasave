@@ -17,7 +17,7 @@ class Locomotive
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $class = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -26,17 +26,17 @@ class Locomotive
     #[ORM\Column(nullable: true)]
     private ?float $length = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $digital = null;
+    #[ORM\Column]
+    private ?bool $digital = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $sound = null;
+    #[ORM\Column]
+    private ?bool $sound = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $smoke = null;
+    #[ORM\Column]
+    private ?bool $smoke = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $dccready = null;
+    #[ORM\Column]
+    private ?bool $dccready = null;
 
     #[ORM\ManyToOne(inversedBy: 'locomotives')]
     private ?Maker $maker = null;

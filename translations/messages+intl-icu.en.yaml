@@ -20,6 +20,7 @@ collection:
         }
 global:
     collections: Collections
+    save: Save
     upload:
         file: Upload a file
         drag-n-drop: or drag and drop
@@ -29,10 +30,14 @@ global:
     title:
         index: MoBaSaVe - Welcome!
     back: Back
+    nav:
+        model: Model
+        details: Details
 model:
     list:
         add: Add model
         edit: Edit
+    details: Details {category}
     field:
         name: Name
         model: Model
@@ -69,7 +74,22 @@ model:
         price: Price
         quantity: Quantity
         status: Status
+        registration: Registration
+        class: Class
+        length: Length
+        nickname: Nickname
+        axle: Axle Configuration
+        power: Power
+        coupler: Coupler
+        maker: Maker
+        digital: Digital
+        sound: Sound
+        smoke: Smoke
+        dccready: DCC ready
+        containertype: Container Type
+        year: Build Year
     saved: Your changes to “{name}” where saved successfully
+    nodetails: This category has no detail information
     created: Your model “{name}” was created successfully
 
 status:

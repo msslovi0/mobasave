@@ -43,6 +43,9 @@ class Category
     #[ORM\ManyToOne(inversedBy: 'categories')]
     private ?User $user = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $class = null;
+
     public function __construct()
     {
         $this->makers = new ArrayCollection();
@@ -174,6 +177,18 @@ class Category
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getClass(): ?string
+    {
+        return $this->class;
+    }
+
+    public function setClass(string $class): static
+    {
+        $this->class = $class;
 
         return $this;
     }

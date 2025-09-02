@@ -37,6 +37,9 @@ class Coupler
     #[ORM\OneToMany(targetEntity: Locomotive::class, mappedBy: 'coupler')]
     private Collection $locomotives;
 
+    #[ORM\ManyToOne(inversedBy: 'couplers')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->trams = new ArrayCollection();
@@ -147,6 +150,18 @@ class Coupler
                 $locomotive->setCoupler(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

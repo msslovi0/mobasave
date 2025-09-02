@@ -37,6 +37,9 @@ class Power
     #[ORM\OneToMany(targetEntity: Locomotive::class, mappedBy: 'power')]
     private Collection $locomotives;
 
+    #[ORM\ManyToOne(inversedBy: 'powers')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->trams = new ArrayCollection();
@@ -147,6 +150,18 @@ class Power
                 $locomotive->setPower(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

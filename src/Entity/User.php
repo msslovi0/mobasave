@@ -133,6 +133,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Condition::class, mappedBy: 'user')]
     private Collection $conditions;
 
+    /**
+     * @var Collection<int, Axle>
+     */
+    #[ORM\OneToMany(targetEntity: Axle::class, mappedBy: 'user')]
+    private Collection $axles;
+
+    /**
+     * @var Collection<int, Power>
+     */
+    #[ORM\OneToMany(targetEntity: Power::class, mappedBy: 'user')]
+    private Collection $powers;
+
+    /**
+     * @var Collection<int, Coupler>
+     */
+    #[ORM\OneToMany(targetEntity: Coupler::class, mappedBy: 'user')]
+    private Collection $couplers;
+
+    /**
+     * @var Collection<int, Containertype>
+     */
+    #[ORM\OneToMany(targetEntity: Containertype::class, mappedBy: 'user')]
+    private Collection $containertypes;
+
     public function __construct()
     {
         $this->userdatabases = new ArrayCollection();
@@ -151,6 +175,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->makers = new ArrayCollection();
         $this->boxes = new ArrayCollection();
         $this->conditions = new ArrayCollection();
+        $this->axles = new ArrayCollection();
+        $this->powers = new ArrayCollection();
+        $this->couplers = new ArrayCollection();
+        $this->containertypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -708,6 +736,126 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($condition->getUser() === $this) {
                 $condition->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Axle>
+     */
+    public function getAxles(): Collection
+    {
+        return $this->axles;
+    }
+
+    public function addAxle(Axle $axle): static
+    {
+        if (!$this->axles->contains($axle)) {
+            $this->axles->add($axle);
+            $axle->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAxle(Axle $axle): static
+    {
+        if ($this->axles->removeElement($axle)) {
+            // set the owning side to null (unless already changed)
+            if ($axle->getUser() === $this) {
+                $axle->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Power>
+     */
+    public function getPowers(): Collection
+    {
+        return $this->powers;
+    }
+
+    public function addPower(Power $power): static
+    {
+        if (!$this->powers->contains($power)) {
+            $this->powers->add($power);
+            $power->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePower(Power $power): static
+    {
+        if ($this->powers->removeElement($power)) {
+            // set the owning side to null (unless already changed)
+            if ($power->getUser() === $this) {
+                $power->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Coupler>
+     */
+    public function getCouplers(): Collection
+    {
+        return $this->couplers;
+    }
+
+    public function addCoupler(Coupler $coupler): static
+    {
+        if (!$this->couplers->contains($coupler)) {
+            $this->couplers->add($coupler);
+            $coupler->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCoupler(Coupler $coupler): static
+    {
+        if ($this->couplers->removeElement($coupler)) {
+            // set the owning side to null (unless already changed)
+            if ($coupler->getUser() === $this) {
+                $coupler->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Containertype>
+     */
+    public function getContainertypes(): Collection
+    {
+        return $this->containertypes;
+    }
+
+    public function addContainertype(Containertype $containertype): static
+    {
+        if (!$this->containertypes->contains($containertype)) {
+            $this->containertypes->add($containertype);
+            $containertype->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContainertype(Containertype $containertype): static
+    {
+        if ($this->containertypes->removeElement($containertype)) {
+            // set the owning side to null (unless already changed)
+            if ($containertype->getUser() === $this) {
+                $containertype->setUser(null);
             }
         }
 

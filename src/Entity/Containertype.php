@@ -28,6 +28,9 @@ class Containertype
     #[ORM\OneToMany(targetEntity: Container::class, mappedBy: 'containertype')]
     private Collection $containers;
 
+    #[ORM\ManyToOne(inversedBy: 'containertypes')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->containers = new ArrayCollection();
@@ -88,6 +91,18 @@ class Containertype
                 $container->setContainertype(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

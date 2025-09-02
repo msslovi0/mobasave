@@ -31,6 +31,9 @@ class Axle
     #[ORM\OneToMany(targetEntity: Locomotive::class, mappedBy: 'axle')]
     private Collection $locomotives;
 
+    #[ORM\ManyToOne(inversedBy: 'axles')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->trams = new ArrayCollection();
@@ -110,6 +113,18 @@ class Axle
                 $locomotive->setAxle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

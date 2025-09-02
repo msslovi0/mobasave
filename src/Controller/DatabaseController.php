@@ -2,6 +2,7 @@
 // src/Controller/LuckyController.php
 namespace App\Controller;
 
+use App\Entity\Containertype;
 use App\Entity\Database;
 use App\Entity\Manufacturer;
 use App\Entity\Model;
@@ -19,6 +20,12 @@ use App\Entity\Dealer;
 use App\Entity\Country;
 use App\Entity\Box;
 use App\Entity\Condition;
+use App\Entity\Tram;
+use App\Entity\Maker;
+use App\Entity\Axle;
+use App\Entity\Power;
+use App\Entity\Coupler;
+use BcMath\Number;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,7 +87,7 @@ class DatabaseController extends AbstractController
         ]);
     }
     #[Route('/model/add/', name: 'mbs_model_add', methods: ['GET','POST'])]
-    public function update(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    public function add(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
@@ -93,20 +100,20 @@ class DatabaseController extends AbstractController
             return $this->render('status/forbidden.html.twig', response: $response);
         }
 
-        $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, 1]));
-        $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, 1]));
-        $subcategory    = $entityManager->getRepository(Subcategory::class)->findBy(array("user" => [null, 1]));
-        $manufacturer   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, 1]));
-        $company        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, 1]));
-        $scale          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, 1]));
-        $track          = $entityManager->getRepository(ScaleTrack::class)->findBy(array("user" => [null, 1]));
-        $epoch          = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, 1]));
-        $subepoch       = $entityManager->getRepository(Subepoch::class)->findBy(array("user" => [null, 1]));
-        $storage        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, 1]));
-        $project        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, 1]));
-        $dealer         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, 1]));
-        $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, 1]));
-        $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, 1]));
+        $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]));
+        $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]));
+        $subcategory    = $entityManager->getRepository(Subcategory::class)->findBy(array("user" => [null, $user->getId()]));
+        $manufacturer   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]));
+        $company        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]));
+        $scale          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]));
+        $track          = $entityManager->getRepository(ScaleTrack::class)->findBy(array("user" => [null, $user->getId()]));
+        $epoch          = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, $user->getId()]));
+        $subepoch       = $entityManager->getRepository(Subepoch::class)->findBy(array("user" => [null, $user->getId()]));
+        $storage        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]));
+        $project        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, $user->getId()]));
+        $dealer         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]));
+        $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, $user->getId()]));
+        $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]));
         $country        = $entityManager->getRepository(Country::class)->findAll();
 
         $model = new Model();
@@ -148,7 +155,7 @@ class DatabaseController extends AbstractController
                     extensions: ['jpg','webp','png']
                 )
             ]])
-            ->add('save', SubmitType::class, ['label' => 'Save']);
+            ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
 
         $form = $form->getForm();
 
@@ -209,20 +216,21 @@ class DatabaseController extends AbstractController
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
             return $this->render('status/forbidden.html.twig', response: $response);
         }
-        $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, 1]));
-        $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, 1]));
-        $subcategory    = $entityManager->getRepository(Subcategory::class)->findBy(array("user" => [null, 1]));
-        $manufacturer   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, 1]));
-        $company        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, 1]));
-        $scale          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, 1]));
-        $track          = $entityManager->getRepository(ScaleTrack::class)->findBy(array("user" => [null, 1]));
-        $epoch          = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, 1]));
-        $subepoch       = $entityManager->getRepository(Subepoch::class)->findBy(array("user" => [null, 1]));
-        $storage        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, 1]));
-        $project        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, 1]));
-        $dealer         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, 1]));
-        $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, 1]));
-        $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, 1]));
+        $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]));
+        $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]));
+        $subcategory    = $entityManager->getRepository(Subcategory::class)->findBy(array("user" => [null, $user->getId()]));
+        $subcategory    = $model->getCategory()->getSubcategories();
+        $manufacturer   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]));
+        $company        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]));
+        $scale          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]));
+        $track          = $entityManager->getRepository(ScaleTrack::class)->findBy(array("user" => [null, $user->getId()]));
+        $epoch          = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, $user->getId()]));
+        $subepoch       = $entityManager->getRepository(Subepoch::class)->findBy(array("user" => [null, $user->getId()]));
+        $storage        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]));
+        $project        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, $user->getId()]));
+        $dealer         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]));
+        $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, $user->getId()]));
+        $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]));
         $country        = $entityManager->getRepository(Country::class)->findAll();
 
         $form = $this->createFormBuilder($model)
@@ -262,7 +270,7 @@ class DatabaseController extends AbstractController
                     extensions: ['jpg','webp','png']
                 )
             ]])
-            ->add('save', SubmitType::class, ['label' => 'Save']);
+            ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
 
         $form = $form->getForm();
 
@@ -303,5 +311,124 @@ class DatabaseController extends AbstractController
             "model" => $model,
         ]);
     }
+    #[Route('/model/{id}/details/', name: 'mbs_model_detail', methods: ['GET','POST'])]
+    public function detail(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
 
+        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $this->render('status/notfound.html.twig', response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            return $this->render('status/forbidden.html.twig', response: $response);
+        }
+
+        $axle           = $entityManager->getRepository(Axle::class)->findBy(array("user" => [null, $user->getId()]));
+        $power          = $entityManager->getRepository(Power::class)->findBy(array("user" => [null, $user->getId()]));
+        $coupler        = $entityManager->getRepository(Coupler::class)->findBy(array("user" => [null, $user->getId()]));
+        $maker          = $model->getCategory()->getMakers();
+
+        switch($model->getCategory()->getId()) {
+            case 1:
+                $detail = $model->getLocomotive();
+                $template = "collection/".$model->getCategory()->getClass().".html.twig";
+                $form = $this->createFormBuilder($detail)
+                    ->add('class', TextType::class, ['required' => false])
+                    ->add('registration', TextType::class, ['required' => false])
+                    ->add('length', NumberType::class, ['required' => false])
+                    ->add('nickname', TextType::class, ['required' => false])
+                    ->add('power', ChoiceType::class, ['choices' => $power, 'choice_label' => 'name', 'required' => false])
+                    ->add('axle', ChoiceType::class, ['choices' => $axle, 'choice_label' => 'name', 'required' => false])
+                    ->add('coupler', ChoiceType::class, ['choices' => $coupler, 'choice_label' => 'name', 'required' => false])
+                    ->add('maker', ChoiceType::class, ['choices' => $maker, 'choice_label' => 'name', 'required' => false])
+                    ->add('digital', CheckboxType::class, ['required' => false])
+                    ->add('sound', CheckboxType::class, ['required' => false])
+                    ->add('smoke', CheckboxType::class, ['required' => false])
+                    ->add('dccready', CheckboxType::class, ['required' => false]);
+
+            break;
+            case 2:
+                $detail = $model->getCar();
+                $template = "collection/".$model->getCategory()->getClass().".html.twig";
+                $form = $this->createFormBuilder($detail)
+                    ->add('class', TextType::class, ['required' => false])
+                    ->add('registration', TextType::class, ['required' => false])
+                    ->add('length', NumberType::class, ['required' => false])
+                    ->add('power', ChoiceType::class, ['choices' => $power, 'choice_label' => 'name', 'required' => false])
+                    ->add('coupler', ChoiceType::class, ['choices' => $coupler, 'choice_label' => 'name', 'required' => false]);
+            break;
+            case 3:
+                $detail = $model->getContainer();
+                $containertype = $entityManager->getRepository(Containertype::class)->findBy(array("user" => [null, $user->getId()]));
+                $template = "collection/".$model->getCategory()->getClass().".html.twig";
+                $form = $this->createFormBuilder($detail)
+                    ->add('registration', TextType::class, ['required' => false])
+                    ->add('length', NumberType::class, ['required' => false])
+                    ->add('containertype', ChoiceType::class, ['choices' => $containertype, 'choice_label' => 'name', 'required' => false]);
+            break;
+            case 6:
+                $detail = $model->getVehicle();
+                $template = "collection/".$model->getCategory()->getClass().".html.twig";
+                $form = $this->createFormBuilder($detail)
+                    ->add('class', TextType::class, ['required' => false])
+                    ->add('registration', TextType::class, ['required' => false])
+                    ->add('year', NumberType::class, ['required' => false, 'attr' => ['maxlength' => 4]])
+                    ->add('maker', ChoiceType::class, ['choices' => $maker, 'choice_label' => 'name', 'required' => false]);
+            break;
+            case 7:
+                $detail = $model->getTram();
+                $template = "collection/".$model->getCategory()->getClass().".html.twig";
+                $form = $this->createFormBuilder($detail)
+                    ->add('class', TextType::class, ['required' => false])
+                    ->add('registration', TextType::class, ['required' => false])
+                    ->add('length', NumberType::class, ['required' => false])
+                    ->add('nickname', TextType::class, ['required' => false])
+                    ->add('power', ChoiceType::class, ['choices' => $power, 'choice_label' => 'name', 'required' => false])
+                    ->add('axle', ChoiceType::class, ['choices' => $axle, 'choice_label' => 'name', 'required' => false])
+                    ->add('coupler', ChoiceType::class, ['choices' => $coupler, 'choice_label' => 'name', 'required' => false])
+                    ->add('maker', ChoiceType::class, ['choices' => $maker, 'choice_label' => 'name', 'required' => false]);
+            break;
+            default:
+                $template = "collection/detail.html.twig";
+        }
+
+        if(isset($form)) {
+            $form = $form->getForm();
+
+            $form->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $model->setUpdated(new \DateTime('now'));
+                $entityManager->persist($model);
+                $entityManager->persist($detail);
+                $entityManager->flush();
+                $this->addFlash(
+                    'success',
+                    $translator->trans('model.saved', ['name' => $model->getName()])
+                );
+                return $this->redirectToRoute('mbs_model_detail', ['id' => $model->getId()]);
+            }
+            return $this->render($template, [
+                "detailform" => $form->createView(),
+                "model" => $model,
+                "detail" => $detail,
+            ]);
+        } else {
+            return $this->render($template, [
+                "model" => $model,
+            ]);
+        }
+
+    }
+    #[Route('/model/{id}/digital/', name: 'mbs_model_digital', methods: ['GET','POST'])]
+    public function digital(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        return new Response('geht');
+    }
 }
