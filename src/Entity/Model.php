@@ -26,13 +26,13 @@ class Model
     #[ORM\Column(length: 13, nullable: true)]
     private ?string $gtin13 = null;
 
-    #[ORM\Column(length: 10, nullable: true)]
+    #[ORM\Column(length: 30, nullable: true)]
     private ?string $color1 = null;
 
-    #[ORM\Column(length: 10, nullable: true)]
+    #[ORM\Column(length: 30, nullable: true)]
     private ?string $color2 = null;
 
-    #[ORM\Column(length: 10, nullable: true)]
+    #[ORM\Column(length: 30, nullable: true)]
     private ?string $color3 = null;
 
     #[ORM\Column]
@@ -98,12 +98,6 @@ class Model
     #[ORM\ManyToOne(inversedBy: 'models')]
     private ?Tram $tram = null;
 
-    /**
-     * @var Collection<int, ModelLoaditem>
-     */
-    #[ORM\OneToMany(targetEntity: ModelLoaditem::class, mappedBy: 'model')]
-    private Collection $modelLoaditems;
-
     #[ORM\ManyToOne(inversedBy: 'models')]
     private ?Digital $digital = null;
 
@@ -149,9 +143,15 @@ class Model
     #[ORM\ManyToOne(inversedBy: 'models')]
     private ?Condition $modelcondition = null;
 
+    /**
+     * @var Collection<int, Modelload>
+     */
+    #[ORM\OneToMany(targetEntity: Modelload::class, mappedBy: 'model')]
+    private Collection $modelloads;
+
     public function __construct()
     {
-        $this->modelLoaditems = new ArrayCollection();
+        $this->modelloads = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -483,36 +483,6 @@ class Model
         return $this;
     }
 
-    /**
-     * @return Collection<int, ModelLoaditem>
-     */
-    public function getModelLoaditems(): Collection
-    {
-        return $this->modelLoaditems;
-    }
-
-    public function addModelLoaditem(ModelLoaditem $modelLoaditem): static
-    {
-        if (!$this->modelLoaditems->contains($modelLoaditem)) {
-            $this->modelLoaditems->add($modelLoaditem);
-            $modelLoaditem->setModel($this);
-        }
-
-        return $this;
-    }
-
-    public function removeModelLoaditem(ModelLoaditem $modelLoaditem): static
-    {
-        if ($this->modelLoaditems->removeElement($modelLoaditem)) {
-            // set the owning side to null (unless already changed)
-            if ($modelLoaditem->getModel() === $this) {
-                $modelLoaditem->setModel(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getDigital(): ?Digital
     {
         return $this->digital;
@@ -689,6 +659,36 @@ class Model
     public function setModelcondition(?Condition $modelcondition): static
     {
         $this->modelcondition = $modelcondition;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Modelload>
+     */
+    public function getModelloads(): Collection
+    {
+        return $this->modelloads;
+    }
+
+    public function addModelload(Modelload $modelload): static
+    {
+        if (!$this->modelloads->contains($modelload)) {
+            $this->modelloads->add($modelload);
+            $modelload->setModel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModelload(Modelload $modelload): static
+    {
+        if ($this->modelloads->removeElement($modelload)) {
+            // set the owning side to null (unless already changed)
+            if ($modelload->getModel() === $this) {
+                $modelload->setModel(null);
+            }
+        }
 
         return $this;
     }

@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-  {% if app.request.get('search') is defined %}
-    {{ 'global.search'|trans }}
+  {% if app.request.get('search') is defined and app.request.get('search') != "" %}
+    {{ 'global.title.search'|trans({'query': app.request.get('search')}) }}
   {% else %}
     {{ 'collection.name'|trans({'name': models[0].modeldatabase.name}) }}
   {% endif %}
@@ -11,7 +11,7 @@
   <div class="py-10">
     <header>
       <div class="mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
-        {% if app.request.get('search') is defined %}
+        {% if app.request.get('search') is defined and app.request.get('search') != "" %}
           <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{'global.searchresult'|trans({'query': app.request.get('search'), 'count': models.getTotalItemCount})}}</h1>
         {% else %}
           <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ 'collection.name'|trans({'name': models[0].modeldatabase.name}) }}</h1>
@@ -28,6 +28,36 @@
               <a href="{{ path('mbs_model_add') }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'model.list.add'|trans }}</a>
             </div>
           </div>
+            <div class="col-span-full mt-5">
+                {% for message in app.flashes('error') %}
+                    <div class="border-l-4 border-red-400 bg-red-50 p-4 dark:border-red-500 dark:bg-red-500/10">
+                        <div class="flex">
+                            <div class="shrink-0">
+                                <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-red-400">
+                                    <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-red-700 dark:text-red-300">{{ message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('success') %}
+                    <div class="border-l-4 border-green-400 bg-green-50 p-4 dark:border-green-500 dark:bg-green-500/10">
+                        <div class="flex">
+                            <div class="shrink-0">
+                                <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-green-400">
+                                    <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700 dark:text-green-300">{{ message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
             {% if models.getTotalItemCount>0 %}
             {{ knp_pagination_render(models) }}
           <div class="mt-8 flow-root">
@@ -37,14 +67,14 @@
                   <thead>
                     <tr>
                       <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'model.list.image'|trans }}</span></th>
-                      <th scope="col" class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0 dark:text-white">
-                          {{ 'model.field.name'|trans }}</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                          {{ 'model.field.category'|trans }}</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                          {{ 'model.field.subcategory'|trans }}</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                          {{ 'model.field.status'|trans }}</th>
+                      <th scope="col" class="py-3.5 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.name'|trans }}</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.manufacturer'|trans }}</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.category'|trans }}</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.subcategory'|trans }}</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.model'|trans }}</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.gtin13'|trans }}</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.status'|trans }}</th>
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.purchased'|trans }}</th>
                       <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'model.list.edit'|trans }}</span></th>
                     </tr>
                   </thead>
@@ -54,7 +84,7 @@
                       <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                           <div class="flex items-center">
                               <div class="size-11 shrink-0">
-                                  <img src="/data/image/{{ model.image }}" alt="" class="size-11 rounded-full dark:outline dark:outline-white/10" />
+                                  <img src="{% if model.image!="" %}{{ asset('data/image/' ~ model.image) }}{% else %}{{ asset('images/blank.svg' ~ model.image) }}{% endif %}" alt="{{ model.name }}" class="size-11 rounded-full dark:outline dark:outline-white/10" />
                               </div>
                           </div>
                       </td>
@@ -63,15 +93,35 @@
                               <div class="font-medium text-gray-900 dark:text-white">{{ model.name }}</div>
                           </div>
                       </td>
+                      <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                          <div class="ml-4">
+                              <div class="font-medium text-gray-900 dark:text-white">{{ model.manufacturer.name is defined ? model.manufacturer.name : '' }}</div>
+                          </div>
+                      </td>
                       <td class="px-3 py-5 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
                           <div class="text-gray-900 dark:text-white">{{ model.category.name }}</div>
                       </td>
                       <td class="px-3 py-5 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
                           <div class="text-gray-900 dark:text-white">{% if model.subcategory is defined and model.subcategory is not null %}{{ model.subcategory.name }}{% endif %}</div>
                       </td>
+                      <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                          <div class="ml-4">
+                              <div class="font-medium text-gray-900 dark:text-white">{{ model.model }}</div>
+                          </div>
+                      </td>
+                      <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                          <div class="ml-4">
+                              <div class="font-medium text-gray-900 dark:text-white">{{ model.gtin13 }}</div>
+                          </div>
+                      </td>
                       <td class="px-3 py-5 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
                           <span class="inline-flex items-center rounded-md bg-{{ model.status.color }}-50 px-2 py-1 text-xs font-medium text-{{ model.status.color }}-700 ring-1 ring-{{ model.status.color }}-600/20 ring-inset dark:bg-{{ model.status.color }}-900/30 dark:text-{{ model.status.color }}-400 dark:ring-{{ model.status.color }}-500/50">{{ model.status.name }}</span>
 
+                      </td>
+                      <td class="px-3 py-5 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                          {% if model.purchased!="" %}
+                          {{ model.purchased|format_date('medium', locale: app.request.locale) }}
+                          {% endif %}
                       </td>
                       <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
                           <a href="{{ path('mbs_model', {id: model.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ 'model.list.edit'|trans }}<span class="sr-only">{{ model.name }}</span></a>

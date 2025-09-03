@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\Decoderfuntion;
+use App\Entity\Pininterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Decoderfuntion>
+ * @extends ServiceEntityRepository<Pininterface>
  */
-class DecoderfuntionRepository extends ServiceEntityRepository
+class PininterfaceRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Decoderfuntion::class);
+        parent::__construct($registry, Pininterface::class);
     }
 
     //    /**
-    //     * @return Decoderfuntion[] Returns an array of Decoderfuntion objects
+    //     * @return Pininterface[] Returns an array of Pininterface objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('d.id', 'ASC')
+    //            ->orderBy('p.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Decoderfuntion
+    //    public function findOneBySomeField($value): ?Pininterface
     //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()

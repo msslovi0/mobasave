@@ -157,6 +157,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Containertype::class, mappedBy: 'user')]
     private Collection $containertypes;
 
+    /**
+     * @var Collection<int, Protocol>
+     */
+    #[ORM\OneToMany(targetEntity: Protocol::class, mappedBy: 'user')]
+    private Collection $protocols;
+
+    /**
+     * @var Collection<int, Decoder>
+     */
+    #[ORM\OneToMany(targetEntity: Decoder::class, mappedBy: 'user')]
+    private Collection $decoders;
+
+    /**
+     * @var Collection<int, Pininterface>
+     */
+    #[ORM\OneToMany(targetEntity: Pininterface::class, mappedBy: 'user')]
+    private Collection $pininterfaces;
+
     public function __construct()
     {
         $this->userdatabases = new ArrayCollection();
@@ -179,6 +197,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->powers = new ArrayCollection();
         $this->couplers = new ArrayCollection();
         $this->containertypes = new ArrayCollection();
+        $this->protocols = new ArrayCollection();
+        $this->decoders = new ArrayCollection();
+        $this->pininterfaces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -856,6 +877,96 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($containertype->getUser() === $this) {
                 $containertype->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Protocol>
+     */
+    public function getProtocols(): Collection
+    {
+        return $this->protocols;
+    }
+
+    public function addProtocol(Protocol $protocol): static
+    {
+        if (!$this->protocols->contains($protocol)) {
+            $this->protocols->add($protocol);
+            $protocol->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProtocol(Protocol $protocol): static
+    {
+        if ($this->protocols->removeElement($protocol)) {
+            // set the owning side to null (unless already changed)
+            if ($protocol->getUser() === $this) {
+                $protocol->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Decoder>
+     */
+    public function getDecoders(): Collection
+    {
+        return $this->decoders;
+    }
+
+    public function addDecoder(Decoder $decoder): static
+    {
+        if (!$this->decoders->contains($decoder)) {
+            $this->decoders->add($decoder);
+            $decoder->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDecoder(Decoder $decoder): static
+    {
+        if ($this->decoders->removeElement($decoder)) {
+            // set the owning side to null (unless already changed)
+            if ($decoder->getUser() === $this) {
+                $decoder->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Pininterface>
+     */
+    public function getPininterfaces(): Collection
+    {
+        return $this->pininterfaces;
+    }
+
+    public function addPininterface(Pininterface $pininterface): static
+    {
+        if (!$this->pininterfaces->contains($pininterface)) {
+            $this->pininterfaces->add($pininterface);
+            $pininterface->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePininterface(Pininterface $pininterface): static
+    {
+        if ($this->pininterfaces->removeElement($pininterface)) {
+            // set the owning side to null (unless already changed)
+            if ($pininterface->getUser() === $this) {
+                $pininterface->setUser(null);
             }
         }
 

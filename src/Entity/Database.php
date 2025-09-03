@@ -22,7 +22,7 @@ class Database
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $icon = null;
 
-    #[ORM\Column(length: 10, nullable: true)]
+    #[ORM\Column(length: 30, nullable: true)]
     private ?string $color = null;
 
     #[ORM\ManyToOne(inversedBy: 'userdatabases')]

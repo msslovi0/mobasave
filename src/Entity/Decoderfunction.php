@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\DecoderfuntionRepository;
+use App\Repository\DecoderfunctionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: DecoderfuntionRepository::class)]
-#[ORM\Table(name: 'mbs_decoderfuntion')]
-class Decoderfuntion
+#[ORM\Entity(repositoryClass: DecoderfunctionRepository::class)]
+#[ORM\Table(name: 'mbs_decoderfunction')]
+class Decoderfunction
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

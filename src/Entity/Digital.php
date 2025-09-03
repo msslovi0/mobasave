@@ -19,12 +19,6 @@ class Digital
     #[ORM\Column(nullable: true)]
     private ?int $address = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $interface = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $decoder = null;
-
     /**
      * @var Collection<int, DigitalFunction>
      */
@@ -36,6 +30,18 @@ class Digital
      */
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'digital')]
     private Collection $models;
+
+    #[ORM\ManyToOne(inversedBy: 'digitals')]
+    private ?Protocol $protocol = null;
+
+    #[ORM\ManyToOne(inversedBy: 'digitals')]
+    private ?Decoder $decoder = null;
+
+    #[ORM\ManyToOne(inversedBy: 'digitals')]
+    private ?Pininterface $pininterface = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $import = null;
 
         public function __construct()
         {
@@ -56,30 +62,6 @@ class Digital
     public function setAddress(?int $address): static
     {
         $this->address = $address;
-
-        return $this;
-    }
-
-    public function getInterface(): ?string
-    {
-        return $this->interface;
-    }
-
-    public function setInterface(?string $interface): static
-    {
-        $this->interface = $interface;
-
-        return $this;
-    }
-
-    public function getDecoder(): ?string
-    {
-        return $this->decoder;
-    }
-
-    public function setDecoder(?string $decoder): static
-    {
-        $this->decoder = $decoder;
 
         return $this;
     }
@@ -140,6 +122,54 @@ class Digital
                 $model->setDigital(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getProtocol(): ?Protocol
+    {
+        return $this->protocol;
+    }
+
+    public function setProtocol(?Protocol $protocol): static
+    {
+        $this->protocol = $protocol;
+
+        return $this;
+    }
+
+    public function getDecoder(): ?Decoder
+    {
+        return $this->decoder;
+    }
+
+    public function setDecoder(?Decoder $decoder): static
+    {
+        $this->decoder = $decoder;
+
+        return $this;
+    }
+
+    public function getPininterface(): ?Pininterface
+    {
+        return $this->pininterface;
+    }
+
+    public function setPininterface(?Pininterface $pininterface): static
+    {
+        $this->pininterface = $pininterface;
+
+        return $this;
+    }
+
+    public function getImport(): ?string
+    {
+        return $this->import;
+    }
+
+    public function setImport(?string $import): static
+    {
+        $this->import = $import;
 
         return $this;
     }

@@ -1,5 +1,5 @@
 footer:
-    claim: © {year} Modellbahnerei. A F&amp;W project. Made with <span class="text-red-500">♥</span> in Mainz.
+    claim: © {year} Modellbahnerei. A <a href='https://fwrw.co/' class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline" target='_blank' rel='noopener'>F&amp;W</a> project. Made with <span class="text-red-500">♥</span> in Mainz.
 collection:
     name: Collection “{name}”
     no-collection:
@@ -35,17 +35,26 @@ global:
     logout: Logout
     title:
         index: MoBaSaVe - Welcome!
+        search: Search result for “{query}”
+        addmodel: Add model
     back: Back
     nav:
         model: Model
         details: Details
+        digital: Digital
     error:
         filetype-invalid: Not a valid filetype
 model:
     list:
         add: Add model
         edit: Edit
+        image: Image
     details: Details {category}
+    delete:
+        delete: Delete
+        cancel: Cancel
+        headline: Delete model
+        text: The model will be deleted. This action is not reversable! Proceed with caution!
     field:
         name: Name
         model: Model
@@ -96,9 +105,14 @@ model:
         dccready: DCC ready
         containertype: Container Type
         year: Build Year
+        address: Address
+        interface: Interface
+        decoder: Decoder
+        protocol: Protocol
     saved: Your changes to “{name}” where saved successfully
     nodetails: This category has no detail information
     created: Your model “{name}” was created successfully
+    deleted: Your model “{name}” was deleted
 
 status:
     notfound:

@@ -2,22 +2,24 @@
 
 namespace App\Entity;
 
-use App\Repository\ModelLoaditemRepository;
+use App\Repository\ModelloadRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ModelLoaditemRepository::class)]
-#[ORM\Table(name: 'mbs_model_loaditem')]
-class ModelLoaditem
+#[ORM\Entity(repositoryClass: ModelloadRepository::class)]
+#[ORM\Table(name: 'mbs_modelload')]
+class Modelload
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'modelLoaditems')]
+    #[ORM\ManyToOne(inversedBy: 'modelloads')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Model $model = null;
 
-    #[ORM\ManyToOne(inversedBy: 'modelLoaditems')]
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Model $loaditem = null;
 
     public function getId(): ?int

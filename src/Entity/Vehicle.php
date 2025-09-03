@@ -34,7 +34,7 @@ class Vehicle
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'vehicle')]
     private Collection $models;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 10, nullable: true)]
     private ?string $import = null;
 
     public function __construct()

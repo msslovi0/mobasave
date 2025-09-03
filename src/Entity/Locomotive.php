@@ -59,8 +59,11 @@ class Locomotive
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nickname = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 10, nullable: true)]
     private ?string $import = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $dimport = null;
 
     public function __construct()
     {
@@ -254,6 +257,18 @@ class Locomotive
     public function setImport(string $import): static
     {
         $this->import = $import;
+
+        return $this;
+    }
+
+    public function getDimport(): ?string
+    {
+        return $this->dimport;
+    }
+
+    public function setDimport(?string $dimport): static
+    {
+        $this->dimport = $dimport;
 
         return $this;
     }

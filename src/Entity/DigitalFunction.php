@@ -24,7 +24,7 @@ class DigitalFunction
 
     #[ORM\ManyToOne(inversedBy: 'digitalFunctions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Decoderfuntion $decoderfunction = null;
+    private ?Decoderfunction $decoderfunction = null;
 
     public function getId(): ?int
     {
@@ -55,12 +55,12 @@ class DigitalFunction
         return $this;
     }
 
-    public function getDecoderfunction(): ?Decoderfuntion
+    public function getDecoderfunction(): ?Decoderfunction
     {
         return $this->decoderfunction;
     }
 
-    public function setDecoderfunction(?Decoderfuntion $decoderfunction): static
+    public function setDecoderfunction(?Decoderfunction $decoderfunction): static
     {
         $this->decoderfunction = $decoderfunction;
 

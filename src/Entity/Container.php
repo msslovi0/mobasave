@@ -31,7 +31,7 @@ class Container
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'container')]
     private Collection $models;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 10, nullable: true)]
     private ?string $import = null;
 
     public function __construct()

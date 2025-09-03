@@ -19,7 +19,7 @@ class Category
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 7, nullable: true)]
+    #[ORM\Column(length: 30, nullable: true)]
     private ?string $color = null;
 
     /**

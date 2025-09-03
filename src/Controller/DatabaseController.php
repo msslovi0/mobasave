@@ -20,7 +20,7 @@ use App\Entity\Dealer;
 use App\Entity\Country;
 use App\Entity\Box;
 use App\Entity\Condition;
-use App\Entity\Maker;
+use App\Entity\Digital;
 use App\Entity\Axle;
 use App\Entity\Power;
 use App\Entity\Coupler;
@@ -29,8 +29,12 @@ use App\Entity\Car;
 use App\Entity\Container;
 use App\Entity\Vehicle;
 use App\Entity\Tram;
+use App\Entity\Decoder;
+use App\Entity\Protocol;
+use App\Entity\Pininterface;
 use BcMath\Number;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -53,6 +57,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Validator\Constraints\File;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 
 class DatabaseController extends AbstractController
 {
@@ -78,7 +84,7 @@ class DatabaseController extends AbstractController
         }
         $request->getSession()->set('database', $id);
 
-        $models = $entityManager->getRepository(Model::class)->findBy(["modeldatabase" => $database]);
+        $models = $entityManager->getRepository(Model::class)->findBy(["modeldatabase" => $database], ['purchased' => 'DESC']);
 
         $pagination = $paginator->paginate(
             $models,
@@ -107,6 +113,10 @@ class DatabaseController extends AbstractController
             ->leftJoin('o.containertype','ot','WITH','o.containertype = ot.id')
             ->where(
                 $qb->expr()->like('m.name', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('m.gtin13', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('m.model', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
                 $qb->expr()->like('l.class', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
@@ -146,8 +156,61 @@ class DatabaseController extends AbstractController
         ]);
 
     }
+    #[Route('/model/delete/{id}', name: 'mbs_model_delete', methods: ['GET'])]
+    public function delete(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+        $database = $request->getSession()->get('database');
+        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $this->render('status/notfound.html.twig', response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            return $this->render('status/forbidden.html.twig', response: $response);
+        }
+        switch($model->getCategory()->getId()) {
+            case 1:
+                $detail = $model->getLocomotive();
+                $entityManager->remove($detail);
+                break;
+            case 2:
+                $detail = $model->getCar();
+                $entityManager->remove($detail);
+                break;
+            case 3:
+                $detail = $model->getContainer();
+                $entityManager->remove($detail);
+                break;
+            case 6:
+                $detail = $model->getVehicle();
+                $entityManager->remove($detail);
+                break;
+            case 7:
+                $detail = $model->getTram();
+                $entityManager->remove($detail);
+                break;
+        }
+        $digital = $model->getDigital();
+        $entityManager->remove($digital);
+        $entityManager->remove($model);
+        $this->addFlash(
+            'success',
+            $translator->trans('model.deleted', ['name' => $model->getName()])
+        );
+        $entityManager->flush();
+        return $this->redirectToRoute('mbs_database', ['id' => $database]);
+
+
+    }
+
+
     #[Route('/model/add/', name: 'mbs_model_add', methods: ['GET','POST'])]
-    public function add(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    public function add(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/image')] string $imageDirectory): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
@@ -242,25 +305,36 @@ class DatabaseController extends AbstractController
             switch($model->getCategory()->getId()) {
                 case 1:
                 $detail = new Locomotive();
+                $detail->setDigital(0);
+                $detail->setSound(0);
+                $detail->setSmoke(0);
+                $detail->setDccready(0);
+                $entityManager->persist($detail);
                 $model->setLocomotive($detail);
                 break;
                 case 2:
                 $detail = new Car();
+                $entityManager->persist($detail);
                 $model->setCar($detail);
                 break;
                 case 3:
                 $detail = new Container();
+                $entityManager->persist($detail);
                 $model->setContainer($detail);
                 break;
                 case 6:
                 $detail = new Vehicle();
+                $entityManager->persist($detail);
                 $model->setVehicle($detail);
                 break;
                 case 7:
                 $detail = new Tram();
+                $entityManager->persist($detail);
                 $model->setTram($detail);
                 break;
             }
+            $digital = new Digital();
+            $model->setDigital($digital);
             $model->setCreated(new \DateTime('now'));
             $model->setUpdated(new \DateTime('now'));
             $model->setModeldatabase($database);
@@ -298,16 +372,16 @@ class DatabaseController extends AbstractController
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
             return $this->render('status/forbidden.html.twig', response: $response);
         }
+        $qb             = $entityManager->createQueryBuilder();
         $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]));
         $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]));
-        $subcategory    = $entityManager->getRepository(Subcategory::class)->findBy(array("user" => [null, $user->getId()]));
-        $subcategory    = $model->getCategory()->getSubcategories();
+        $subcategory    = $qb->select('s')->from(Subcategory::class, 's')->where($qb->expr()->orX($qb->expr()->isNull('s.user'), $qb->expr()->eq('s.user', ':user'),))->andWhere('s.category = :category')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('category',  $model->getCategory())]))->orderBy('s.name')->getQuery()->getResult();
         $manufacturer   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]));
         $company        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]));
         $scale          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]));
-        $track          = $entityManager->getRepository(ScaleTrack::class)->findBy(array("user" => [null, $user->getId()]));
+        $track          = $qb->select('t')->from(ScaleTrack::class, 't')->where($qb->expr()->orX($qb->expr()->isNull('t.user'), $qb->expr()->eq('t.user', ':user'),))->andWhere('t.scale = :scale')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('scale',  $model->getScale())]))->getQuery()->getResult();
         $epoch          = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, $user->getId()]));
-        $subepoch       = $entityManager->getRepository(Subepoch::class)->findBy(array("user" => [null, $user->getId()]));
+        $subepoch        = $qb->select('se')->from(Subepoch::class, 'se')->where($qb->expr()->orX($qb->expr()->isNull('se.user'), $qb->expr()->eq('se.user', ':user'),))->andWhere('se.epoch = :epoch')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('epoch',  $model->getEpoch())]))->getQuery()->getResult();
         $storage        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]));
         $project        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, $user->getId()]));
         $dealer         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]));
@@ -511,6 +585,109 @@ class DatabaseController extends AbstractController
     #[Route('/model/{id}/digital/', name: 'mbs_model_digital', methods: ['GET','POST'])]
     public function digital(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
-        return new Response('geht');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+
+        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $this->render('status/notfound.html.twig', response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            return $this->render('status/forbidden.html.twig', response: $response);
+        }
+
+        $protocol       = $entityManager->getRepository(Protocol::class)->findBy(array("user" => [null, $user->getId()]));
+        $decoder        = $entityManager->getRepository(Decoder::class)->findBy(array("user" => [null, $user->getId()]));
+        $interface      = $entityManager->getRepository(Pininterface::class)->findBy(array("user" => [null, $user->getId()]));
+
+        $digital = $model->getDigital();
+        $template = "collection/digital.html.twig";
+        $form = $this->createFormBuilder($digital)
+            ->add('address', NumberType::class, ['required' => false])
+            ->add('protocol', ChoiceType::class, ['choices' => $protocol, 'choice_label' => 'name', 'required' => false])
+            ->add('decoder', ChoiceType::class, ['choices' => $decoder, 'choice_label' => 'name', 'required' => false])
+            ->add('pininterface', ChoiceType::class, ['choices' => $interface, 'choice_label' => 'name', 'required' => false]);
+
+        $form = $form->getForm();
+
+        $form->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $model->setUpdated(new \DateTime('now'));
+            $entityManager->persist($model);
+            $entityManager->persist($digital);
+            $entityManager->flush();
+            $this->addFlash(
+                'success',
+                $translator->trans('model.saved', ['name' => $model->getName()])
+            );
+            return $this->redirectToRoute('mbs_model_digital', ['id' => $model->getId()]);
+        }
+        return $this->render($template, [
+            "digitalform" => $form->createView(),
+            "model" => $model,
+            "digital" => $digital,
+        ]);
+    }
+    #[Route('/api/subcategory/', name: 'mbs_api_subcategory', format: 'json', methods: ['POST'])]
+    public function subcategory(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $id = $request->get('id');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+        $qb = $entityManager->createQueryBuilder();
+        $subcategories    = $qb->select('s')->from(Subcategory::class, 's')->where($qb->expr()->orX($qb->expr()->isNull('s.user'), $qb->expr()->eq('s.user', ':user'),))->andWhere('s.category = :category')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('category',  $id)]))->orderBy('s.name')->getQuery()->getResult();
+
+        foreach($subcategories as $subcategory) {
+            $data[$subcategory->getId()] = $subcategory->getName();
+        }
+
+        if(isset($data)) {
+            return new JsonResponse($data);
+        } else {
+            return new Response('{}');
+        }
+    }
+    #[Route('/api/track/', name: 'mbs_api_track', format: 'json', methods: ['POST'])]
+    public function track(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $id = $request->get('id');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+        $qb = $entityManager->createQueryBuilder();
+        $tracks          = $qb->select('t')->from(ScaleTrack::class, 't')->where($qb->expr()->orX($qb->expr()->isNull('t.user'), $qb->expr()->eq('t.user', ':user'),))->andWhere('t.scale = :scale')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('scale',  $id)]))->getQuery()->getResult();
+
+        foreach($tracks as $track) {
+            $data[$track->getId()] = $track->getName();
+        }
+
+        if(isset($data)) {
+            return new JsonResponse($data);
+        } else {
+            return new Response('{}');
+        }
+    }
+    #[Route('/api/subepoch/', name: 'mbs_api_subepoch', format: 'json', methods: ['POST'])]
+    public function subepoch(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $id = $request->get('id');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+        $qb = $entityManager->createQueryBuilder();
+        $subepochs        = $qb->select('se')->from(Subepoch::class, 'se')->where($qb->expr()->orX($qb->expr()->isNull('se.user'), $qb->expr()->eq('se.user', ':user'),))->andWhere('se.epoch = :epoch')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('epoch',  $id)]))->getQuery()->getResult();
+
+        foreach($subepochs as $subepoch) {
+            $data[$subepoch->getId()] = $subepoch->getName();
+        }
+
+        if(isset($data)) {
+            return new JsonResponse($data);
+        } else {
+            return new Response('{}');
+        }
     }
 }

@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\ModelLoaditem;
+use App\Entity\Modelload;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ModelLoaditem>
+ * @extends ServiceEntityRepository<Modelload>
  */
-class ModelLoaditemRepository extends ServiceEntityRepository
+class ModelloadRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ModelLoaditem::class);
+        parent::__construct($registry, Modelload::class);
     }
 
     //    /**
-    //     * @return ModelLoaditem[] Returns an array of ModelLoaditem objects
+    //     * @return Modelload[] Returns an array of Modelload objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class ModelLoaditemRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?ModelLoaditem
+    //    public function findOneBySomeField($value): ?Modelload
     //    {
     //        return $this->createQueryBuilder('m')
     //            ->andWhere('m.exampleField = :val')

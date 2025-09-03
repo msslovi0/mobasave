@@ -25,7 +25,7 @@ class Status
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'status')]
     private Collection $models;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 30)]
     private ?string $color = null;
 
     #[ORM\ManyToOne(inversedBy: 'statuses')]
