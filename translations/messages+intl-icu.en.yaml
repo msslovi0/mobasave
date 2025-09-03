@@ -39,6 +39,8 @@ global:
     nav:
         model: Model
         details: Details
+    error:
+        filetype-invalid: Not a valid filetype
 model:
     list:
         add: Add model

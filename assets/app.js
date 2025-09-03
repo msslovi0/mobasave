@@ -48,6 +48,8 @@ function dropHandler(ev) {
         if (item.kind === "file") {
             const file = item.getAsFile();
             if (validFileType(file)) {
+                document.getElementById(('filetype-error')).classList.add('hidden');
+                document.getElementById(('drop-zone')).classList.remove('border-red-600','dark:border-red-400');
                 const src = URL.createObjectURL(file);
                 const image = document.createElement("img");
                 image.classList.add('mx-auto','size-12','text-gray-300','dark:text-gray-500');
@@ -57,6 +59,8 @@ function dropHandler(ev) {
                 document.getElementById('icon-holder').append(image);
                 console.log(document.getElementById('form_image').value);
             } else {
+                document.getElementById(('filetype-error')).classList.remove('hidden');
+                document.getElementById(('drop-zone')).classList.add('border-red-600','dark:border-red-400');
                 console.log('wrong.file.type');
             }
         }
