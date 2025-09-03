@@ -106,9 +106,12 @@ model:
         containertype: Container Type
         year: Build Year
         address: Address
-        interface: Interface
+        pininterface: Interface
         decoder: Decoder
         protocol: Protocol
+        functions: Functions
+        function: Function
+        functionkey: Key
     saved: Your changes to “{name}” where saved successfully
     nodetails: This category has no detail information
     created: Your model “{name}” was created successfully

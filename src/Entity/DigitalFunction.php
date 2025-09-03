@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\DigitalFunctionRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DigitalFunctionRepository::class)]
@@ -25,6 +26,9 @@ class DigitalFunction
     #[ORM\ManyToOne(inversedBy: 'digitalFunctions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Decoderfunction $decoderfunction = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $hint = null;
 
     public function getId(): ?int
     {
@@ -63,6 +67,18 @@ class DigitalFunction
     public function setDecoderfunction(?Decoderfunction $decoderfunction): static
     {
         $this->decoderfunction = $decoderfunction;
+
+        return $this;
+    }
+
+    public function getHint(): ?string
+    {
+        return $this->hint;
+    }
+
+    public function setHint(?string $hint): static
+    {
+        $this->hint = $hint;
 
         return $this;
     }

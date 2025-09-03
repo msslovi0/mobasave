@@ -32,6 +32,9 @@ use App\Entity\Tram;
 use App\Entity\Decoder;
 use App\Entity\Protocol;
 use App\Entity\Pininterface;
+use App\Entity\DigitalFunction;
+use App\Entity\Functionkey;
+use App\Entity\Decoderfunction;
 use BcMath\Number;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -627,10 +630,21 @@ class DatabaseController extends AbstractController
             );
             return $this->redirectToRoute('mbs_model_digital', ['id' => $model->getId()]);
         }
+        $digitalfunctions = $entityManager->getRepository(DigitalFunction::class)->findBy(array("digital" => [$digital]));
+        $functions = [];
+        $qb = $entityManager->createQueryBuilder();
+        // $digitalfunctions    = $qb->select('df','d','f')->from(DigitalFunction::class, 'df')->join(Functionkey::class, 'f')->join(Decoderfunction::class, 'd')->where('df.functionkey = f.id and df.decoderfunction=d.id and df.digital = :digital')->setParameters(new ArrayCollection([new Parameter('digital',  $digital)]))->getQuery()->getResult();
+        // echo count($digitalfunctions);
+
+        foreach($digitalfunctions as $digitalfunction) {
+            $functions[str_replace("F","",$digitalfunction->getFunctionkey()->getName())][] = ["key" => $digitalfunction->getFunctionkey()->getName(), "name" => $digitalfunction->getDecoderfunction()->getName(), "sound" => $digitalfunction->getDecoderfunction()->getSound(), "light" => $digitalfunction->getDecoderfunction()->getLight(), "hint" => $digitalfunction->getHint()];
+        }
+        ksort($functions);
         return $this->render($template, [
             "digitalform" => $form->createView(),
             "model" => $model,
             "digital" => $digital,
+            "functions" => $functions,
         ]);
     }
     #[Route('/api/subcategory/', name: 'mbs_api_subcategory', format: 'json', methods: ['POST'])]

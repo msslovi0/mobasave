@@ -62,6 +62,9 @@ class ImportFunctionsCommand {
             } else {
                 $output->writeln('<fg=yellow>◇ Existing Digital Function</> ('.$model->getName().', '.$functionkey->getName().', '.$decoderfunction->getName().')');
             }
+            if($data[2]!="") {
+                $digitalfunction->setHint($data[2]);
+            }
             $digitalfunction->setDigital($digital);
             $digitalfunction->setFunctionkey($functionkey);
             $digitalfunction->setDecoderfunction($decoderfunction);
