@@ -82,20 +82,36 @@
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_category" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.category'|trans }}</label>
-                        <div class="grid grid-cols-1">
+                        <div class="grid grid-cols-10 gap-2">
+                            <div class="grid grid-cols-1 col-span-9">
                             {{ form_widget(modelform.category, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700', 'data-path': path('mbs_api_subcategory')}}) }}
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
                         </div>
+                        <button type="button" command="show-modal" class="add-value" data-parent='category' data-title="{{ 'model.field.category'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.category'|trans}) }}" data-entity="category" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                            <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                        </button>
+                        </div>
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_subcategory" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.subcategory'|trans }}</label>
-                        <div class="grid grid-cols-1">
+                        <div class="grid grid-cols-10 gap-2">
+                            <div class="grid grid-cols-1 col-span-9">
                             {{ form_widget(modelform.subcategory, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
+                        </div>
+                        <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.subcategory'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.subcategory'|trans}) }}" data-entity="subcategory" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                            <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                        </button>
                         </div>
                     </div>
                     <div class="sm:col-span-3">
@@ -112,11 +128,19 @@
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_manufacturer" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.manufacturer'|trans }}</label>
-                        <div class="grid grid-cols-1">
+                        <div class="grid grid-cols-10 gap-2">
+                            <div class="grid grid-cols-1 col-span-9">
                             {{ form_widget(modelform.manufacturer, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
+                        </div>
+                        <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.manufacturer'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.manufacturer'|trans}) }}" data-entity="manufacturer" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                            <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                        </button>
                         </div>
                     </div>
                     <div class="sm:col-span-3">
@@ -127,11 +151,19 @@
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_company" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.company'|trans }}</label>
-                        <div class="grid grid-cols-1">
+                        <div class="grid grid-cols-10 gap-2">
+                            <div class="grid grid-cols-1 col-span-9">
                             {{ form_widget(modelform.company, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
+                        </div>
+                        <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.company'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.company'|trans}) }}" data-entity="company" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                            <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                        </button>
                         </div>
                     </div>
                     <div class="sm:col-span-3">
@@ -150,11 +182,19 @@
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_country" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.country'|trans }}</label>
-                        <div class="grid grid-cols-1">
+                        <div class="grid grid-cols-10 gap-2">
+                            <div class="grid grid-cols-1 col-span-9">
                             {{ form_widget(modelform.country, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
+                        </div>
+                        <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.country'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.country'|trans}) }}" data-entity="country" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                            <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                        </button>
                         </div>
                     </div>
                     <div class="sm:col-span-3">
@@ -163,65 +203,122 @@
                         <span class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.gauge'|trans }}</span>
                         <div class="grid grid-cols-2 gap-2">
                             <label for="form_scale" class="sr-only">{{ 'model.field.scale'|trans }}</label>
-                            <div class="grid grid-cols-1">
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 col-span-9 mr-2">
                                 {{ form_widget(modelform.scale, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700', 'data-path': path('mbs_api_track')}}) }}
                                 <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                     <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                                 </svg>
                             </div>
+                            <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.scale'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.scale'|trans}) }}" data-entity="scale" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                </svg>
+                                <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                            </button>
+                            </div>
                             <label for="form_track" class="sr-only">{{ 'model.field.track'|trans }}</label>
-                            <div class="grid grid-cols-1">
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 col-span-9 mr-2">
                                 {{ form_widget(modelform.track, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
                                 <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                     <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                                 </svg>
+                            </div>
+                                <button type="button" command="show-modal" class="add-value" data-parent='scale' data-title="{{ 'model.field.track'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.track'|trans}) }}" data-entity="track" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                    </svg>
+                                    <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="sm:col-span-3">
                         <span class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.epoch'|trans }}</span>
                         <div class="grid grid-cols-2 gap-2">
-                            <label for="form_epoch" class="sr-only">{{ 'model.field.scale'|trans }}</label>
-                            <div class="grid grid-cols-1">
-                                {{ form_widget(modelform.epoch, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700', 'data-path': path('mbs_api_subepoch')}}) }}
-                                <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
-                                    <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
-                                </svg>
+                            <label for="form_epoch" class="sr-only">{{ 'model.field.epoch'|trans }}</label>
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 col-span-9 mr-2">
+                                    {{ form_widget(modelform.epoch, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700', 'data-path': path('mbs_api_track')}}) }}
+                                    <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                                        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.epoch'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.epoch'|trans}) }}" data-entity="epoch" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                    </svg>
+                                    <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                                </button>
                             </div>
-                            <label for="form_subepoch" class="sr-only">{{ 'model.field.track'|trans }}</label>
-                            <div class="grid grid-cols-1">
-                                {{ form_widget(modelform.subepoch, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
-                                <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
-                                    <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
-                                </svg>
+                            <label for="form_subepoch" class="sr-only">{{ 'model.field.subepoch'|trans }}</label>
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 col-span-9 mr-2">
+                                    {{ form_widget(modelform.subepoch, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                    <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                                        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <button type="button" command="show-modal" class="add-value" data-parent='epoch' data-title="{{ 'model.field.subepoch'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.subepoch'|trans}) }}" data-entity="subepoch" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                    </svg>
+                                    <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                                </button>
                             </div>
                         </div>
+
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_storage" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.storage'|trans }}</label>
-                        <div class="grid grid-cols-1">
+                        <div class="grid grid-cols-10 gap-2">
+                            <div class="grid grid-cols-1 col-span-9">
                             {{ form_widget(modelform.storage, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
                         </div>
+                        <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.storage'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.storage'|trans}) }}" data-entity="storage" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                            <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                        </button>
+                        </div>
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_box" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.box'|trans }}</label>
-                        <div class="grid grid-cols-1">
+                        <div class="grid grid-cols-10 gap-2">
+                            <div class="grid grid-cols-1 col-span-9">
                             {{ form_widget(modelform.box, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
                         </div>
+                        <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.box'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.box'|trans}) }}" data-entity="box" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                            <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                        </button>
+                        </div>
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_project" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.project'|trans }}</label>
-                        <div class="grid grid-cols-1">
+                        <div class="grid grid-cols-10 gap-2">
+                            <div class="grid grid-cols-1 col-span-9">
                             {{ form_widget(modelform.project, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
+                        </div>
+                        <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.project'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.project'|trans}) }}" data-entity="project" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                            <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                        </button>
                         </div>
                     </div>
                     <div class="sm:col-span-3 row-span-3">
@@ -274,20 +371,36 @@
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_modelcondition" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.condition'|trans }}</label>
-                        <div class="grid grid-cols-1">
+                        <div class="grid grid-cols-10 gap-2">
+                            <div class="grid grid-cols-1 col-span-9">
                             {{ form_widget(modelform.modelcondition, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
                         </div>
+                        <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.condition'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.condition'|trans}) }}" data-entity="condition" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                            <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                        </button>
+                        </div>
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_status" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.status'|trans }}</label>
-                        <div class="grid grid-cols-1">
+                        <div class="grid grid-cols-10 gap-2">
+                            <div class="grid grid-cols-1 col-span-9">
                             {{ form_widget(modelform.status, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
+                        </div>
+                        <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.status'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.status'|trans}) }}" data-entity="status" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                            <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                        </button>
                         </div>
                     </div>
                     <div class="col-span-full">
@@ -317,12 +430,21 @@
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_dealer" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.dealer'|trans }}</label>
-                        <div class="grid grid-cols-1">
+                        <div class="grid grid-cols-10 gap-2">
+                            <div class="grid grid-cols-1 col-span-9">
                             {{ form_widget(modelform.dealer, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
                         </div>
+                        <button type="button" command="show-modal" class="add-value" data-title="{{ 'model.field.dealer'|trans }}" data-label="{{ 'model.field.new'|trans({'name': 'model.field.dealer'|trans}) }}" data-entity="dealer" commandfor="drawer" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                            <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                        </button>
+                        </div>
+
                     </div>
                     <div class="sm:col-span-3">
                         <label for="form_msrp" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.msrp'|trans }}</label>
@@ -356,6 +478,44 @@
     <script src="{{ asset('js/jquery-3.7.1.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/model.js') }}" type="text/javascript"></script>
     {% if model.id is defined and model.id != "" %}
+        <el-dialog>
+            <dialog id="drawer" aria-labelledby="drawer-title" class="fixed inset-0 size-auto max-h-none max-w-none overflow-hidden bg-transparent not-open:hidden backdrop:bg-transparent">
+                <el-dialog-backdrop class="absolute inset-0 bg-gray-500/75 transition-opacity duration-500 ease-in-out data-closed:opacity-0 dark:bg-gray-900/50"></el-dialog-backdrop>
+
+                <div tabindex="0" class="absolute inset-0 pl-10 focus:outline-none sm:pl-16">
+                    <el-dialog-panel class="ml-auto block size-full max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700">
+                        <div class="relative flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl dark:bg-gray-800 dark:after:absolute dark:after:inset-y-0 dark:after:left-0 dark:after:w-px dark:after:bg-white/10">
+                            <div class="px-4 sm:px-6">
+                                <div class="flex items-start justify-between">
+                                    <h2 id="drawer-title" class="text-base font-semibold text-gray-900 dark:text-white">Panel title</h2>
+                                    <div class="ml-3 flex h-7 items-center">
+                                        <button type="button" command="close" id="close-drawer" commandfor="drawer" class="relative rounded-md text-gray-400 hover:text-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:hover:text-white dark:focus-visible:outline-green-700">
+                                            <span class="absolute -inset-2.5"></span>
+                                            <span class="sr-only">Close panel</span>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+                                                <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="relative mt-6 flex-1 px-4 sm:px-6">
+                                <input type="hidden" name="drawer-entity" id="drawer-entity"/>
+                                <input type="hidden" name="drawer-path" id="drawer-path" value="{{ path('mbs_value_new') }}"/>
+                                <label for="drawer-name" id="drawer-label" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.new'|trans }}</label>
+                                <div class="grid grid-cols-1">
+                                    <input type="text" name="new" id="drawer-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700"/>
+                                </div>
+                                <div class="grid grid-cols-1 mt-3">
+                                    <button type="button" id="add-value" class="rounded-md bg-green-800 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:focus-visible:outline-green-700">{{ 'model.function.add'|trans }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </el-dialog-panel>
+                </div>
+            </dialog>
+        </el-dialog>
+
         <el-dialog>
             <dialog id="dialog" aria-labelledby="dialog-title" class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
                 <el-dialog-backdrop class="fixed inset-0 bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in dark:bg-gray-900/50"></el-dialog-backdrop>

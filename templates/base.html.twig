@@ -12,7 +12,7 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="{{ app.request.attributes.get("_route") }} mx-100 md:mx-50">
+    <body class="{{ app.request.attributes.get("_route") }} lg:mx-100 md:mx-50 sm:mx-0">
         {%  include 'nav.html.twig' %}
         {% block body %}{% endblock %}
         {%  include 'footer.html.twig' %}

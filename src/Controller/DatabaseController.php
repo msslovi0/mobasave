@@ -110,6 +110,8 @@ class DatabaseController extends AbstractController
             ->leftJoin('m.container','o','WITH','m.container = o.id')
             ->leftJoin('m.vehicle','v','WITH','m.vehicle = v.id')
             ->leftJoin('m.tram','t','WITH','m.tram = t.id')
+            ->leftJoin('m.dealer','d','WITH','m.dealer = d.id')
+            ->leftJoin('m.manufacturer','w','WITH','m.manufacturer = w.id')
             ->leftJoin('l.maker','lm','WITH','l.maker = lm.id')
             ->leftJoin('v.maker','vm','WITH','v.maker = vm.id')
             ->leftJoin('t.maker','tm','WITH','t.maker = tm.id')
@@ -120,6 +122,10 @@ class DatabaseController extends AbstractController
                 $qb->expr()->like('m.gtin13', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
                 $qb->expr()->like('m.model', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('d.name', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('w.name', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
                 $qb->expr()->like('l.class', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
@@ -157,6 +163,35 @@ class DatabaseController extends AbstractController
         return $this->render('collection/list.html.twig', [
             "models" => $pagination
         ]);
+
+    }
+    #[Route('/model/function/delete/{id}', name: 'mbs_model_function_delete', methods: ['GET'])]
+    public function deleteFunction(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
+    {
+        $digitalfunction = $entityManager->getRepository(DigitalFunction::class)->findOneBy(["id" =>$id]);
+        $user = $this->security->getUser();
+        $models = $digitalfunction->getDigital()->getModels();
+        $model = $models[0];
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $this->render('status/notfound.html.twig', response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            return $this->render('status/forbidden.html.twig', response: $response);
+        }
+
+        $model->setUpdated(new \DateTime());
+        $entityManager->remove($digitalfunction);
+        $entityManager->persist($model);
+        $this->addFlash(
+            'success',
+            $translator->trans('model.function.deleted', ['function' => $digitalfunction->getFunctionkey()->getName()." ".$digitalfunction->getDecoderfunction()->getName()])
+        );
+        $entityManager->flush();
+        return $this->redirectToRoute('mbs_model_digital', ['id' => $model->getId()]);
 
     }
     #[Route('/model/delete/{id}', name: 'mbs_model_delete', methods: ['GET'])]
@@ -606,6 +641,7 @@ class DatabaseController extends AbstractController
         $protocol       = $entityManager->getRepository(Protocol::class)->findBy(array("user" => [null, $user->getId()]));
         $decoder        = $entityManager->getRepository(Decoder::class)->findBy(array("user" => [null, $user->getId()]));
         $interface      = $entityManager->getRepository(Pininterface::class)->findBy(array("user" => [null, $user->getId()]));
+        $functionkey    = $entityManager->getRepository(Functionkey::class)->findBy([], ['sort' => 'ASC']);
 
         $digital = $model->getDigital();
         $template = "collection/digital.html.twig";
@@ -630,14 +666,12 @@ class DatabaseController extends AbstractController
             );
             return $this->redirectToRoute('mbs_model_digital', ['id' => $model->getId()]);
         }
-        $digitalfunctions = $entityManager->getRepository(DigitalFunction::class)->findBy(array("digital" => [$digital]));
         $functions = [];
         $qb = $entityManager->createQueryBuilder();
-        // $digitalfunctions    = $qb->select('df','d','f')->from(DigitalFunction::class, 'df')->join(Functionkey::class, 'f')->join(Decoderfunction::class, 'd')->where('df.functionkey = f.id and df.decoderfunction=d.id and df.digital = :digital')->setParameters(new ArrayCollection([new Parameter('digital',  $digital)]))->getQuery()->getResult();
-        // echo count($digitalfunctions);
+        $digitalfunctions    = $qb->select('df.id', 'df.hint','d.name as decoderfunction','f.name as functionkey', 'f.sort', 'd.light', 'd.sound')->from(DigitalFunction::class, 'df')->join(Functionkey::class, 'f')->join(Decoderfunction::class, 'd')->where('df.functionkey = f.id and df.decoderfunction=d.id and df.digital = :digital')->setParameters(new ArrayCollection([new Parameter('digital',  $digital)]))->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
 
         foreach($digitalfunctions as $digitalfunction) {
-            $functions[str_replace("F","",$digitalfunction->getFunctionkey()->getName())][] = ["key" => $digitalfunction->getFunctionkey()->getName(), "name" => $digitalfunction->getDecoderfunction()->getName(), "sound" => $digitalfunction->getDecoderfunction()->getSound(), "light" => $digitalfunction->getDecoderfunction()->getLight(), "hint" => $digitalfunction->getHint()];
+            $functions[$digitalfunction['sort']][] = ["key" => $digitalfunction['functionkey'], "name" => $digitalfunction['decoderfunction'], "sound" => $digitalfunction['sound'], "light" => $digitalfunction['light'], "hint" => $digitalfunction['hint'], "id" => $digitalfunction['id']];
         }
         ksort($functions);
         return $this->render($template, [
@@ -645,13 +679,152 @@ class DatabaseController extends AbstractController
             "model" => $model,
             "digital" => $digital,
             "functions" => $functions,
+            "functionkey" => $functionkey,
         ]);
+    }
+    #[Route('/model/function/add/', name: 'mbs_model_function_add', methods: ['POST'])]
+    public function addFunction(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $id = $request->get('model');
+        $key = $request->get('key');
+        $df = $request->get('decoderfunction');
+        $sound = $request->get('sound')=="true" ? 1 : 0;
+        $light = $request->get('light')=="true" ? 1 : 0;
+        $user = $this->security->getUser();
+        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+
+
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $this->render('status/notfound.html.twig', response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            return $this->render('status/forbidden.html.twig', response: $response);
+        }
+        $functionkey = $entityManager->getRepository(Functionkey::class)->findOneBy(['id' => $key]);
+        $decoderfunction = $entityManager->getRepository(Decoderfunction::class)->findOneBy(["name" => $df, "sound" => $sound, "light" => $light]);
+        if(!is_object($decoderfunction)) {
+            $decoderfunction = new Decoderfunction();
+            $decoderfunction->setName($df);
+            $decoderfunction->setLight($light);
+            $decoderfunction->setSound($sound);
+            $entityManager->persist($decoderfunction);
+        }
+        $digitalfunction = new DigitalFunction();
+        $digitalfunction->setFunctionkey($functionkey);
+        $digitalfunction->setDecoderfunction($decoderfunction);
+        $digitalfunction->setDigital($model->getDigital());
+        $entityManager->persist($digitalfunction);
+        $entityManager->flush();
+
+        return new Response('ok-'.(int)$sound."-".(int)$light);
+    }
+    #[Route('/model/value/new/', name: 'mbs_value_new', format: 'json', methods: ['POST'])]
+    public function newValue(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $name = $request->get('name');
+        $entity = $request->get('entity');
+        $user = $this->security->getUser();
+
+        switch($entity) {
+            case "protocol":
+                $template = new Protocol();
+                $repository = $entityManager->getRepository(Protocol::class);
+            break;
+            case "pininterface":
+                $template = new Pininterface();
+                $repository = $entityManager->getRepository(Pininterface::class);
+            break;
+            case "decoder":
+                $template = new Decoder();
+                $repository = $entityManager->getRepository(Decoder::class);
+            break;
+            case "category":
+                $template = new Category();
+                $repository = $entityManager->getRepository(Category::class);
+            break;
+            case "subcategory":
+                $template = new Subcategory();
+                $repository = $entityManager->getRepository(Subcategory::class);
+            break;
+            case "manufacturer":
+                $template = new Manufacturer();
+                $repository = $entityManager->getRepository(Manufacturer::class);
+            break;
+            case "company":
+                $template = new Company();
+                $repository = $entityManager->getRepository(Company::class);
+            break;
+            case "country":
+                $template = new Country();
+                $repository = $entityManager->getRepository(Country::class);
+            break;
+            case "storage":
+                $template = new Storage();
+                $repository = $entityManager->getRepository(Storage::class);
+            break;
+            case "box":
+                $template = new Box();
+                $repository = $entityManager->getRepository(Box::class);
+            break;
+            case "project":
+                $template = new Project();
+                $repository = $entityManager->getRepository(Project::class);
+            break;
+            case "condition":
+                $template = new Condition();
+                $repository = $entityManager->getRepository(Condition::class);
+            break;
+            case "status":
+                $template = new Status();
+                $repository = $entityManager->getRepository(Status::class);
+            break;
+            case "dealer":
+                $template = new Dealer();
+                $repository = $entityManager->getRepository(Dealer::class);
+            break;
+            case "scale":
+                $template = new Scale();
+                $repository = $entityManager->getRepository(Scale::class);
+            break;
+            case "track":
+                $template = new ScaleTrack();
+                $repository = $entityManager->getRepository(ScaleTrack::class);
+            break;
+            case "epoch":
+                $template = new Epoch();
+                $repository = $entityManager->getRepository(Epoch::class);
+            break;
+            case "subepoch":
+                $template = new Subepoch();
+                $repository = $entityManager->getRepository(Subepoch::class);
+            break;
+        }
+
+        $new = $repository->findOneBy(["name" => $name]);
+        if(!is_object($new)) {
+            $new = $template;
+            $new->setName($name);
+            $new->setUser($user);
+            $entityManager->persist($new);
+            $entityManager->flush();
+        }
+
+        $values = $repository->findBy(array("user" => [null, $user->getId()]));
+        foreach($values as $value) {
+            $data[$value->getId()] = $value->getName();
+        }
+        return new JsonResponse($data);
     }
     #[Route('/api/subcategory/', name: 'mbs_api_subcategory', format: 'json', methods: ['POST'])]
     public function subcategory(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
-        $id = $request->get('id');
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $id = $request->get('id');
         $user = $this->security->getUser();
         $qb = $entityManager->createQueryBuilder();
         $subcategories    = $qb->select('s')->from(Subcategory::class, 's')->where($qb->expr()->orX($qb->expr()->isNull('s.user'), $qb->expr()->eq('s.user', ':user'),))->andWhere('s.category = :category')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('category',  $id)]))->orderBy('s.name')->getQuery()->getResult();
@@ -669,8 +842,8 @@ class DatabaseController extends AbstractController
     #[Route('/api/track/', name: 'mbs_api_track', format: 'json', methods: ['POST'])]
     public function track(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
-        $id = $request->get('id');
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $id = $request->get('id');
         $user = $this->security->getUser();
         $qb = $entityManager->createQueryBuilder();
         $tracks          = $qb->select('t')->from(ScaleTrack::class, 't')->where($qb->expr()->orX($qb->expr()->isNull('t.user'), $qb->expr()->eq('t.user', ':user'),))->andWhere('t.scale = :scale')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('scale',  $id)]))->getQuery()->getResult();
@@ -688,8 +861,8 @@ class DatabaseController extends AbstractController
     #[Route('/api/subepoch/', name: 'mbs_api_subepoch', format: 'json', methods: ['POST'])]
     public function subepoch(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
-        $id = $request->get('id');
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $id = $request->get('id');
         $user = $this->security->getUser();
         $qb = $entityManager->createQueryBuilder();
         $subepochs        = $qb->select('se')->from(Subepoch::class, 'se')->where($qb->expr()->orX($qb->expr()->isNull('se.user'), $qb->expr()->eq('se.user', ':user'),))->andWhere('se.epoch = :epoch')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('epoch',  $id)]))->getQuery()->getResult();

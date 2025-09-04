@@ -58,6 +58,79 @@ $(function() {
         });
     });
 
+    $('#mobile-nav').on('change', function() {
+        location.replace($('#mobile-nav').find(':selected').data('path'));
+    });
+    $('.delete-function').on('click', function() {
+       $('#dialog-title').html($(this).data('headline'));
+       $('#dialog-action').attr('href', $(this).data('path'));
+    });
+
+    $('#add-function').on('click', function(event) {
+        const key = $('#add-key').val();
+        const keytext = $('#add-key').find(':selected').text();
+        const decoderfunction = $('#add-decoderfunction').val();
+        const sound = $('#add-sound').is(':checked');
+        const light = $('#add-light').is(':checked');
+        const path = $('#add-path').val();
+        const model = $('#add-model').val();
+        var template = $('#row-template');
+        var row = $('<tr>').html(template.html());
+        console.log(path);
+        if(sound!=1) {
+            row.find('#template-row-sound button').remove();
+        }
+        if(light!=1) {
+            row.find('#template-row-light button').remove();
+        }
+        row.find('#template-row-key').html(keytext);
+        if(key!="" && decoderfunction!="")
+        {
+            $.post(path, {model: model, sound: sound, light: light, key: key, decoderfunction: decoderfunction, ajax: 1}, function (response, textstatus, xhr) {
+                if (xhr.status == 200) {
+                    $('#add-key').focus();
+                    $('#add-decoderfunction').val('');
+                    $('#add-sound').prop('checked', false);
+                    $('#add-light').prop('checked', false);
+                    row.appendTo($('#functions tbody'));
+                }
+            });
+        }
+        event.preventDefault();
+    })
+
+    $('.add-value').on('click', function(event) {
+        $('#drawer-title').html($(this).data('title'))
+        $('#drawer-label').html($(this).data('label'))
+        $('#drawer-entity').val($(this).data('entity'));
+    });
+    $('#add-value').on('click', function(event) {
+       const entity = $('#drawer-entity').val();
+       const name = $('#drawer-name').val();
+       const path = $('#drawer-path').val();
+       console.log(path);
+       if(name!="") {
+           $.post(path, {name: name, entity: entity, ajax: 1}, function (response, textstatus, xhr) {
+               if (xhr.status == 200) {
+                   $('#form_'+entity).empty();
+                   $('<option>').val('').text('').appendTo('#form_'+entity);
+                   $.each(response, function(subid, text) {
+                       $('<option>').val(subid-1).text(text).prop('selected', text==name ? true : false).appendTo('#form_'+entity);
+                   });
+                   $('#drawer-name').val('');
+                   $('#close-drawer').click();
+                   $('#form_'+entity).removeClass('bg-white dark:bg-white/5 dark:*:bg-gray-800 dark:outline-white/10 outline-gray-300');
+                   $('#form_'+entity).addClass('ring-3 ring-green-600/20 bg-green-50 outline-green-600/20 animate-pulse');
+                   setTimeout(function() {
+                       $('#form_'+entity).addClass('bg-white dark:bg-white/5 dark:*:bg-gray-800 dark:outline-white/10 outline-gray-300');
+                       $('#form_'+entity).removeClass('ring-3 ring-green-600/20 bg-green-50 outline-green-600/20 animate-pulse');
+                   }, 1500);
+
+               }
+           });
+       }
+    });
+
     const dropZone = document.getElementById("drop-zone");
     $('#drop-zone').on('drop', function(event) {
         dropHandler(event);

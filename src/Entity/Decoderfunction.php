@@ -20,11 +20,11 @@ class Decoderfunction
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $sound;
+    #[ORM\Column]
+    private ?bool $sound = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $light;
+    #[ORM\Column]
+    private ?bool $light = null;
 
     /**
      * @var Collection<int, DigitalFunction>

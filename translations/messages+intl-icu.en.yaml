@@ -44,17 +44,20 @@ global:
         digital: Digital
     error:
         filetype-invalid: Not a valid filetype
+
 model:
     list:
         add: Add model
         edit: Edit
+        sound: Sound
+        light: Light
         image: Image
     details: Details {category}
     delete:
         delete: Delete
         cancel: Cancel
         headline: Delete model
-        text: The model will be deleted. This action is not reversable! Proceed with caution!
+        text: The model will be deleted. This action can't be undone! Proceed with caution!
     field:
         name: Name
         model: Model
@@ -112,6 +115,16 @@ model:
         functions: Functions
         function: Function
         functionkey: Key
+        new: New value for “{name}”
+    function:
+        sound: Sound function
+        light: Light function
+        trash: Delete function “{function}”
+        add: Add
+        delete:
+            headline: Delete function “{function}”
+            text: The function will no longer be associated with this model. This action can't be undone! Proceed with caution!
+        deleted: The function association “{function}” was deleted
     saved: Your changes to “{name}” where saved successfully
     nodetails: This category has no detail information
     created: Your model “{name}” was created successfully

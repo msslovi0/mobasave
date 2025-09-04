@@ -25,6 +25,9 @@ class Functionkey
     #[ORM\OneToMany(targetEntity: DigitalFunction::class, mappedBy: 'functionkey')]
     private Collection $digitalFunctions;
 
+    #[ORM\Column]
+    private ?int $sort = null;
+
     public function __construct()
     {
         $this->digitalFunctions = new ArrayCollection();
@@ -74,6 +77,18 @@ class Functionkey
                 $digitalFunction->setFunctionkey(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSort(): ?int
+    {
+        return $this->sort;
+    }
+
+    public function setSort(int $sort): static
+    {
+        $this->sort = $sort;
 
         return $this;
     }
