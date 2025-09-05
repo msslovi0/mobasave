@@ -149,6 +149,24 @@ class Model
     #[ORM\OneToMany(targetEntity: Modelload::class, mappedBy: 'model')]
     private Collection $modelloads;
 
+    #[ORM\ManyToOne(inversedBy: 'models')]
+    private ?Modelset $modelset = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $listprice = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column]
+    private ?bool $available = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $power = null;
+
+    #[ORM\ManyToOne(inversedBy: 'models')]
+    private ?Edition $edition = null;
+
     public function __construct()
     {
         $this->modelloads = new ArrayCollection();
@@ -689,6 +707,78 @@ class Model
                 $modelload->setModel(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getModelset(): ?Modelset
+    {
+        return $this->modelset;
+    }
+
+    public function setModelset(?Modelset $modelset): static
+    {
+        $this->modelset = $modelset;
+
+        return $this;
+    }
+
+    public function getListprice(): ?float
+    {
+        return $this->listprice;
+    }
+
+    public function setListprice(?float $listprice): static
+    {
+        $this->listprice = $listprice;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function isAvailable(): ?bool
+    {
+        return $this->available;
+    }
+
+    public function setAvailable(bool $available): static
+    {
+        $this->available = $available;
+
+        return $this;
+    }
+
+    public function getPower(): ?string
+    {
+        return $this->power;
+    }
+
+    public function setPower(?string $power): static
+    {
+        $this->power = $power;
+
+        return $this;
+    }
+
+    public function getEdition(): ?Edition
+    {
+        return $this->edition;
+    }
+
+    public function setEdition(?Edition $edition): static
+    {
+        $this->edition = $edition;
 
         return $this;
     }

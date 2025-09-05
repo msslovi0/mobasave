@@ -175,6 +175,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Pininterface::class, mappedBy: 'user')]
     private Collection $pininterfaces;
 
+    /**
+     * @var Collection<int, Modelset>
+     */
+    #[ORM\OneToMany(targetEntity: Modelset::class, mappedBy: 'user')]
+    private Collection $modelsets;
+
+    /**
+     * @var Collection<int, Edition>
+     */
+    #[ORM\OneToMany(targetEntity: Edition::class, mappedBy: 'user')]
+    private Collection $editions;
+
     public function __construct()
     {
         $this->userdatabases = new ArrayCollection();
@@ -200,6 +212,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->protocols = new ArrayCollection();
         $this->decoders = new ArrayCollection();
         $this->pininterfaces = new ArrayCollection();
+        $this->modelsets = new ArrayCollection();
+        $this->editions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -967,6 +981,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($pininterface->getUser() === $this) {
                 $pininterface->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Modelset>
+     */
+    public function getModelsets(): Collection
+    {
+        return $this->modelsets;
+    }
+
+    public function addModelset(Modelset $modelset): static
+    {
+        if (!$this->modelsets->contains($modelset)) {
+            $this->modelsets->add($modelset);
+            $modelset->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModelset(Modelset $modelset): static
+    {
+        if ($this->modelsets->removeElement($modelset)) {
+            // set the owning side to null (unless already changed)
+            if ($modelset->getUser() === $this) {
+                $modelset->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Edition>
+     */
+    public function getEditions(): Collection
+    {
+        return $this->editions;
+    }
+
+    public function addEdition(Edition $edition): static
+    {
+        if (!$this->editions->contains($edition)) {
+            $this->editions->add($edition);
+            $edition->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEdition(Edition $edition): static
+    {
+        if ($this->editions->removeElement($edition)) {
+            // set the owning side to null (unless already changed)
+            if ($edition->getUser() === $this) {
+                $edition->setUser(null);
             }
         }
 

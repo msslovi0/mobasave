@@ -115,6 +115,7 @@ model:
         functions: Functions
         function: Function
         functionkey: Key
+        modelset: Set
         new: New value for “{name}”
     function:
         sound: Sound function

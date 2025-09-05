@@ -58,11 +58,11 @@ class Manufacturer
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $linkedin = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $logo = null;
+    #[ORM\Column]
+    private ?bool $logo = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $vector = null;
+    #[ORM\Column]
+    private ?bool $vector = null;
 
     #[ORM\Column(length: 2, nullable: true)]
     private ?string $abbr2 = null;

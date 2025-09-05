@@ -18,6 +18,7 @@ use App\Entity\Storage;
 use App\Entity\Project;
 use App\Entity\Dealer;
 use App\Entity\Country;
+use App\Entity\Modelset;
 use App\Entity\Box;
 use App\Entity\Condition;
 use App\Entity\Digital;
@@ -102,6 +103,8 @@ class DatabaseController extends AbstractController
     #[Route('/model/search/', name: 'mbs_model_search', methods: ['GET'])]
     public function search(EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request)
     {
+        $user = $this->security->getUser();
+
         $query = $request->get('search');
         $qb = $entityManager->createQueryBuilder();
         $result = $qb->select('m')->from(Model::class, 'm')
@@ -152,7 +155,7 @@ class DatabaseController extends AbstractController
                 $qb->expr()->like('lm.name', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
                 $qb->expr()->like('ot.name', $qb->expr()->literal('%' . $query . '%')),
-            )->getQuery()->getResult();
+            )->andWhere('m.modeldatabase in (:databases)')->setParameters(new ArrayCollection([new Parameter('databases',  $user->getUserdatabases())]))->getQuery()->getResult();
 
         $pagination = $paginator->paginate(
             $result,
@@ -409,6 +412,8 @@ class DatabaseController extends AbstractController
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
             return $this->render('status/forbidden.html.twig', response: $response);
+        } else {
+            $request->getSession()->set('database', $model->getModeldatabase()->getId());
         }
         $qb             = $entityManager->createQueryBuilder();
         $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]));
@@ -426,6 +431,7 @@ class DatabaseController extends AbstractController
         $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, $user->getId()]));
         $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]));
         $country        = $entityManager->getRepository(Country::class)->findAll();
+        $modelset       = $entityManager->getRepository(Modelset::class)->findAll();
 
         $form = $this->createFormBuilder($model)
             ->add('name', TextType::class)
@@ -444,6 +450,7 @@ class DatabaseController extends AbstractController
             ->add('box', ChoiceType::class, ['choices' => $box, 'choice_label' => 'name', 'required' => false])
             ->add('modelcondition', ChoiceType::class, ['choices' => $condition, 'choice_label' => 'name', 'required' => false])
             ->add('country', ChoiceType::class, ['choices' => $country, 'choice_label' => 'name', 'required' => false])
+            ->add('modelset', ChoiceType::class, ['choices' => $modelset, 'choice_label' => 'name', 'required' => false])
             ->add('instructions', CheckboxType::class, ['required' => false])
             ->add('parts', CheckboxType::class, ['required' => false])
             ->add('displaycase', CheckboxType::class, ['required' => false])
@@ -802,6 +809,10 @@ class DatabaseController extends AbstractController
             case "subepoch":
                 $template = new Subepoch();
                 $repository = $entityManager->getRepository(Subepoch::class);
+            break;
+            case "modelset":
+                $template = new Modelset();
+                $repository = $entityManager->getRepository(Modelset::class);
             break;
         }
 

@@ -56,11 +56,11 @@ class Dealer
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $linkedin = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $logo;
+    #[ORM\Column]
+    private ?bool $logo = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $vector;
+    #[ORM\Column]
+    private ?bool $vector = null;
 
     #[ORM\ManyToOne(inversedBy: 'dealers')]
     private ?Country $country = null;

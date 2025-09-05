@@ -20,11 +20,11 @@ class Company
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $logo;
+    #[ORM\Column]
+    private ?bool $logo = null;
 
-    #[ORM\Column(type: Types::BINARY)]
-    private $vector;
+    #[ORM\Column]
+    private ?bool $vector = null;
 
     #[ORM\ManyToOne(inversedBy: 'companies')]
     private ?Country $country = null;

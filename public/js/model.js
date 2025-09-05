@@ -84,6 +84,7 @@ $(function() {
             row.find('#template-row-light button').remove();
         }
         row.find('#template-row-key').html(keytext);
+        row.find('#template-row-decoderfunction').html(decoderfunction);
         if(key!="" && decoderfunction!="")
         {
             $.post(path, {model: model, sound: sound, light: light, key: key, decoderfunction: decoderfunction, ajax: 1}, function (response, textstatus, xhr) {
