@@ -220,6 +220,7 @@ $(function() {
         "image/jpg",
         "image/png",
         "image/webp",
+        "image/svg+xml",
     ];
 
     function validFileType(file) {

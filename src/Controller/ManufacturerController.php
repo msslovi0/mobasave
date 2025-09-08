@@ -2,10 +2,18 @@
 // src/Controller/LuckyController.php
 namespace App\Controller;
 
+use App\Entity\Country;
 use App\Entity\Database;
 use App\Entity\Manufacturer;
+use App\Entity\State;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ManufacturerController extends AbstractController
@@ -21,11 +30,152 @@ class ManufacturerController extends AbstractController
     {
     }
 
-    #[Route('/manufacturer/{id}', name: 'mbs_manufacturer', methods: ['GET', 'POST'])]
-    public function manufacturer(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/image')] string $imageDirectory): Response
+    #[Route('/manufacturer/add/', name: 'mbs_manufacturer_add', methods: ['GET', 'POST'])]
+    public function add(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/manufacturer')] string $imageDirectory): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
 
+        $country        = $entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
+        $state          = $entityManager->getRepository(State::class)->findBy([], ['name' => 'ASC']);
 
+        $manufacturer = new Manufacturer();
+
+        $form = $this->createFormBuilder($manufacturer)
+            ->add('name', TextType::class)
+            ->add('email', EmailType::class, ['required' => false])
+            ->add('url', UrlType::class, ['required' => false])
+            ->add('street', TextType::class, ['required' => false])
+            ->add('extra', TextType::class, ['required' => false])
+            ->add('zip', TextType::class, ['required' => false, 'attr' => ['maxlength' => 10]])
+            ->add('city', TextType::class, ['required' => false])
+            ->add('facebook', UrlType::class, ['required' => false])
+            ->add('instagram', UrlType::class, ['required' => false])
+            ->add('youtube', UrlType::class, ['required' => false])
+            ->add('tiktok', UrlType::class, ['required' => false])
+            ->add('twitter', UrlType::class, ['required' => false])
+            ->add('linkedin', UrlType::class, ['required' => false])
+            ->add('abbr2', TextType::class, ['required' => false, 'attr' => ['maxlength' => 2]])
+            ->add('abbr3', TextType::class, ['required' => false, 'attr' => ['maxlength' => 3]])
+            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name'])
+            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name'])
+            ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
+            ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
+
+        $form = $form->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                try {
+                    $imageFile->move($imageDirectory, $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash(
+                        'error',
+                        $translator->trans('upload.failed', ['message' => $e->getMessage()])
+                    );
+                    return $this->redirectToRoute('mbs_manufacturer', ['id' => $manufacturer->getId()]);
+                    // ... handle exception if something happens during file upload
+                }
+                $manufacturer->setImage($newFilename);
+            } elseif(isset($currentImage) && $currentImage!="") {
+                $manufacturer->setImage($currentImage);
+            }
+            $manufacturer->setLogo(0);
+            $manufacturer->setVector(0);
+            $entityManager->persist($manufacturer);
+            $entityManager->flush();
+            $this->addFlash(
+                'success',
+                $translator->trans('manufacturer.saved', ['name' => $manufacturer->getName()])
+            );
+            return $this->redirectToRoute('mbs_manufacturer', ['id' => $manufacturer->getId()]);
+        }
+
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        return $this->render('manufacturer/manufacturer.html.twig', [
+            "databases" => $databases,
+            "manufacturerform" => $form->createView(),
+            "manufacturer" => $manufacturer,
+        ]);
+    }
+
+    #[Route('/manufacturer/{id}', name: 'mbs_manufacturer', methods: ['GET', 'POST'])]
+    public function manufacturer(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/manufacturer')] string $imageDirectory): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+        $manufacturer = $entityManager->getRepository(Manufacturer::class)->findOneBy(["id" => $id]);
+        if($manufacturer->getImage()!="") {
+            $currentImage = $manufacturer->getImage();
+        }
+
+        $country        = $entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
+        $state          = $entityManager->getRepository(State::class)->findBy([], ['name' => 'ASC']);
+
+        $form = $this->createFormBuilder($manufacturer)
+            ->add('name', TextType::class)
+            ->add('email', EmailType::class, ['required' => false])
+            ->add('url', UrlType::class, ['required' => false])
+            ->add('street', TextType::class, ['required' => false])
+            ->add('extra', TextType::class, ['required' => false])
+            ->add('zip', TextType::class, ['required' => false, 'attr' => ['maxlength' => 10]])
+            ->add('city', TextType::class, ['required' => false])
+            ->add('facebook', UrlType::class, ['required' => false])
+            ->add('instagram', UrlType::class, ['required' => false])
+            ->add('youtube', UrlType::class, ['required' => false])
+            ->add('tiktok', UrlType::class, ['required' => false])
+            ->add('twitter', UrlType::class, ['required' => false])
+            ->add('linkedin', UrlType::class, ['required' => false])
+            ->add('abbr2', TextType::class, ['required' => false, 'attr' => ['maxlength' => 2]])
+            ->add('abbr3', TextType::class, ['required' => false, 'attr' => ['maxlength' => 3]])
+            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name'])
+            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name'])
+            ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
+            ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
+
+        $form = $form->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                try {
+                    $imageFile->move($imageDirectory, $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash(
+                        'error',
+                        $translator->trans('upload.failed', ['message' => $e->getMessage()])
+                    );
+                    return $this->redirectToRoute('mbs_manufacturer', ['id' => $manufacturer->getId()]);
+                    // ... handle exception if something happens during file upload
+                }
+                $manufacturer->setImage($newFilename);
+            } elseif(isset($currentImage) && $currentImage!="") {
+                $manufacturer->setImage($currentImage);
+            }
+            $entityManager->persist($manufacturer);
+            $entityManager->flush();
+            $this->addFlash(
+                'success',
+                $translator->trans('manufacturer.saved', ['name' => $manufacturer->getName()])
+            );
+            return $this->redirectToRoute('mbs_manufacturer', ['id' => $manufacturer->getId()]);
+        }
+
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        return $this->render('manufacturer/manufacturer.html.twig', [
+            "databases" => $databases,
+            "manufacturerform" => $form->createView(),
+            "manufacturer" => $manufacturer,
+        ]);
     }
 
     #[Route('/manufacturer/', name: 'mbs_manufacturer_list', methods: ['GET'])]
@@ -33,7 +183,7 @@ class ManufacturerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $manufacturers = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]));
+        $manufacturers = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]), ['name' => 'ASC']);
 
         $pagination = $paginator->paginate(
             $manufacturers,
@@ -47,4 +197,35 @@ class ManufacturerController extends AbstractController
             "manufacturers" => $pagination
         ]);
     }
+
+    #[Route('/manufacturer/delete/{id}', name: 'mbs_manufacturer_delete', methods: ['GET'])]
+    public function delete(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+        $manufacturer = $entityManager->getRepository(Manufacturer::class)->findOneBy(["id" => $id]);
+        if(count($manufacturer->getModels())>0) {
+            $this->addFlash(
+                'error',
+                $translator->trans('manufacturer.has-models', ['count' => count($manufacturer->getModels()), 'name' => $manufacturer->getName()])
+            );
+            $entityManager->flush();
+            return $this->redirectToRoute('mbs_manufacturer', ['id' => $manufacturer->getId()]);
+        }
+        if(!$manufacturer) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        $entityManager->remove($manufacturer);
+        $this->addFlash(
+            'success',
+            $translator->trans('manufacturer.deleted', ['name' => $manufacturer->getName()])
+        );
+        $entityManager->flush();
+        return $this->redirectToRoute('mbs_manufacturer_list');
+
+    }
+
 }

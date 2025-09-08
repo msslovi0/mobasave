@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{ 'global.nav.manufacturer'|trans }}
+    {{ 'global.nav.company'|trans }}
 {% endblock %}
 {% block body %}
     <div class="py-10">
         <header>
             <div class="mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ 'global.nav.manufacturer'|trans }}</h1>
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ 'global.nav.company'|trans }}</h1>
             </div>
         </header>
         <main>
@@ -17,7 +17,7 @@
                         <div class="sm:flex-auto">
                         </div>
                         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                            <a href="{{ path('mbs_manufacturer_add') }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'manufacturer.list.add'|trans }}</a>
+                            <a href="{{ path('mbs_company_add') }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'company.list.add'|trans }}</a>
                         </div>
                     </div>
                     <div class="col-span-full mt-5">
@@ -50,67 +50,49 @@
                             </div>
                         {% endfor %}
                     </div>
-                    {% if manufacturers.getTotalItemCount>0 %}
-                    {{ knp_pagination_render(manufacturers) }}
+                    {% if companies.getTotalItemCount>0 %}
+                    {{ knp_pagination_render(companies) }}
                     <div class="mt-8 flow-root">
                         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                                 <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
                                     <thead>
                                     <tr>
-                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'manufacturer.list.logo'|trans }}</span></th>
-                                        <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'manufacturer.field.name'|trans }}</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'manufacturer.field.street'|trans }}</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'manufacturer.field.zip'|trans }}</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'manufacturer.field.city'|trans }}</th>
-                                        <th scope="col" colspan="2" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'manufacturer.field.country'|trans }}</th>
-                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'manufacturer.list.edit'|trans }}</span></th>
+                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'company.list.logo'|trans }}</span></th>
+                                        <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'company.field.name'|trans }}</th>
+                                        <th scope="col" colspan="2" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'company.field.country'|trans }}</th>
+                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'company.list.edit'|trans }}</span></th>
                                     </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
-                                    {% for manufacturer in manufacturers %}
+                                    {% for company in companies %}
                                         <tr class="even:bg-gray-50 dark:even:bg-gray-800/50">
                                             <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                                                 <div class="flex items-center">
                                                     <div class="size-11 shrink-0">
-                                                        <img src="{% if manufacturer.image!="" %}{{ asset('data/logo/manufacturer/' ~ manufacturer.image) }}{% else %}{{ asset('images/blank.svg') }}{% endif %}" alt="{{ manufacturer.name }}" class="size-11 rounded-full dark:outline dark:outline-white/10" />
+                                                        <img src="{% if company.image!="" %}{{ asset('data/logo/company/' ~ company.image) }}{% else %}{{ asset('images/blank.svg') }}{% endif %}" alt="{{ company.name }}" class="size-11 rounded-full dark:outline dark:outline-white/10" />
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                                                 <div class="ml-4">
-                                                    <div class="font-medium text-gray-900 dark:text-white">{{ manufacturer.name }}</div>
-                                                </div>
-                                            </td>
-                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
-                                                <div class="ml-4">
-                                                    <div class="font-medium text-gray-900 dark:text-white">{{ manufacturer.street }}</div>
-                                                </div>
-                                            </td>
-                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
-                                                <div class="ml-4">
-                                                    <div class="font-medium text-gray-900 dark:text-white">{{ manufacturer.zip }}</div>
-                                                </div>
-                                            </td>
-                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
-                                                <div class="ml-4">
-                                                    <div class="font-medium text-gray-900 dark:text-white">{{ manufacturer.city }}</div>
+                                                    <div class="font-medium text-gray-900 dark:text-white">{{ company.name }}</div>
                                                 </div>
                                             </td>
                                             <td class="py-5 pl-4 text-sm whitespace-nowrap sm:pl-0">
                                                 <div class="flex items-center">
                                                     <div class="size-11 shrink-0">
-                                                        <img src="{% if manufacturer.country.name is defined %}{{ asset('data/flags/' ~ manufacturer.country.iso2 ~ ".svg") }}{% else %}{{ asset('images/blank.svg') }}{% endif %}" alt="" class="size-11 rounded-full dark:outline dark:outline-white/10" />
+                                                        <img src="{% if company.country.name is defined %}{{ asset('data/flags/' ~ company.country.iso2 ~ ".svg") }}{% else %}{{ asset('images/blank.svg') }}{% endif %}" alt="" class="size-11 rounded-full dark:outline dark:outline-white/10" />
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="py-5 pr-3 text-sm whitespace-nowrap sm:pl-0">
                                                 <div class="">
-                                                    <div class="font-medium text-gray-900 dark:text-white">{{ manufacturer.country.name is defined ? manufacturer.country.name : '' }}</div>
+                                                    <div class="font-medium text-gray-900 dark:text-white">{{ company.country.name is defined ? company.country.name : '' }}</div>
                                                 </div>
                                             </td>
                                             <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
-                                                <a href="{{ path('mbs_manufacturer', {id: manufacturer.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ manufacturer.name }}</span></a>
+                                                <a href="{{ path('mbs_company', {id: company.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ company.name }}</span></a>
                                             </td>
 
                                         </tr>
@@ -119,7 +101,7 @@
                                 </table>
                             </div>
                         </div>
-                        {{ knp_pagination_render(manufacturers) }}
+                        {{ knp_pagination_render(companies) }}
                         {% endif %}
                     </div>
                 </div>

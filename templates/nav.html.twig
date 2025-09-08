@@ -8,23 +8,28 @@
           </div>
           <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
             <!-- Current: "border-green-800 dark:border-green-700 text-gray-900 dark:text-white", Default: "border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-white/20 hover:text-gray-700 dark:hover:text-gray-200" -->
+              {% set current = '' %}
               {% if 'mbs_model' in app.request.attributes.get("_route") or 'mbs_database' in app.request.attributes.get("_route") %}
                   {% set current = 'home' %}
               {% elseif 'mbs_manufacturer' in app.request.attributes.get("_route") %}
                   {% set current = 'manufacturer' %}
               {% elseif 'mbs_dealer' in app.request.attributes.get("_route") %}
                   {% set current = 'dealer' %}
+              {% elseif 'mbs_company' in app.request.attributes.get("_route") %}
+                  {% set current = 'company' %}
               {% endif %}
             <el-dropdown class="inline-flex items-center border-b-2 {{ current=='home' ? 'border-green-800 dark:border-green-700 text-gray-900 dark:text-white' : 'text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200 border-transparent' }} px-1 pt-1 text-sm font-medium">
               <button class="cursor-pointer">{{ 'global.nav.collections'|trans }}</button>
 
               <el-menu anchor="bottom start" popover class="w-56 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
                   <div class="py-1">
+                      {% if databases is defined %}
                       {% for database in databases %}
                       <a href="{{ path('mbs_database', {id: database.id}) }}" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5 dark:focus:text-white border-l-7" style="border-left-color: {{ database.color }}">
                           {{ database.name }}
                       </a>
                       {% endfor %}
+                      {% endif %}
                   </div>
               </el-menu>
             </el-dropdown>

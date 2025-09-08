@@ -1,0 +1,225 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {% if dealer.id is defined and dealer.id != "" %}
+        {{ dealer.name }}
+    {% else %}
+        {{ 'global.title.add.dealer'|trans }}
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <div class="py-10">
+        <header>
+            <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ dealer.name }}</h1>
+                <div class="flex gap-1">
+                    <a href="{{ path('mbs_dealer_add') }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'dealer.list.add'|trans }}</a>
+                </div>
+            </div>
+        </header>
+        <main>
+            {{ form_start(dealerform, {'attr': {'class': 'mx-auto max-w-10xl px-4 py-8 sm:px-6 lg:px-8'}}) }}
+            <div class="space-y-12">
+                <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
+                    <div>
+                        {% if dealer.image!="" %}<img src="{{ asset('data/logo/dealer/' ~ dealer.image) }}" alt="{{ dealer.name }}" class="mx-auto h-auto w-200" />{% endif %}
+                        <div class="col-span-full">
+                            <label for="form_image" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.logo'|trans }}</label>
+                            <div id="drop-zone" class="hover:bg-gray-100 mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 dark:border-white/25">
+                                <div class="text-center">
+                                    <div id="icon-holder">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" data-slot="icon" aria-hidden="true" class="mx-auto size-12 text-gray-300 dark:text-gray-500" id="preview-icon">
+                                            <path d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="mt-4 flex text-sm/6 text-gray-600 dark:text-gray-400">
+                                        <label for="form_image" class="relative cursor-pointer rounded-md font-semibold text-green-800 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-green-800 hover:text-green-700 dark:bg-transparent dark:text-green-600 dark:focus-within:outline-green-700 dark:hover:text-green-600">
+                                            <span>{{ 'global.upload.file'|trans }}</span>
+                                            {{ form_widget(dealerform.image, {'attr': {'class': 'sr-only', 'accept': '.png, .jpg, .jpeg, .webp'}}) }}
+                                        </label>
+                                        <p class="pl-1">{{ 'global.upload.drag-n-drop'|trans }}</p>
+                                    </div>
+                                    <p class="text-xs/5 text-gray-600 dark:text-gray-400">{{ 'global.upload.filetypes'|trans }}</p>
+                                </div>
+                            </div>
+                            <p id="filetype-error" class="hidden mt-2 text-sm text-red-600 dark:text-red-400">{{ 'global.error.filetype-invalid'|trans }}</p>
+                        </div>
+                    </div>
+
+                    <div class="grid max-w-2xl grid-cols-2 gap-2 sm:grid-cols-6 md:col-span-2">
+                        <div class="col-span-full">
+                            {% for message in app.flashes('error') %}
+                                <div class="border-l-4 border-red-400 bg-red-50 p-4 dark:border-red-500 dark:bg-red-500/10">
+                                    <div class="flex">
+                                        <div class="shrink-0">
+                                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-red-400">
+                                                <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm text-red-700 dark:text-red-300">{{ message }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% for message in app.flashes('success') %}
+                                <div class="border-l-4 border-green-400 bg-green-50 p-4 dark:border-green-500 dark:bg-green-500/10">
+                                    <div class="flex">
+                                        <div class="shrink-0">
+                                            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-green-400">
+                                                <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm text-green-700 dark:text-green-300">{{ message }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="sm:col-span-full">
+                            <label for="form_name" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.name'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.name, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_street" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.street'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.street, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_extra" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.extra'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.extra, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_zip" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.zip'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.zip, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_city" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.city'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.city, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_email" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.email'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.email, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_url" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.url'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.url, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_facebook" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.facebook'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.facebook, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_instagram" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.instagram'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.instagram, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_youtube" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.youtube'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.youtube, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_twitter" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.twitter'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.twitter, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_tiktok" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.tiktok'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.tiktok, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_linkedin" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.linkedin'|trans }}</label>
+                            <div>
+                                {{ form_widget(dealerform.linkedin, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_country" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.country'|trans }}</label>
+                            <div class="grid grid-cols-1 col-span-9">
+                                {{ form_widget(dealerform.country, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700', 'data-path': path('mbs_api_subcategory')}}) }}
+                                <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                                    <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label for="form_state" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.state'|trans }}</label>
+                            <div class="grid grid-cols-1 col-span-9">
+                                {{ form_widget(dealerform.state, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                                    <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="col-span-full">
+                            <div class="flex items-center">
+                                <div aria-hidden="true" class="w-full mt-3 border-t border-gray-300 dark:border-white/15"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex items-center justify-end gap-x-2">
+                    {% if dealer.id is defined and dealer.id != "" %}<button type="button" command="show-modal" commandfor="dialog" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto dark:bg-red-500 dark:shadow-none dark:hover:bg-red-400disabled:bg-gray-400z disabled:bg-gray-400" {{ dealer.models|length>0 ? "disabled='true'" : "" }}>{{ 'dealer.delete.delete'|trans }}</button>{% endif %}
+                    {{ form_widget(dealerform.save, {'attr': {'class': 'rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:focus-visible:outline-green-700'}}) }}
+                </div>
+                {{ form_end(dealerform) }}
+        </main>
+    </div>
+
+    <script src="{{ asset('js/jquery-3.7.1.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/model.js') }}" type="text/javascript"></script>
+    {% if dealer.id is defined and dealer.id != "" %}
+        <el-dialog>
+            <dialog id="dialog" aria-labelledby="dialog-title" class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
+                <el-dialog-backdrop class="fixed inset-0 bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in dark:bg-gray-900/50"></el-dialog-backdrop>
+
+                <div tabindex="0" class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
+                    <el-dialog-panel class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg sm:p-6 data-closed:sm:translate-y-0 data-closed:sm:scale-95 dark:bg-gray-800 dark:outline dark:-outline-offset-1 dark:outline-white/10">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10 dark:bg-red-500/10">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 text-red-600 dark:text-red-400">
+                                    <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                <h3 id="dialog-title" class="text-base font-semibold text-gray-900 dark:text-white">
+                                    {{ 'dealer.delete.headline'|trans }}</h3>
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'dealer.delete.text'|trans }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                            <a href="{{ path('mbs_dealer_delete', {'id': dealer.id}) }}" type="button" command="close" commandfor="dialog" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto dark:bg-red-500 dark:shadow-none dark:hover:bg-red-400">
+                                {{ 'dealer.delete.delete'|trans }}</a>
+                            <button type="button" command="close" commandfor="dialog" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">
+                                {{ 'dealer.delete.cancel'|trans }}</button>
+                        </div>
+                    </el-dialog-panel>
+                </div>
+            </dialog>
+        </el-dialog>
+    {% endif %}
+{% endblock %}

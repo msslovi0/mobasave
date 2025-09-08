@@ -31,14 +31,18 @@ global:
     upload:
         file: Upload a file
         drag-n-drop: or drag and drop
-        filetypes: PNG, JPG, WebP
+        filetypes: PNG, JPG, WebP, SVG
     login: Login
     logout: Logout
     add: Add
     title:
         index: MoBaSaVe - Welcome!
         search: Search result for “{query}”
-        addmodel: Add model
+        add:
+            model: Add model
+            dealer: Add dealer
+            manufacturer: Add manufacturer
+            company: Add company
     back: Back
     nav:
         model: Model
@@ -62,8 +66,101 @@ manufacturer:
         zip: Zip
         city: City
         country: Country
+        state: State
         logo: Logo
+        extra: Additional address information
+        email: Email address
+        url: Website URL
+        facebook: Facebook
+        instagram: Instagram
+        youtube: YouTube
+        twitter: Twitter
+        tiktok: TikTok
+        linkedin: LinkedIn
+        abbr2: Abbreviation (2 chars)
+        abbr3: Abbreviation (3 chars)
+    delete:
+        delete: Delete
+        cancel: Cancel
+        headline: Delete manufacturer
+        text: The manufacturer will be deleted. This action can't be undone! Proceed with caution!
+    saved: Your changes to manufacturer “{name}” where saved successfully
+    deleted: The manufacturer “{name}” was deleted
+    has-models: >-
+        {count, plural,
+            =1    {Can't delete manufacturer “{name}”. There is still one model assigned.}
+            other {Can't delete manufacturer “{name}”. There are still # models assigned.}
+        }
 
+dealer:
+    list:
+        add: Add dealer
+    field:
+        name: Name
+        street: Street
+        zip: Zip
+        city: City
+        country: Country
+        state: State
+        logo: Logo
+        extra: Additional address information
+        email: Email address
+        url: Website URL
+        facebook: Facebook
+        instagram: Instagram
+        youtube: YouTube
+        twitter: Twitter
+        tiktok: TikTok
+        linkedin: LinkedIn
+        abbr2: Abbreviation (2 chars)
+        abbr3: Abbreviation (3 chars)
+    delete:
+        delete: Delete
+        cancel: Cancel
+        headline: Delete dealer
+        text: The dealer will be deleted. This action can't be undone! Proceed with caution!
+    saved: Your changes to dealer “{name}” where saved successfully
+    deleted: The dealer “{name}” was deleted
+    has-models: >-
+        {count, plural,
+            =1    {Can't delete dealer “{name}”. There is still one model assigned.}
+            other {Can't delete dealer “{name}”. There are still # models assigned.}
+        }
+
+company:
+    list:
+        add: Add company
+    field:
+        name: Name
+        street: Street
+        zip: Zip
+        city: City
+        country: Country
+        state: State
+        logo: Logo
+        extra: Additional address information
+        email: Email address
+        url: Website URL
+        facebook: Facebook
+        instagram: Instagram
+        youtube: YouTube
+        twitter: Twitter
+        tiktok: TikTok
+        linkedin: LinkedIn
+        abbr2: Abbreviation (2 chars)
+        abbr3: Abbreviation (3 chars)
+    delete:
+        delete: Delete
+        cancel: Cancel
+        headline: Delete company
+        text: The company will be deleted. This action can't be undone! Proceed with caution!
+    saved: Your changes to company “{name}” where saved successfully
+    deleted: The company “{name}” was deleted
+    has-models: >-
+        {count, plural,
+            =1    {Can't delete company “{name}”. There is still one model assigned.}
+            other {Can't delete company “{name}”. There are still # models assigned.}
+        }
 model:
     list:
         add: Add model

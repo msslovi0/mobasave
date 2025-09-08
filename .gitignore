@@ -25,5 +25,12 @@
 */.DS_Store*
 .DS_Store
 php.ini
-/data/image/*
+/data/*/*.jpg
+/data/*/*.jpeg
+/data/*/*.svg
+/data/*/*.png
+/data/*/*/*.jpg
+/data/*/*/*.jpeg
+/data/*/*/*.svg
+/data/*/*/*.png
 .idea

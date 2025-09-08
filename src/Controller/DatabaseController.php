@@ -369,7 +369,7 @@ class DatabaseController extends AbstractController
             ->add('description', TextareaType::class, ['required' => false])
             ->add('image', FileType::class, ['data_class' => null, 'required' => false, 'constraints' => [
                 new File(
-                    extensions: ['jpg','webp','png']
+                    extensions: ['jpg','webp','png','svg']
                 )
             ]])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
@@ -532,7 +532,7 @@ class DatabaseController extends AbstractController
             ->add('description', TextareaType::class, ['required' => false])
             ->add('image', FileType::class, ['data_class' => null, 'required' => false, 'constraints' => [
                 new File(
-                    extensions: ['jpg','webp','png']
+                    extensions: ['jpg','webp','png','svg']
                 )
             ]])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
@@ -558,7 +558,7 @@ class DatabaseController extends AbstractController
                     // ... handle exception if something happens during file upload
                 }
                 $model->setImage($newFilename);
-            } elseif($currentImage!="") {
+            } elseif(isset($currentImage) && $currentImage!="") {
                 $model->setImage($currentImage);
             }
             $model->setUpdated(new \DateTime('now'));
@@ -570,6 +570,7 @@ class DatabaseController extends AbstractController
             );
             return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
         }
+
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('collection/model.html.twig', [
             "databases" => $databases,
