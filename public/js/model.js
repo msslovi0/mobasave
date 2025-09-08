@@ -158,8 +158,8 @@ $(function() {
         $('#drawer-label').html($(this).data('label'))
         $('#drawer-entity').val($(this).data('entity'));
         const parent = $(this).data('parent');
-        if($(this).data('parent')!="") {
-            $('#drawer-parent').val($(this).data('parent'));
+        if(typeof parent != 'undefined' && parent!="") {
+            $('#drawer-parent').val(parent);
             $('#parent').html($("label[for='form_"+parent+"']").text());
             $('#parent-wrapper').show();
         } else {

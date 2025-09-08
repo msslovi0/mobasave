@@ -82,12 +82,14 @@ class DatabaseController extends AbstractController
         if(!$database) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $this->render('status/notfound.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
         }
         if(is_object($user) and $database->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            return $this->render('status/forbidden.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
         $request->getSession()->set('database', $id);
 
@@ -99,7 +101,9 @@ class DatabaseController extends AbstractController
             100 /* limit per page */
         );
 
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('collection/list.html.twig', [
+            "databases" => $databases,
             "models" => $pagination
         ]);
     }
@@ -167,7 +171,10 @@ class DatabaseController extends AbstractController
             $request->query->getInt('page', 1), /* page number */
             $_format=="json" ? 10 : 100 /* limit per page */
         );
+
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('collection/list.'.$_format.'.twig', [
+            "databases" => $databases,
             "models" => $pagination
         ]);
     }
@@ -182,12 +189,14 @@ class DatabaseController extends AbstractController
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $this->render('status/notfound.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
         }
         if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            return $this->render('status/forbidden.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
 
         $model->setUpdated(new \DateTime());
@@ -214,12 +223,14 @@ class DatabaseController extends AbstractController
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $this->render('status/notfound.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
         }
         if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            return $this->render('status/forbidden.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
 
         $model->setUpdated(new \DateTime());
@@ -243,12 +254,14 @@ class DatabaseController extends AbstractController
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $this->render('status/notfound.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
         }
         if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            return $this->render('status/forbidden.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
         switch($model->getCategory()->getId()) {
             case 1:
@@ -297,7 +310,8 @@ class DatabaseController extends AbstractController
         if(is_object($user) and $database->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            return $this->render('status/forbidden.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
 
         $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]));
@@ -429,7 +443,9 @@ class DatabaseController extends AbstractController
             return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
         }
 
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('collection/model.html.twig', [
+            "databases" => $databases,
             "modelform" => $form->createView(),
             "model" => $model,
         ]);
@@ -447,12 +463,14 @@ class DatabaseController extends AbstractController
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $this->render('status/notfound.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
         }
         if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            return $this->render('status/forbidden.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         } else {
             $request->getSession()->set('database', $model->getModeldatabase()->getId());
         }
@@ -552,8 +570,9 @@ class DatabaseController extends AbstractController
             );
             return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
         }
-
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('collection/model.html.twig', [
+            "databases" => $databases,
             "modelform" => $form->createView(),
             "model" => $model,
         ]);
@@ -568,12 +587,14 @@ class DatabaseController extends AbstractController
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $this->render('status/notfound.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
         }
         if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            return $this->render('status/forbidden.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
 
         $axle           = $entityManager->getRepository(Axle::class)->findBy(array("user" => [null, $user->getId()]));
@@ -661,13 +682,17 @@ class DatabaseController extends AbstractController
                 );
                 return $this->redirectToRoute('mbs_model_detail', ['id' => $model->getId()]);
             }
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
             return $this->render($template, [
+                "databases" => $databases,
                 "detailform" => $form->createView(),
                 "model" => $model,
                 "detail" => $detail,
             ]);
         } else {
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
             return $this->render($template, [
+                "databases" => $databases,
                 "model" => $model,
             ]);
         }
@@ -683,12 +708,14 @@ class DatabaseController extends AbstractController
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $this->render('status/notfound.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
         }
         if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            return $this->render('status/forbidden.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
 
         $protocol       = $entityManager->getRepository(Protocol::class)->findBy(array("user" => [null, $user->getId()]));
@@ -727,7 +754,10 @@ class DatabaseController extends AbstractController
             $functions[$digitalfunction['sort']][] = ["key" => $digitalfunction['functionkey'], "name" => $digitalfunction['decoderfunction'], "sound" => $digitalfunction['sound'], "light" => $digitalfunction['light'], "hint" => $digitalfunction['hint'], "id" => $digitalfunction['id']];
         }
         ksort($functions);
+
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render($template, [
+            "databases" => $databases,
             "digitalform" => $form->createView(),
             "model" => $model,
             "digital" => $digital,
@@ -745,17 +775,21 @@ class DatabaseController extends AbstractController
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $this->render('status/notfound.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
         }
         if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            return $this->render('status/forbidden.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
 
         $load = $entityManager->getRepository(Modelload::class)->findBy(array("model" => $model));
 
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('collection/load.html.twig', [
+            "databases" => $databases,
             "model" => $model,
             "load" => $load,
         ]);
@@ -774,12 +808,14 @@ class DatabaseController extends AbstractController
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $this->render('status/notfound.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
         }
         if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            return $this->render('status/forbidden.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
 
         $modelload = new Modelload();
@@ -810,12 +846,14 @@ class DatabaseController extends AbstractController
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $this->render('status/notfound.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
         }
         if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            return $this->render('status/forbidden.html.twig', response: $response);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
         $functionkey = $entityManager->getRepository(Functionkey::class)->findOneBy(['id' => $key]);
         $decoderfunction = $entityManager->getRepository(Decoderfunction::class)->findOneBy(["name" => $df, "sound" => $sound, "light" => $light]);
@@ -871,10 +909,14 @@ class DatabaseController extends AbstractController
             break;
             case "manufacturer":
                 $template = new Manufacturer();
+                $template->setLogo(0);
+                $template->setVector(0);
                 $repository = $entityManager->getRepository(Manufacturer::class);
             break;
             case "company":
                 $template = new Company();
+                $template->setLogo(0);
+                $template->setVector(0);
                 $repository = $entityManager->getRepository(Company::class);
             break;
             case "country":

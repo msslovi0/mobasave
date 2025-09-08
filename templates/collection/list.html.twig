@@ -67,7 +67,7 @@
                   <thead>
                     <tr>
                       <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'model.list.image'|trans }}</span></th>
-                      <th scope="col" class="py-3.5 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.name'|trans }}</th>
+                      <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.name'|trans }}</th>
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.manufacturer'|trans }}</th>
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.category'|trans }}</th>
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.subcategory'|trans }}</th>
@@ -75,7 +75,7 @@
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.gtin13'|trans }}</th>
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.status'|trans }}</th>
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.purchased'|trans }}</th>
-                      <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'model.list.edit'|trans }}</span></th>
+                      <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'global.edit'|trans }}</span></th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
@@ -84,7 +84,7 @@
                       <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                           <div class="flex items-center">
                               <div class="size-11 shrink-0">
-                                  <img src="{% if model.image!="" %}{{ asset('data/image/' ~ model.image) }}{% else %}{{ asset('images/blank.svg' ~ model.image) }}{% endif %}" alt="{{ model.name }}" class="size-11 rounded-full dark:outline dark:outline-white/10" />
+                                  <img src="{% if model.image!="" %}{{ asset('data/image/' ~ model.image) }}{% else %}{{ asset('images/blank.svg') }}{% endif %}" alt="{{ model.name }}" class="size-11 rounded-full dark:outline dark:outline-white/10" />
                               </div>
                           </div>
                       </td>
@@ -124,7 +124,7 @@
                           {% endif %}
                       </td>
                       <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
-                          <a href="{{ path('mbs_model', {id: model.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ 'model.list.edit'|trans }}<span class="sr-only">{{ model.name }}</span></a>
+                          <a href="{{ path('mbs_model', {id: model.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ model.name }}</span></a>
                       </td>
                   </tr>
                   {% endfor %}
