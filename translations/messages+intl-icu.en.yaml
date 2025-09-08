@@ -33,6 +33,7 @@ global:
         filetypes: PNG, JPG, WebP
     login: Login
     logout: Logout
+    add: Add
     title:
         index: MoBaSaVe - Welcome!
         search: Search result for “{query}”
@@ -42,6 +43,7 @@ global:
         model: Model
         details: Details
         digital: Digital
+        load: Load
     error:
         filetype-invalid: Not a valid filetype
 
@@ -90,6 +92,7 @@ model:
         dealer: Dealer
         msrp: MSRP
         notes: Notes
+        description: Description
         box: Box
         price: Price
         quantity: Quantity
@@ -113,10 +116,14 @@ model:
         decoder: Decoder
         protocol: Protocol
         functions: Functions
+        loads: Loads
         function: Function
         functionkey: Key
         modelset: Set
         new: New value for “{name}”
+        parent: Parent is:
+    epoch:
+        till-today: today
     function:
         sound: Sound function
         light: Light function
@@ -126,10 +133,16 @@ model:
             headline: Delete function “{function}”
             text: The function will no longer be associated with this model. This action can't be undone! Proceed with caution!
         deleted: The function association “{function}” was deleted
+    load:
+        delete:
+            headline: Delete load “{load}”
+            text: The load will no longer be associated with this model. The loadentry itself remains untouched. This action can't be undone! Proceed with caution!
+        deleted: The load “{load}” was deleted
     saved: Your changes to “{name}” where saved successfully
     nodetails: This category has no detail information
     created: Your model “{name}” was created successfully
     deleted: Your model “{name}” was deleted
+    assign-load: Assign load
 
 status:
     notfound:

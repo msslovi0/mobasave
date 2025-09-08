@@ -16,7 +16,7 @@ class Vehicle
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $class = null;
 
     #[ORM\Column(nullable: true)]

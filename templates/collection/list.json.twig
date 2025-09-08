@@ -1,0 +1,11 @@
+{
+    {% for model in models %}
+    "{{ model.id }}": {
+        "id": {{ model.id }},
+        "image": "{{ model.image }}",
+        "model": "{{ model.model }}",
+        "name": "{{ model.name }}"
+    }{%if loop.last!=true %},{% endif %}
+    {% endfor %}
+}
+

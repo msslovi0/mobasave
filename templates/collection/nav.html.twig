@@ -8,6 +8,9 @@
                 <option data-path="{{ path('mbs_model', {id: model.id}) }}" {{ template=='model' ? "selected='selected'" : '' }}>{{ 'global.nav.model'|trans }}</option>
                 <option data-path="{{ path('mbs_model_detail', {id: model.id}) }}" {{ template=='details' ? "selected='selected'" : '' }}>{{ 'global.nav.details'|trans }}</option>
                 <option data-path="{{ path('mbs_model_digital', {id: model.id}) }}" {{ template=='digital' ? "selected='selected'" : '' }}>{{ 'global.nav.digital'|trans }}</option>
+                {% if model.category.id == 2 %}
+                    <option data-path="{{ path('mbs_model_load', {id: model.id}) }}" {{ template=='load' ? "selected='selected'" : '' }}>{{ 'global.nav.load'|trans }}</option>
+                {% endif %}
             </select>
             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end fill-gray-500 dark:fill-gray-400">
                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
@@ -18,6 +21,9 @@
                 <a href="{{ path('mbs_model', {id: model.id}) }}" aria-current="page" class="{{ template=='model' ? active : inactive }}">{{ 'global.nav.model'|trans }}</a>
                 <a href="{{ path('mbs_model_detail', {id: model.id}) }}" class="{{ template=='details' ? active : inactive }}">{{ 'global.nav.details'|trans }}</a>
                 <a href="{{ path('mbs_model_digital', {id: model.id}) }}" class="{{ template=='digital' ? active : inactive }}">{{ 'global.nav.digital'|trans }}</a>
+                {% if model.category.id == 2 %}
+                <a href="{{ path('mbs_model_load', {id: model.id}) }}" class="{{ template=='load' ? active : inactive }}">{{ 'global.nav.load'|trans }}</a>
+                {% endif %}
             </nav>
         </div>
     </div>

@@ -58,15 +58,69 @@ $(function() {
         });
     });
 
-    $('#mobile-nav').on('change', function() {
+    $('#load').on('keyup', function() {
+        const search = $('#load').val();
+        const path = $('#load').data('path');
+        if(search.length<3) {
+            return false;
+        }
+        //$('#el-options').html('<el-option value="Courtney Henry" class="block px-3 py-2 text-gray-900 select-none aria-selected:bg-indigo-600 aria-selected:text-white dark:text-white dark:aria-selected:bg-indigo-500" id="option-6" role="option" aria-selected="false" tabindex="-1"> <div class="flex"> <span class="truncate">Courtney Henry</span> <span class="ml-2 truncate text-gray-500 in-aria-selected:text-white dark:text-gray-400 dark:in-aria-selected:text-white">@courtneyhenry</span> </div> </el-option>');
+        $.get(path, {search: search, ajax: 1}, function (response, textstatus, xhr) {
+            if (xhr.status == 200) {
+                $('#el-options').empty();
+                $.each(response, function(id, data) {
+                    $('<a>').attr('data-id', id).attr('value', data.name).html('<div class="flex justify-between"><span class="truncate">'+data.name+'</span> <span class="ml-2 truncate text-gray-300 hover:text-white dark:text-gray-200 dark:hover:text-white">'+data.model+'</span></div>').attr('class', 'block px-3 py-2 text-gray-900 select-none hover:bg-green-800 hover:text-white dark:text-white dark:hover:bg-green-700').appendTo('#el-options');
+                })
+                $('#el-options a').on('click', function() {
+                    $('#el-model').val($(this).data('id'));
+                    $('#el-modelname').val($(this).attr('value'));
+                    $('#load').val($(this).attr('value'));
+                    $('#el-options').hide();
+                    $('#add-load').prop('disabled', false);
+                })
+                $('#el-options').show();
+            }
+        });
+    })
+    $('#load').on('blur', function () {
+        setTimeout(function() {
+            $('#el-options').hide();
+        }, 500);
+
+    })
+
+    $('#mobile-nav').on('change', function () {
         location.replace($('#mobile-nav').find(':selected').data('path'));
     });
-    $('.delete-function').on('click', function() {
-       $('#dialog-title').html($(this).data('headline'));
-       $('#dialog-action').attr('href', $(this).data('path'));
+    $('.delete-function').on('click', function () {
+        $('#dialog-title').html($(this).data('headline'));
+        $('#dialog-action').attr('href', $(this).data('path'));
     });
 
-    $('#add-function').on('click', function(event) {
+    $('#add-load').on('click', function(event) {
+        const model = $('#model').val();
+        const load = $('#el-model').val();
+        const loadname = $('#el-modelname').val();
+        const path = $('#add-path').val();
+        var template = $('#row-template');
+        var row = $('<tr>').html(template.html());
+        row.find('#template-row-model').html(loadname);
+        if($('#load').val()!="") {
+            $.post(path, {model: model, load: load, ajax: 1}, function (response, textstatus, xhr) {
+                if (xhr.status == 200) {
+                    $('#load').focus();
+                    $('#load').val('');
+                    $('#add-load').prop('disabled', true);
+                    $('#el-model').val('');
+                    $('#el-modelname').val('');
+                    row.appendTo($('#loads tbody'));
+                }
+            });
+        }
+        event.preventDefault();
+    });
+
+    $('#add-function').on('click', function (event) {
         const key = $('#add-key').val();
         const keytext = $('#add-key').find(':selected').text();
         const decoderfunction = $('#add-decoderfunction').val();
@@ -76,7 +130,6 @@ $(function() {
         const model = $('#add-model').val();
         var template = $('#row-template');
         var row = $('<tr>').html(template.html());
-        console.log(path);
         if(sound!=1) {
             row.find('#template-row-sound button').remove();
         }
@@ -104,14 +157,24 @@ $(function() {
         $('#drawer-title').html($(this).data('title'))
         $('#drawer-label').html($(this).data('label'))
         $('#drawer-entity').val($(this).data('entity'));
+        const parent = $(this).data('parent');
+        if($(this).data('parent')!="") {
+            $('#drawer-parent').val($(this).data('parent'));
+            $('#parent').html($("label[for='form_"+parent+"']").text());
+            $('#parent-wrapper').show();
+        } else {
+            $('#drawer-parent').val('');
+            $('#parent-wrapper').hide();
+        }
     });
     $('#add-value').on('click', function(event) {
        const entity = $('#drawer-entity').val();
        const name = $('#drawer-name').val();
        const path = $('#drawer-path').val();
-       console.log(path);
+       const parententity = $('#drawer-parent').val();
+       const parent = $('#form_'+parententity).val();
        if(name!="") {
-           $.post(path, {name: name, entity: entity, ajax: 1}, function (response, textstatus, xhr) {
+           $.post(path, {name: name, entity: entity, parent: parent, ajax: 1}, function (response, textstatus, xhr) {
                if (xhr.status == 200) {
                    $('#form_'+entity).empty();
                    $('<option>').val('').text('').appendTo('#form_'+entity);

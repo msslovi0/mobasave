@@ -36,6 +36,8 @@ use App\Entity\Pininterface;
 use App\Entity\DigitalFunction;
 use App\Entity\Functionkey;
 use App\Entity\Decoderfunction;
+use App\Entity\Description;
+use App\Entity\Modelload;
 use BcMath\Number;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -60,6 +62,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Component\Validator\Constraints\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
@@ -100,9 +103,11 @@ class DatabaseController extends AbstractController
             "models" => $pagination
         ]);
     }
-    #[Route('/model/search/', name: 'mbs_model_search', methods: ['GET'])]
-    public function search(EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request)
+    #[Route('/model/search/', defaults: ['_format' => 'html'], name: 'mbs_model_search', methods: ['GET'])]
+    #[Route('/model/autocomplete/', defaults: ['_format' => 'json'], name: 'mbs_model_autocomplete', methods: ['GET'])]
+    public function search(string $_format, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
 
         $query = $request->get('search');
@@ -160,17 +165,48 @@ class DatabaseController extends AbstractController
         $pagination = $paginator->paginate(
             $result,
             $request->query->getInt('page', 1), /* page number */
-            100 /* limit per page */
+            $_format=="json" ? 10 : 100 /* limit per page */
         );
-
-        return $this->render('collection/list.html.twig', [
+        return $this->render('collection/list.'.$_format.'.twig', [
             "models" => $pagination
         ]);
+    }
+    #[Route('/model/load/delete/{id}', name: 'mbs_model_load_delete', methods: ['GET'])]
+    public function deleteLoad(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $modelload = $entityManager->getRepository(Modelload::class)->findOneBy(["id" =>$id]);
+        $user = $this->security->getUser();
+        $model = $modelload->getModel();
+        $loaditem = $modelload->getLoaditem();
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $this->render('status/notfound.html.twig', response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            return $this->render('status/forbidden.html.twig', response: $response);
+        }
+
+        $model->setUpdated(new \DateTime());
+        $loaditem->setUpdated(new \DateTime());
+        $entityManager->remove($modelload);
+        $entityManager->persist($model);
+        $entityManager->persist($loaditem);
+        $this->addFlash(
+            'success',
+            $translator->trans('model.load.deleted', ['load' => $loaditem->getName()])
+        );
+        $entityManager->flush();
+        return $this->redirectToRoute('mbs_model_load', ['id' => $model->getId()]);
 
     }
     #[Route('/model/function/delete/{id}', name: 'mbs_model_function_delete', methods: ['GET'])]
     public function deleteFunction(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $digitalfunction = $entityManager->getRepository(DigitalFunction::class)->findOneBy(["id" =>$id]);
         $user = $this->security->getUser();
         $models = $digitalfunction->getDigital()->getModels();
@@ -268,7 +304,7 @@ class DatabaseController extends AbstractController
         $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]));
         $subcategory    = $entityManager->getRepository(Subcategory::class)->findBy(array("user" => [null, $user->getId()]));
         $manufacturer   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]));
-        $company        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]));
+        $company        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $scale          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]));
         $track          = $entityManager->getRepository(ScaleTrack::class)->findBy(array("user" => [null, $user->getId()]));
         $epoch          = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, $user->getId()]));
@@ -279,6 +315,7 @@ class DatabaseController extends AbstractController
         $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, $user->getId()]));
         $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]));
         $country        = $entityManager->getRepository(Country::class)->findAll();
+        $modelset       = $entityManager->getRepository(Modelset::class)->findBy(array("user" => [null, $user->getId()]));
 
         $model = new Model();
 
@@ -299,6 +336,7 @@ class DatabaseController extends AbstractController
             ->add('box', ChoiceType::class, ['choices' => $box, 'choice_label' => 'name', 'required' => false])
             ->add('modelcondition', ChoiceType::class, ['choices' => $condition, 'choice_label' => 'name', 'required' => false])
             ->add('country', ChoiceType::class, ['choices' => $country, 'choice_label' => 'name', 'required' => false])
+            ->add('modelset', ChoiceType::class, ['choices' => $modelset, 'choice_label' => 'name', 'required' => false])
             ->add('instructions', CheckboxType::class, ['required' => false])
             ->add('parts', CheckboxType::class, ['required' => false])
             ->add('displaycase', CheckboxType::class, ['required' => false])
@@ -314,6 +352,7 @@ class DatabaseController extends AbstractController
             ->add('msrp', MoneyType::class, ['required' => false])
             ->add('price', MoneyType::class, ['required' => false])
             ->add('notes', TextareaType::class, ['required' => false])
+            ->add('description', TextareaType::class, ['required' => false])
             ->add('image', FileType::class, ['data_class' => null, 'required' => false, 'constraints' => [
                 new File(
                     extensions: ['jpg','webp','png']
@@ -375,7 +414,9 @@ class DatabaseController extends AbstractController
                 break;
             }
             $digital = new Digital();
+            $entityManager->persist($digital);
             $model->setDigital($digital);
+            $model->setAvailable(1);
             $model->setCreated(new \DateTime('now'));
             $model->setUpdated(new \DateTime('now'));
             $model->setModeldatabase($database);
@@ -420,7 +461,7 @@ class DatabaseController extends AbstractController
         $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]));
         $subcategory    = $qb->select('s')->from(Subcategory::class, 's')->where($qb->expr()->orX($qb->expr()->isNull('s.user'), $qb->expr()->eq('s.user', ':user'),))->andWhere('s.category = :category')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('category',  $model->getCategory())]))->orderBy('s.name')->getQuery()->getResult();
         $manufacturer   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]));
-        $company        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]));
+        $company        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $scale          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]));
         $track          = $qb->select('t')->from(ScaleTrack::class, 't')->where($qb->expr()->orX($qb->expr()->isNull('t.user'), $qb->expr()->eq('t.user', ':user'),))->andWhere('t.scale = :scale')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('scale',  $model->getScale())]))->getQuery()->getResult();
         $epoch          = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, $user->getId()]));
@@ -431,7 +472,7 @@ class DatabaseController extends AbstractController
         $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, $user->getId()]));
         $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]));
         $country        = $entityManager->getRepository(Country::class)->findAll();
-        $modelset       = $entityManager->getRepository(Modelset::class)->findAll();
+        $modelset       = $entityManager->getRepository(Modelset::class)->findBy(array("user" => [null, $user->getId()]));
 
         $form = $this->createFormBuilder($model)
             ->add('name', TextType::class)
@@ -442,8 +483,12 @@ class DatabaseController extends AbstractController
             ->add('company', ChoiceType::class, ['choices' => $company, 'choice_label' => 'name', 'required' => false])
             ->add('scale', ChoiceType::class, ['choices' => $scale, 'choice_label' => 'name', 'required' => false])
             ->add('track', ChoiceType::class, ['choices' => $track, 'choice_label' => 'name', 'required' => false])
-            ->add('epoch', ChoiceType::class, ['choices' => $epoch, 'choice_label' => 'name', 'required' => false])
-            ->add('subepoch', ChoiceType::class, ['choices' => $subepoch, 'choice_label' => 'name', 'required' => false])
+            ->add('epoch', ChoiceType::class, ['choices' => $epoch, 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
+                return $choice->getName()." (".$choice->getStart()."-".($choice->getEnd()!="" ? $choice->getEnd():"∞").")";
+            }, 'required' => false])
+            ->add('subepoch', ChoiceType::class, ['choices' => $subepoch, 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
+                return $choice->getName()." (".$choice->getStart()."-".($choice->getEnd()!="" ? $choice->getEnd():"∞").")";
+            }, 'required' => false])
             ->add('storage', ChoiceType::class, ['choices' => $storage, 'choice_label' => 'name', 'required' => false])
             ->add('project', ChoiceType::class, ['choices' => $project, 'choice_label' => 'name', 'required' => false])
             ->add('dealer', ChoiceType::class, ['choices' => $dealer, 'choice_label' => 'name', 'required' => false])
@@ -466,6 +511,7 @@ class DatabaseController extends AbstractController
             ->add('msrp', MoneyType::class, ['required' => false])
             ->add('price', MoneyType::class, ['required' => false])
             ->add('notes', TextareaType::class, ['required' => false])
+            ->add('description', TextareaType::class, ['required' => false])
             ->add('image', FileType::class, ['data_class' => null, 'required' => false, 'constraints' => [
                 new File(
                     extensions: ['jpg','webp','png']
@@ -689,9 +735,69 @@ class DatabaseController extends AbstractController
             "functionkey" => $functionkey,
         ]);
     }
+    #[Route('/model/{id}/load/', name: 'mbs_model_load', methods: ['GET','POST'])]
+    public function load(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+
+        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $this->render('status/notfound.html.twig', response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            return $this->render('status/forbidden.html.twig', response: $response);
+        }
+
+        $load = $entityManager->getRepository(Modelload::class)->findBy(array("model" => $model));
+
+        return $this->render('collection/load.html.twig', [
+            "model" => $model,
+            "load" => $load,
+        ]);
+    }
+    #[Route('/model/load/add/', name: 'mbs_model_load_add', methods: ['POST'])]
+    public function addLoad(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $id = $request->get('model');
+        $load = $request->get('load');
+        $user = $this->security->getUser();
+
+        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        $loaditem = $entityManager->getRepository(Model::class)->findOneBy(["id" => $load]);
+
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $this->render('status/notfound.html.twig', response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            return $this->render('status/forbidden.html.twig', response: $response);
+        }
+
+        $modelload = new Modelload();
+        $modelload->setModel($model);
+        $modelload->setLoaditem($loaditem);
+        $model->setUpdated(new \DateTime('now'));
+        $loaditem->setUpdated(new \DateTime('now'));
+        $entityManager->persist($model);
+        $entityManager->persist($loaditem);
+        $entityManager->persist($modelload);
+        $entityManager->flush();
+        return new Response('ok');
+    }
+
     #[Route('/model/function/add/', name: 'mbs_model_function_add', methods: ['POST'])]
     public function addFunction(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $id = $request->get('model');
         $key = $request->get('key');
         $df = $request->get('decoderfunction');
@@ -735,6 +841,8 @@ class DatabaseController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $name = $request->get('name');
         $entity = $request->get('entity');
+        $parent = $request->get('parent');
+        $parent = (int)$parent+1;
         $user = $this->security->getUser();
 
         switch($entity) {
@@ -756,6 +864,9 @@ class DatabaseController extends AbstractController
             break;
             case "subcategory":
                 $template = new Subcategory();
+                $parententity = $entityManager->getRepository(Category::class)->findOneBy(array("id" => $parent));
+                $parentname = "category";
+                $template->setCategory($parententity);
                 $repository = $entityManager->getRepository(Subcategory::class);
             break;
             case "manufacturer":
@@ -800,6 +911,9 @@ class DatabaseController extends AbstractController
             break;
             case "track":
                 $template = new ScaleTrack();
+                $parententity = $entityManager->getRepository(Scale::class)->findOneBy(array("id" => $parent));
+                $parentname = "scale";
+                $template->setScale($parententity);
                 $repository = $entityManager->getRepository(ScaleTrack::class);
             break;
             case "epoch":
@@ -808,6 +922,9 @@ class DatabaseController extends AbstractController
             break;
             case "subepoch":
                 $template = new Subepoch();
+                $parententity = $entityManager->getRepository(Epoch::class)->findOneBy(array("id" => $parent));
+                $parentname = "epoch";
+                $template->setEpoch($parententity);
                 $repository = $entityManager->getRepository(Subepoch::class);
             break;
             case "modelset":
@@ -825,7 +942,11 @@ class DatabaseController extends AbstractController
             $entityManager->flush();
         }
 
-        $values = $repository->findBy(array("user" => [null, $user->getId()]));
+        if(isset($parententity)) {
+            $values = $repository->findBy(array($parentname => $parententity, "user" => [null, $user->getId()]));
+        } else {
+            $values = $repository->findBy(array("user" => [null, $user->getId()]));
+        }
         foreach($values as $value) {
             $data[$value->getId()] = $value->getName();
         }
@@ -879,7 +1000,7 @@ class DatabaseController extends AbstractController
         $subepochs        = $qb->select('se')->from(Subepoch::class, 'se')->where($qb->expr()->orX($qb->expr()->isNull('se.user'), $qb->expr()->eq('se.user', ':user'),))->andWhere('se.epoch = :epoch')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('epoch',  $id)]))->getQuery()->getResult();
 
         foreach($subepochs as $subepoch) {
-            $data[$subepoch->getId()] = $subepoch->getName();
+            $data[$subepoch->getId()] = $subepoch->getName()." (".$subepoch->getStart()."-".($subepoch->getEnd()!=""?$subepoch->getEnd():"∞").")";
         }
 
         if(isset($data)) {
