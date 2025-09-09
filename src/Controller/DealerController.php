@@ -55,8 +55,8 @@ class DealerController extends AbstractController
             ->add('tiktok', UrlType::class, ['required' => false])
             ->add('twitter', UrlType::class, ['required' => false])
             ->add('linkedin', UrlType::class, ['required' => false])
-            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name'])
-            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name'])
+            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
             ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
 
@@ -129,8 +129,8 @@ class DealerController extends AbstractController
             ->add('tiktok', UrlType::class, ['required' => false])
             ->add('twitter', UrlType::class, ['required' => false])
             ->add('linkedin', UrlType::class, ['required' => false])
-            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name'])
-            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name'])
+            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
             ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
 

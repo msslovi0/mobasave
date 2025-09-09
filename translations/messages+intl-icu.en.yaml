@@ -246,6 +246,9 @@ model:
             headline: Delete function “{function}”
             text: The function will no longer be associated with this model. This action can't be undone! Proceed with caution!
         deleted: The function association “{function}” was deleted
+    value:
+        add:
+            hint: Due to technical restrictions the form will reload once you click “Save”, you will have to select the new value again and resubmit the form in order to save it.
     load:
         delete:
             headline: Delete load “{load}”
@@ -256,6 +259,7 @@ model:
     created: Your model “{name}” was created successfully
     deleted: Your model “{name}” was deleted
     assign-load: Assign load
+    resubmit: Please re-select your newly created values and re-submit the form in order to save it.
 
 status:
     notfound:

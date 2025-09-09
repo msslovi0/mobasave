@@ -43,8 +43,8 @@ class CompanyController extends AbstractController
 
         $form = $this->createFormBuilder($company)
             ->add('name', TextType::class)
-            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name'])
-            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name'])
+            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
             ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
 
@@ -105,8 +105,8 @@ class CompanyController extends AbstractController
 
         $form = $this->createFormBuilder($company)
             ->add('name', TextType::class)
-            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name'])
-            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name'])
+            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
             ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
 

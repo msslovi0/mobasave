@@ -18,6 +18,7 @@ use App\Entity\Storage;
 use App\Entity\Project;
 use App\Entity\Dealer;
 use App\Entity\Country;
+use App\Entity\State;
 use App\Entity\Modelset;
 use App\Entity\Box;
 use App\Entity\Condition;
@@ -314,36 +315,40 @@ class DatabaseController extends AbstractController
             return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
 
-        $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]));
-        $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]));
-        $subcategory    = $entityManager->getRepository(Subcategory::class)->findBy(array("user" => [null, $user->getId()]));
-        $manufacturer   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]));
+        $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $subcategory    = $entityManager->getRepository(Subcategory::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $manufacturer   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $company        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
-        $scale          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]));
-        $track          = $entityManager->getRepository(ScaleTrack::class)->findBy(array("user" => [null, $user->getId()]));
-        $epoch          = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, $user->getId()]));
-        $subepoch       = $entityManager->getRepository(Subepoch::class)->findBy(array("user" => [null, $user->getId()]));
-        $storage        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]));
-        $project        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, $user->getId()]));
-        $dealer         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]));
-        $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, $user->getId()]));
-        $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]));
+        $scale          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $track          = $entityManager->getRepository(ScaleTrack::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $epoch          = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $subepoch       = $entityManager->getRepository(Subepoch::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $storage        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $project        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $dealer         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $country        = $entityManager->getRepository(Country::class)->findAll();
-        $modelset       = $entityManager->getRepository(Modelset::class)->findBy(array("user" => [null, $user->getId()]));
+        $modelset       = $entityManager->getRepository(Modelset::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
 
         $model = new Model();
 
         $form = $this->createFormBuilder($model)
             ->add('name', TextType::class)
             ->add('status', ChoiceType::class, ['choices' => $status, 'choice_label' => 'name'])
-            ->add('category', ChoiceType::class, ['choices' => $category, 'choice_label' => 'name'])
-            ->add('subcategory', ChoiceType::class, ['choices' => $subcategory, 'choice_label' => 'name', 'required' => false])
+            ->add('category', ChoiceType::class, ['choices' => $category, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('subcategory', ChoiceType::class, ['choices' => $subcategory, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "subcategory-option category-".$choice->getCategory()->getId()];}, 'required' => false])
             ->add('manufacturer', ChoiceType::class, ['choices' => $manufacturer, 'choice_label' => 'name', 'required' => false])
             ->add('company', ChoiceType::class, ['choices' => $company, 'choice_label' => 'name', 'required' => false])
-            ->add('scale', ChoiceType::class, ['choices' => $scale, 'choice_label' => 'name', 'required' => false])
-            ->add('track', ChoiceType::class, ['choices' => $track, 'choice_label' => 'name', 'required' => false])
-            ->add('epoch', ChoiceType::class, ['choices' => $epoch, 'choice_label' => 'name', 'required' => false])
-            ->add('subepoch', ChoiceType::class, ['choices' => $subepoch, 'choice_label' => 'name', 'required' => false])
+            ->add('scale', ChoiceType::class, ['choices' => $scale, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('track', ChoiceType::class, ['choices' => $track, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "track-option scale-".$choice->getScale()->getId()];}, 'required' => false])
+            ->add('epoch', ChoiceType::class, ['choices' => $epoch, 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
+                return $choice->getName()." (".$choice->getStart()."-".($choice->getEnd()!="" ? $choice->getEnd():"∞").")";
+            }, 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}, 'required' => false])
+            ->add('subepoch', ChoiceType::class, ['choices' => $subepoch, 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
+                return $choice->getName()." (".$choice->getStart()."-".($choice->getEnd()!="" ? $choice->getEnd():"∞").")";
+            }, 'choice_attr' => function ($choice) {return ['class' => "subepoch-option epoch-".$choice->getEpoch()->getId()];}, 'required' => false])
             ->add('storage', ChoiceType::class, ['choices' => $storage, 'choice_label' => 'name', 'required' => false])
             ->add('project', ChoiceType::class, ['choices' => $project, 'choice_label' => 'name', 'required' => false])
             ->add('dealer', ChoiceType::class, ['choices' => $dealer, 'choice_label' => 'name', 'required' => false])
@@ -441,6 +446,16 @@ class DatabaseController extends AbstractController
                 $translator->trans('model.created', ['name' => $model->getName()])
             );
             return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+            $this->addFlash(
+                'error',
+                $translator->trans('model.resubmit', ['name' => $model->getName()])
+            );
+        } else {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_OK);
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
@@ -448,7 +463,7 @@ class DatabaseController extends AbstractController
             "databases" => $databases,
             "modelform" => $form->createView(),
             "model" => $model,
-        ]);
+        ], response: $response);
     }
     #[Route('/model/{id}', name: 'mbs_model', methods: ['GET','POST'])]
     public function model(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/image')] string $imageDirectory): Response
@@ -475,38 +490,38 @@ class DatabaseController extends AbstractController
             $request->getSession()->set('database', $model->getModeldatabase()->getId());
         }
         $qb             = $entityManager->createQueryBuilder();
-        $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]));
-        $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]));
-        $subcategory    = $qb->select('s')->from(Subcategory::class, 's')->where($qb->expr()->orX($qb->expr()->isNull('s.user'), $qb->expr()->eq('s.user', ':user'),))->andWhere('s.category = :category')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('category',  $model->getCategory())]))->orderBy('s.name')->getQuery()->getResult();
-        $manufacturer   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]));
+        $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $subcategory    = $entityManager->getRepository(Subcategory::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $manufacturer   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $company        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
-        $scale          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]));
-        $track          = $qb->select('t')->from(ScaleTrack::class, 't')->where($qb->expr()->orX($qb->expr()->isNull('t.user'), $qb->expr()->eq('t.user', ':user'),))->andWhere('t.scale = :scale')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('scale',  $model->getScale())]))->getQuery()->getResult();
-        $epoch          = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, $user->getId()]));
-        $subepoch        = $qb->select('se')->from(Subepoch::class, 'se')->where($qb->expr()->orX($qb->expr()->isNull('se.user'), $qb->expr()->eq('se.user', ':user'),))->andWhere('se.epoch = :epoch')->setParameters(new ArrayCollection([new Parameter('user',  $user->getId()), new Parameter('epoch',  $model->getEpoch())]))->getQuery()->getResult();
-        $storage        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]));
-        $project        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, $user->getId()]));
-        $dealer         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]));
-        $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, $user->getId()]));
-        $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]));
+        $scale          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $track          = $entityManager->getRepository(ScaleTrack::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $epoch          = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $subepoch        =$entityManager->getRepository(Subepoch::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $storage        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $project        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $dealer         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $country        = $entityManager->getRepository(Country::class)->findAll();
-        $modelset       = $entityManager->getRepository(Modelset::class)->findBy(array("user" => [null, $user->getId()]));
+        $modelset       = $entityManager->getRepository(Modelset::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
 
         $form = $this->createFormBuilder($model)
             ->add('name', TextType::class)
             ->add('status', ChoiceType::class, ['choices' => $status, 'choice_label' => 'name'])
-            ->add('category', ChoiceType::class, ['choices' => $category, 'choice_label' => 'name'])
-            ->add('subcategory', ChoiceType::class, ['choices' => $subcategory, 'choice_label' => 'name', 'required' => false])
+            ->add('category', ChoiceType::class, ['choices' => $category, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('subcategory', ChoiceType::class, ['choices' => $subcategory, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "subcategory-option category-".$choice->getCategory()->getId()];}, 'required' => false])
             ->add('manufacturer', ChoiceType::class, ['choices' => $manufacturer, 'choice_label' => 'name', 'required' => false])
             ->add('company', ChoiceType::class, ['choices' => $company, 'choice_label' => 'name', 'required' => false])
-            ->add('scale', ChoiceType::class, ['choices' => $scale, 'choice_label' => 'name', 'required' => false])
-            ->add('track', ChoiceType::class, ['choices' => $track, 'choice_label' => 'name', 'required' => false])
+            ->add('scale', ChoiceType::class, ['choices' => $scale, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}, 'required' => false])
+            ->add('track', ChoiceType::class, ['choices' => $track, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "track-option scale-".$choice->getScale()->getId()];}, 'required' => false])
             ->add('epoch', ChoiceType::class, ['choices' => $epoch, 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
                 return $choice->getName()." (".$choice->getStart()."-".($choice->getEnd()!="" ? $choice->getEnd():"∞").")";
-            }, 'required' => false])
+            }, 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}, 'required' => false])
             ->add('subepoch', ChoiceType::class, ['choices' => $subepoch, 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
                 return $choice->getName()." (".$choice->getStart()."-".($choice->getEnd()!="" ? $choice->getEnd():"∞").")";
-            }, 'required' => false])
+            }, 'choice_attr' => function ($choice) {return ['class' => "subepoch-option epoch-".$choice->getEpoch()->getId()];}, 'required' => false])
             ->add('storage', ChoiceType::class, ['choices' => $storage, 'choice_label' => 'name', 'required' => false])
             ->add('project', ChoiceType::class, ['choices' => $project, 'choice_label' => 'name', 'required' => false])
             ->add('dealer', ChoiceType::class, ['choices' => $dealer, 'choice_label' => 'name', 'required' => false])
@@ -569,6 +584,16 @@ class DatabaseController extends AbstractController
                 $translator->trans('model.saved', ['name' => $model->getName()])
             );
             return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+            $this->addFlash(
+                'error',
+                $translator->trans('model.resubmit', ['name' => $model->getName()])
+            );
+        } else {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_OK);
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
@@ -576,7 +601,7 @@ class DatabaseController extends AbstractController
             "databases" => $databases,
             "modelform" => $form->createView(),
             "model" => $model,
-        ]);
+        ], response: $response);
     }
     #[Route('/model/{id}/details/', name: 'mbs_model_detail', methods: ['GET','POST'])]
     public function detail(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
@@ -980,15 +1005,19 @@ class DatabaseController extends AbstractController
         if(!is_object($new)) {
             $new = $template;
             $new->setName($name);
-            $new->setUser($user);
+            if($entity!="country") {
+                $new->setUser($user);
+            }
             $entityManager->persist($new);
             $entityManager->flush();
         }
 
         if(isset($parententity)) {
-            $values = $repository->findBy(array($parentname => $parententity, "user" => [null, $user->getId()]));
+            $values = $repository->findBy(array($parentname => $parententity, "user" => [null, $user->getId()]), ['name' => 'ASC']);
+        } elseif($entity!="country") {
+            $values = $repository->findBy(array("user" => [null, $user->getId()]), ['name' => 'ASC']);
         } else {
-            $values = $repository->findBy(array("user" => [null, $user->getId()]));
+            $values = $repository->findBy([], ['name' => 'ASC']);
         }
         foreach($values as $value) {
             $data[$value->getId()] = $value->getName();
@@ -1044,6 +1073,25 @@ class DatabaseController extends AbstractController
 
         foreach($subepochs as $subepoch) {
             $data[$subepoch->getId()] = $subepoch->getName()." (".$subepoch->getStart()."-".($subepoch->getEnd()!=""?$subepoch->getEnd():"∞").")";
+        }
+
+        if(isset($data)) {
+            return new JsonResponse($data);
+        } else {
+            return new Response('{}');
+        }
+    }
+    #[Route('/api/state/', name: 'mbs_api_state', format: 'json', methods: ['POST'])]
+    public function state(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $id = $request->get('id');
+        $user = $this->security->getUser();
+        $qb = $entityManager->createQueryBuilder();
+        $states        = $qb->select('s')->from(State::class, 's')->where('s.country = :country')->setParameters(new ArrayCollection([new Parameter('country',  $id)]))->getQuery()->getResult();
+
+        foreach($states as $state) {
+            $data[$state->getId()] = $state->getName();
         }
 
         if(isset($data)) {
