@@ -172,6 +172,18 @@
                                 </svg>
                             </div>
                         </div>
+                        <div class="col-span-full">
+                            <div class="flex items-center">
+                                <div aria-hidden="true" class="w-full mt-3 border-t border-gray-300 dark:border-white/15"></div>
+                            </div>
+                        </div>
+                        {% if dealer.models|length > 0 %}
+                        <div class="col-span-full">
+                            <div class="flex items-center">
+                                <a href="{{ path('mbs_dealer_models', {id: dealer.id}) }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'dealer.show-all'|trans({'name': dealer.name, 'count': dealer.models|length}) }}</a>
+                            </div>
+                        </div>
+                        {% endif %}
                         <div class="sm:col-span-3 sm:row-span-30">
                         </div>
                     </div>

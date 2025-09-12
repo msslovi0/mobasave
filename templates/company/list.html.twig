@@ -6,20 +6,16 @@
 {% block body %}
     <div class="py-10">
         <header>
-            <div class="mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ 'global.nav.company'|trans }}</h1>
+                <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                    <a href="{{ path('mbs_company_add') }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'company.list.add'|trans }}</a>
+                </div>
             </div>
         </header>
         <main>
             <div class="mx-auto max-w-10xl px-4 py-8 sm:px-6 lg:px-8">
                 <div class="px-4 sm:px-6 lg:px-8">
-                    <div class="sm:flex sm:items-center">
-                        <div class="sm:flex-auto">
-                        </div>
-                        <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                            <a href="{{ path('mbs_company_add') }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'company.list.add'|trans }}</a>
-                        </div>
-                    </div>
                     <div class="col-span-full mt-5">
                         {% for message in app.flashes('error') %}
                             <div class="border-l-4 border-red-400 bg-red-50 p-4 dark:border-red-500 dark:bg-red-500/10">
@@ -61,6 +57,7 @@
                                         <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'company.list.logo'|trans }}</span></th>
                                         <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'company.field.name'|trans }}</th>
                                         <th scope="col" colspan="2" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'company.field.country'|trans }}</th>
+                                        <th></th>
                                         <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'company.list.edit'|trans }}</span></th>
                                     </tr>
                                     </thead>
@@ -76,7 +73,7 @@
                                             </td>
                                             <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                                                 <div class="ml-4">
-                                                    <div class="font-medium text-gray-900 dark:text-white">{{ company.name }}</div>
+                                                    <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_company', {id: company.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ company.name }}</a></div>
                                                 </div>
                                             </td>
                                             <td class="py-5 pl-4 text-sm whitespace-nowrap sm:pl-0">
@@ -90,6 +87,20 @@
                                                 <div class="">
                                                     <div class="font-medium text-gray-900 dark:text-white">{{ company.country.name is defined ? company.country.name : '' }}</div>
                                                 </div>
+                                            </td>
+                                            <td class="py-5 pr-3 text-sm whitespace-nowrap sm:pl-0">
+                                                <span class="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-gray-900 inset-ring inset-ring-gray-200 dark:text-white dark:inset-ring-white/10">
+                                                    <svg viewBox="0 0 6 6" aria-hidden="true" class="size-1.5 fill-{{ company.logo==1 ? "green" : "red" }}-500 dark:fill-{{ company.logo==1 ? "green" : "red" }}-400">
+                                                        <circle r="3" cx="3" cy="3" />
+                                                    </svg>
+                                                        {{ 'global.logo'|trans }}
+                                                </span>
+                                                <span class="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-gray-900 inset-ring inset-ring-gray-200 dark:text-white dark:inset-ring-white/10">
+                                                    <svg viewBox="0 0 6 6" aria-hidden="true" class="size-1.5 fill-{{ company.vector==1 ? "green" : "red" }}-500 dark:fill-{{ company.logo==1 ? "green" : "red" }}-400">
+                                                        <circle r="3" cx="3" cy="3" />
+                                                    </svg>
+                                                        {{ 'global.vector'|trans }}
+                                                </span>
                                             </td>
                                             <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
                                                 <a href="{{ path('mbs_company', {id: company.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ company.name }}</span></a>

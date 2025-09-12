@@ -6,6 +6,7 @@ use App\Entity\Country;
 use App\Entity\Database;
 use App\Entity\Dealer;
 use App\Entity\State;
+use App\Entity\Model;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -68,7 +69,8 @@ class DealerController extends AbstractController
             if($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                $extension = $imageFile->guessExtension();
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$extension;
                 try {
                     $imageFile->move($imageDirectory, $newFilename);
                 } catch (FileException $e) {
@@ -80,6 +82,10 @@ class DealerController extends AbstractController
                     // ... handle exception if something happens during file upload
                 }
                 $dealer->setImage($newFilename);
+                if($extension=='svg') {
+                    $dealer->setVector(1);
+                }
+                $dealer->setLogo(1);
             } elseif(isset($currentImage) && $currentImage!="") {
                 $dealer->setImage($currentImage);
             }
@@ -142,7 +148,8 @@ class DealerController extends AbstractController
             if($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                $extension = $imageFile->guessExtension();
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$extension;
                 try {
                     $imageFile->move($imageDirectory, $newFilename);
                 } catch (FileException $e) {
@@ -153,7 +160,14 @@ class DealerController extends AbstractController
                     return $this->redirectToRoute('mbs_dealer', ['id' => $dealer->getId()]);
                     // ... handle exception if something happens during file upload
                 }
+                if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
+                    unlink($imageDirectory."/".$currentImage);
+                }
                 $dealer->setImage($newFilename);
+                if($extension=='svg') {
+                    $dealer->setVector(1);
+                }
+                $dealer->setLogo(1);
             } elseif(isset($currentImage) && $currentImage!="") {
                 $dealer->setImage($currentImage);
             }
@@ -171,6 +185,26 @@ class DealerController extends AbstractController
             "databases" => $databases,
             "dealerform" => $form->createView(),
             "dealer" => $dealer,
+        ]);
+    }
+
+    #[Route('/dealer/{id}/models', name: 'mbs_dealer_models', methods: ['GET', 'POST'])]
+    public function models(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+        $dealer = $entityManager->getRepository(Dealer::class)->find($id);
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        $models = $entityManager->getRepository(Model::Class)->findBy(["dealer" => $dealer, "modeldatabase" => $databases]);
+        $pagination = $paginator->paginate(
+            $models,
+            $request->query->getInt('page', 1), /* page number */
+            100 /* limit per page */
+        );
+
+        return $this->render('collection/list.html.twig', [
+            "databases" => $databases,
+            "models" => $pagination
         ]);
     }
 

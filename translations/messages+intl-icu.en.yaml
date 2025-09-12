@@ -56,10 +56,14 @@ global:
         company: Company
     error:
         filetype-invalid: Not a valid filetype
+    logo: Logo
+    vector: Vector
 
 manufacturer:
     list:
         add: Add manufacturer
+        edit: Edit
+        logo: Logo
     field:
         name: Name
         street: Street
@@ -86,6 +90,13 @@ manufacturer:
         text: The manufacturer will be deleted. This action can't be undone! Proceed with caution!
     saved: Your changes to manufacturer “{name}” where saved successfully
     deleted: The manufacturer “{name}” was deleted
+    models: Models by “{name}”
+    back: Back to “{name}”
+    show-all: >-
+        {count, plural,
+            =1    {Show one model from “{name}”}
+            other {Show all # models from “{name}”}
+        }
     has-models: >-
         {count, plural,
             =1    {Can't delete manufacturer “{name}”. There is still one model assigned.}
@@ -95,6 +106,8 @@ manufacturer:
 dealer:
     list:
         add: Add dealer
+        edit: Edit
+        logo: Logo
     field:
         name: Name
         street: Street
@@ -119,8 +132,15 @@ dealer:
         cancel: Cancel
         headline: Delete dealer
         text: The dealer will be deleted. This action can't be undone! Proceed with caution!
-    saved: Your changes to dealer “{name}” where saved successfully
+    saved: Your changes to dealer “{name}” have been successfully saved
     deleted: The dealer “{name}” was deleted
+    models: Models by “{name}”
+    back: Back to “{name}”
+    show-all: >-
+        {count, plural,
+            =1    {Show one model from “{name}”}
+            other {Show all # models from “{name}”}
+        }
     has-models: >-
         {count, plural,
             =1    {Can't delete dealer “{name}”. There is still one model assigned.}
@@ -130,6 +150,8 @@ dealer:
 company:
     list:
         add: Add company
+        edit: Edit
+        logo: Logo
     field:
         name: Name
         street: Street
@@ -154,8 +176,15 @@ company:
         cancel: Cancel
         headline: Delete company
         text: The company will be deleted. This action can't be undone! Proceed with caution!
-    saved: Your changes to company “{name}” where saved successfully
+    saved: Your changes to company “{name}” have been successfully saved
     deleted: The company “{name}” was deleted
+    models: Models by “{name}”
+    back: Back to “{name}”
+    show-all: >-
+        {count, plural,
+            =1    {Show one model from “{name}”}
+            other {Show all # models from “{name}”}
+        }
     has-models: >-
         {count, plural,
             =1    {Can't delete company “{name}”. There is still one model assigned.}
@@ -254,7 +283,7 @@ model:
             headline: Delete load “{load}”
             text: The load will no longer be associated with this model. The loadentry itself remains untouched. This action can't be undone! Proceed with caution!
         deleted: The load “{load}” was deleted
-    saved: Your changes to “{name}” where saved successfully
+    saved: Your changes to “{name}” have been successfully saved
     nodetails: This category has no detail information
     created: Your model “{name}” was created successfully
     deleted: Your model “{name}” was deleted

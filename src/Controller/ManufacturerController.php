@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Country;
 use App\Entity\Database;
 use App\Entity\Manufacturer;
+use App\Entity\Model;
 use App\Entity\State;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -82,6 +83,10 @@ class ManufacturerController extends AbstractController
                     // ... handle exception if something happens during file upload
                 }
                 $manufacturer->setImage($newFilename);
+                if($imageFile->guessExtension()=='svg') {
+                    $manufacturer->setVector(1);
+                }
+                $manufacturer->setLogo(1);
             } elseif(isset($currentImage) && $currentImage!="") {
                 $manufacturer->setImage($currentImage);
             }
@@ -146,7 +151,8 @@ class ManufacturerController extends AbstractController
             if($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                $extension = $imageFile->guessExtension();
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$extension;
                 try {
                     $imageFile->move($imageDirectory, $newFilename);
                 } catch (FileException $e) {
@@ -157,7 +163,14 @@ class ManufacturerController extends AbstractController
                     return $this->redirectToRoute('mbs_manufacturer', ['id' => $manufacturer->getId()]);
                     // ... handle exception if something happens during file upload
                 }
+                if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
+                    unlink($imageDirectory."/".$currentImage);
+                }
                 $manufacturer->setImage($newFilename);
+                if($extension=='svg') {
+                    $manufacturer->setVector(1);
+                }
+                $manufacturer->setLogo(1);
             } elseif(isset($currentImage) && $currentImage!="") {
                 $manufacturer->setImage($currentImage);
             }
@@ -175,6 +188,26 @@ class ManufacturerController extends AbstractController
             "databases" => $databases,
             "manufacturerform" => $form->createView(),
             "manufacturer" => $manufacturer,
+        ]);
+    }
+
+    #[Route('/manufacturer/{id}/models', name: 'mbs_manufacturer_models', methods: ['GET', 'POST'])]
+    public function models(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+        $manufacturer = $entityManager->getRepository(Manufacturer::class)->find($id);
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        $models = $entityManager->getRepository(Model::Class)->findBy(["manufacturer" => $manufacturer, "modeldatabase" => $databases]);
+        $pagination = $paginator->paginate(
+            $models,
+            $request->query->getInt('page', 1), /* page number */
+            100 /* limit per page */
+        );
+
+        return $this->render('collection/list.html.twig', [
+            "databases" => $databases,
+            "models" => $pagination
         ]);
     }
 

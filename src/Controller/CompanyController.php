@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Country;
 use App\Entity\Database;
 use App\Entity\Company;
+use App\Entity\Model;
 use App\Entity\State;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -67,7 +68,14 @@ class CompanyController extends AbstractController
                     return $this->redirectToRoute('mbs_company', ['id' => $company->getId()]);
                     // ... handle exception if something happens during file upload
                 }
+                if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
+                    unlink($imageDirectory."/".$currentImage);
+                }
                 $company->setImage($newFilename);
+                if($imageFile->guessExtension()=='svg') {
+                    $company->setVector(1);
+                }
+                $company->setLogo(1);
             } elseif(isset($currentImage) && $currentImage!="") {
                 $company->setImage($currentImage);
             }
@@ -118,7 +126,8 @@ class CompanyController extends AbstractController
             if($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                $extension = $imageFile->guessExtension();
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$extension;
                 try {
                     $imageFile->move($imageDirectory, $newFilename);
                 } catch (FileException $e) {
@@ -130,6 +139,10 @@ class CompanyController extends AbstractController
                     // ... handle exception if something happens during file upload
                 }
                 $company->setImage($newFilename);
+                if($extension=='svg') {
+                    $company->setVector(1);
+                }
+                $company->setLogo(1);
             } elseif(isset($currentImage) && $currentImage!="") {
                 $company->setImage($currentImage);
             }
@@ -155,7 +168,7 @@ class CompanyController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $companies = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), ['name' => 'ASC']);
+        $companies = $entityManager->getRepository(Company::class)->findBy(array("vector" => 0, "user" => [null, $user->getId()]), ['name' => 'ASC']);
 
         $pagination = $paginator->paginate(
             $companies,
@@ -167,6 +180,26 @@ class CompanyController extends AbstractController
         return $this->render('company/list.html.twig', [
             "databases" => $databases,
             "companies" => $pagination
+        ]);
+    }
+
+    #[Route('/company/{id}/models', name: 'mbs_company_models', methods: ['GET', 'POST'])]
+    public function models(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+        $company = $entityManager->getRepository(Company::class)->find($id);
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        $models = $entityManager->getRepository(Model::Class)->findBy(["company" => $company, "modeldatabase" => $databases]);
+        $pagination = $paginator->paginate(
+            $models,
+            $request->query->getInt('page', 1), /* page number */
+            100 /* limit per page */
+        );
+
+        return $this->render('collection/list.html.twig', [
+            "databases" => $databases,
+            "models" => $pagination
         ]);
     }
 

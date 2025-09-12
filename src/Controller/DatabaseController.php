@@ -388,7 +388,8 @@ class DatabaseController extends AbstractController
             if($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                $extension = $imageFile->guessExtension();
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$extension;
                 try {
                     $imageFile->move($imageDirectory, $newFilename);
                 } catch (FileException $e) {
@@ -466,6 +467,9 @@ class DatabaseController extends AbstractController
         ], response: $response);
     }
     #[Route('/model/{id}', name: 'mbs_model', methods: ['GET','POST'])]
+    #[Route('/dealer/{dealer}/model/{id}', name: 'mbs_dealer_model', methods: ['GET','POST'])]
+    #[Route('/manufacturer/{manufacturer}/model/{id}', name: 'mbs_manufacturer_model', methods: ['GET','POST'])]
+    #[Route('/company/{company}/model/{id}', name: 'mbs_company_model', methods: ['GET','POST'])]
     public function model(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/image')] string $imageDirectory): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -572,6 +576,9 @@ class DatabaseController extends AbstractController
                 return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
                     // ... handle exception if something happens during file upload
                 }
+                if(file_exists($imageDirectory."/".$currentImage)) {
+                    unlink($imageDirectory."/".$currentImage);
+                }
                 $model->setImage($newFilename);
             } elseif(isset($currentImage) && $currentImage!="") {
                 $model->setImage($currentImage);
@@ -604,6 +611,9 @@ class DatabaseController extends AbstractController
         ], response: $response);
     }
     #[Route('/model/{id}/details/', name: 'mbs_model_detail', methods: ['GET','POST'])]
+    #[Route('/dealer/{dealer}/model/{id}/details/', name: 'mbs_dealer_model_detail', methods: ['GET','POST'])]
+    #[Route('/manufacturer/{manufacturer}/model/{id}/details/', name: 'mbs_manufacturer_model_detail', methods: ['GET','POST'])]
+    #[Route('/company/{company}/model/{id}/details/', name: 'mbs_company_model_detail', methods: ['GET','POST'])]
     public function detail(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -725,6 +735,9 @@ class DatabaseController extends AbstractController
 
     }
     #[Route('/model/{id}/digital/', name: 'mbs_model_digital', methods: ['GET','POST'])]
+    #[Route('/dealer/{dealer}/model/{id}/digital/', name: 'mbs_dealer_model_digital', methods: ['GET','POST'])]
+    #[Route('/manufacturer/{manufacturer}/model/{id}/digital/', name: 'mbs_manufacturer_model_digital', methods: ['GET','POST'])]
+    #[Route('/company/{company}/model/{id}/digital/', name: 'mbs_company_model_digital', methods: ['GET','POST'])]
     public function digital(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -792,6 +805,9 @@ class DatabaseController extends AbstractController
         ]);
     }
     #[Route('/model/{id}/load/', name: 'mbs_model_load', methods: ['GET','POST'])]
+    #[Route('/dealer/{dealer}/model/{id}/load/', name: 'mbs_dealer_model_load', methods: ['GET','POST'])]
+    #[Route('/manufacturer/{manufacturer}/model/{id}/load/', name: 'mbs_manufacturer_model_load', methods: ['GET','POST'])]
+    #[Route('/company/{company}/model/{id}/load/', name: 'mbs_company_model_load', methods: ['GET','POST'])]
     public function load(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');

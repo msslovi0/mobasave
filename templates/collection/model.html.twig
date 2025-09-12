@@ -1,4 +1,18 @@
 {% extends 'base.html.twig' %}
+{% if 'mbs_manufacturer' in app.request.attributes.get("_route") %}
+    {% set current = 'manufacturer' %}
+    {% set path_back = path('mbs_manufacturer_models', {id: model.manufacturer.id}) %}
+{% elseif 'mbs_dealer' in app.request.attributes.get("_route") %}
+    {% set current = 'dealer' %}
+    {% set path_back = path('mbs_dealer_models', {id: model.dealer.id}) %}
+{% elseif 'mbs_company' in app.request.attributes.get("_route") %}
+    {% set current = 'company' %}
+    {% set path_back = path('mbs_company_models', {id: model.company.id}) %}
+{% else %}
+    {% set current = 'model' %}
+    {% set path_back = path('mbs_database', {id: app.session.get('database')}) %}
+{% endif %}
+
 {% block title %}
     {% if model.id is defined and model.id != "" %}
         {{ model.name }} ({{ model.model }})
@@ -13,7 +27,7 @@
                 <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ model.name }}</h1>
                 <div class="flex gap-1">
                   <a href="{{ path('mbs_model_add') }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'model.list.add'|trans }}</a>
-                  <a href="{{ path('mbs_database', {id: app.session.get('database')}) }}" type="button" class="block rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'global.back'|trans }}</a>
+                  <a href="{{ path_back }}" type="button" class="block rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'global.back'|trans }}</a>
                 </div>
             </div>
         </header>

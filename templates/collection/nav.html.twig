@@ -1,15 +1,41 @@
 {%  set active="rounded-md bg-green-800 px-3 py-2 text-sm font-medium text-white dark:bg-green-900 dark:text-white" %}
 {%  set inactive="rounded-md hover:bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" %}
+{% if 'mbs_manufacturer' in app.request.attributes.get("_route") %}
+    {% set current = 'manufacturer' %}
+    {% set path_model = path('mbs_manufacturer_model', {id: model.id, manufacturer: model.manufacturer.id}) %}
+    {% set path_detail = path('mbs_manufacturer_model_detail', {id: model.id, manufacturer: model.manufacturer.id}) %}
+    {% set path_digital = path('mbs_manufacturer_model_digital', {id: model.id, manufacturer: model.manufacturer.id}) %}
+    {% set path_load = path('mbs_manufacturer_model_load', {id: model.id, manufacturer: model.manufacturer.id}) %}
+{% elseif 'mbs_dealer' in app.request.attributes.get("_route") %}
+    {% set current = 'dealer' %}
+    {% set path_model = path('mbs_dealer_model', {id: model.id, dealer: model.dealer.id}) %}
+    {% set path_detail = path('mbs_dealer_model_detail', {id: model.id, dealer: model.dealer.id}) %}
+    {% set path_digital = path('mbs_dealer_model_digital', {id: model.id, dealer: model.dealer.id}) %}
+    {% set path_load = path('mbs_dealer_model_load', {id: model.id, dealer: model.dealer.id}) %}
+{% elseif 'mbs_company' in app.request.attributes.get("_route") %}
+    {% set current = 'company' %}
+    {% set path_model = path('mbs_company_model', {id: model.id, company: model.company.id}) %}
+    {% set path_detail = path('mbs_company_model_detail', {id: model.id, company: model.company.id}) %}
+    {% set path_digital = path('mbs_company_model_digital', {id: model.id, company: model.company.id}) %}
+    {% set path_load = path('mbs_company_model_load', {id: model.id, company: model.company.id}) %}
+{% else %}
+    {% set current = 'model' %}
+    {% set path_model = path('mbs_model', {id: model.id}) %}
+    {% set path_detail = path('mbs_model_detail', {id: model.id}) %}
+    {% set path_digital = path('mbs_model_digital', {id: model.id}) %}
+    {% set path_load = path('mbs_model_load', {id: model.id}) %}
+{% endif %}
+
 <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-2 md:grid-cols-3 dark:border-white/10">
     <div>
         <div class="grid grid-cols-1 sm:hidden">
             <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
             <select id="mobile-nav" aria-label="Select a tab" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 dark:bg-gray-800/50 dark:text-gray-100 dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700">
-                <option data-path="{{ path('mbs_model', {id: model.id}) }}" {{ template=='model' ? "selected='selected'" : '' }}>{{ 'global.nav.model'|trans }}</option>
-                <option data-path="{{ path('mbs_model_detail', {id: model.id}) }}" {{ template=='details' ? "selected='selected'" : '' }}>{{ 'global.nav.details'|trans }}</option>
-                <option data-path="{{ path('mbs_model_digital', {id: model.id}) }}" {{ template=='digital' ? "selected='selected'" : '' }}>{{ 'global.nav.digital'|trans }}</option>
+                <option data-path="{{ path_model }}" {{ template=='model' ? "selected='selected'" : '' }}>{{ 'global.nav.model'|trans }}</option>
+                <option data-path="{{ path_detail }}" {{ template=='details' ? "selected='selected'" : '' }}>{{ 'global.nav.details'|trans }}</option>
+                <option data-path="{{ path_digital }}" {{ template=='digital' ? "selected='selected'" : '' }}>{{ 'global.nav.digital'|trans }}</option>
                 {% if model.category.id == 2 %}
-                    <option data-path="{{ path('mbs_model_load', {id: model.id}) }}" {{ template=='load' ? "selected='selected'" : '' }}>{{ 'global.nav.load'|trans }}</option>
+                    <option data-path="{{ path_load }}" {{ template=='load' ? "selected='selected'" : '' }}>{{ 'global.nav.load'|trans }}</option>
                 {% endif %}
             </select>
             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end fill-gray-500 dark:fill-gray-400">
@@ -18,11 +44,11 @@
         </div>
         <div class="hidden sm:block">
             <nav aria-label="Tabs" class="flex space-x-4">
-                <a href="{{ path('mbs_model', {id: model.id}) }}" aria-current="page" class="{{ template=='model' ? active : inactive }}">{{ 'global.nav.model'|trans }}</a>
-                <a href="{{ path('mbs_model_detail', {id: model.id}) }}" class="{{ template=='details' ? active : inactive }}">{{ 'global.nav.details'|trans }}</a>
-                <a href="{{ path('mbs_model_digital', {id: model.id}) }}" class="{{ template=='digital' ? active : inactive }}">{{ 'global.nav.digital'|trans }}</a>
+                <a href="{{ path_model }}" aria-current="page" class="{{ template=='model' ? active : inactive }}">{{ 'global.nav.model'|trans }}</a>
+                <a href="{{ path_detail }}" class="{{ template=='details' ? active : inactive }}">{{ 'global.nav.details'|trans }}</a>
+                <a href="{{ path_digital }}" class="{{ template=='digital' ? active : inactive }}">{{ 'global.nav.digital'|trans }}</a>
                 {% if model.category.id == 2 %}
-                <a href="{{ path('mbs_model_load', {id: model.id}) }}" class="{{ template=='load' ? active : inactive }}">{{ 'global.nav.load'|trans }}</a>
+                <a href="{{ path_load }}" class="{{ template=='load' ? active : inactive }}">{{ 'global.nav.load'|trans }}</a>
                 {% endif %}
             </nav>
         </div>

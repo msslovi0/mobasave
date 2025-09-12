@@ -1,8 +1,31 @@
 {% extends 'base.html.twig' %}
+{% if 'mbs_manufacturer' in app.request.attributes.get("_route") %}
+    {% set current = 'manufacturer' %}
+    {% set path_history = path('mbs_manufacturer', {id: models[0].manufacturer.id}) %}
+    {% set text_history = 'manufacturer.back'|trans({name: models[0].manufacturer.name}) %}
+{% elseif 'mbs_dealer' in app.request.attributes.get("_route") %}
+    {% set current = 'dealer' %}
+    {% set path_history = path('mbs_dealer', {id: models[0].dealer.id}) %}
+    {% set text_history = 'dealer.back'|trans({name: models[0].dealer.name}) %}
+{% elseif 'mbs_company' in app.request.attributes.get("_route") %}
+    {% set current = 'company' %}
+    {% set path_history = path('mbs_company', {id: models[0].company.id}) %}
+    {% set text_history = 'company.back'|trans({name: models[0].company.name}) %}
+{% else %}
+    {% set current = 'model' %}
+    {% set path_history = path('mbs_database', {id: models[0].modeldatabase.id}) %}
+    {% set text_history = 'global.back'|trans %}
+{% endif %}
 
 {% block title %}
   {% if app.request.get('search') is defined and app.request.get('search') != "" %}
     {{ 'global.title.search'|trans({'query': app.request.get('search')}) }}
+  {% elseif current == "manufacturer"  %}
+      {{ 'manufacturer.models'|trans({'name': models[0].manufacturer.name}) }}
+  {% elseif current == "dealer"  %}
+      {{ 'dealer.models'|trans({'name': models[0].dealer.name}) }}
+  {% elseif current == "company"  %}
+      {{ 'company.models'|trans({'name': models[0].company.name}) }}
   {% else %}
     {{ 'collection.name'|trans({'name': models[0].modeldatabase.name}) }}
   {% endif %}
@@ -10,24 +33,28 @@
 {% block body %}
   <div class="py-10">
     <header>
-      <div class="mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
-        {% if app.request.get('search') is defined and app.request.get('search') != "" %}
-          <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{'global.searchresult'|trans({'query': app.request.get('search'), 'count': models.getTotalItemCount})}}</h1>
-        {% else %}
-          <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ 'collection.name'|trans({'name': models[0].modeldatabase.name}) }}</h1>
-        {% endif %}
+        <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
+          <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+          {% if app.request.get('search') is defined and app.request.get('search') != "" %}
+              {{ 'global.title.search'|trans({'query': app.request.get('search')}) }}
+          {% elseif current == "manufacturer"  %}
+              {{ 'manufacturer.models'|trans({'name': models[0].manufacturer.name}) }}
+          {% elseif current == "dealer"  %}
+              {{ 'dealer.models'|trans({'name': models[0].dealer.name}) }}
+          {% elseif current == "company"  %}
+              {{ 'company.models'|trans({'name': models[0].company.name}) }}
+          {% else %}
+              {{ 'collection.name'|trans({'name': models[0].modeldatabase.name}) }}
+          {% endif %}
+          </h1>
+          <div class="flex gap-1">
+              <a href="{{ path('mbs_model_add') }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'model.list.add'|trans }}</a>
+              <a href="{{ path_history }}" type="button" class="block rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">{{ text_history }}</a>
+          </div>
       </div>
     </header>
     <main>
       <div class="mx-auto max-w-10xl px-4 py-8 sm:px-6 lg:px-8">
-        <div class="px-4 sm:px-6 lg:px-8">
-          <div class="sm:flex sm:items-center">
-            <div class="sm:flex-auto">
-            </div>
-            <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-              <a href="{{ path('mbs_model_add') }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'model.list.add'|trans }}</a>
-            </div>
-          </div>
             <div class="col-span-full mt-5">
                 {% for message in app.flashes('error') %}
                     <div class="border-l-4 border-red-400 bg-red-50 p-4 dark:border-red-500 dark:bg-red-500/10">
@@ -80,7 +107,17 @@
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
                   {% for model in models %}
-                  <tr class="even:bg-gray-50 dark:even:bg-gray-800/50">
+                      {% if current == 'manufacturer' %}
+                          {% set path = path('mbs_manufacturer_model', {id: model.id, manufacturer: model.manufacturer.id}) %}
+                      {% elseif current == 'company' %}
+                          {% set path = path('mbs_company_model', {id: model.id, company: model.company.id}) %}
+                      {% elseif current == 'dealer' %}
+                          {% set path = path('mbs_dealer_model', {id: model.id, dealer: model.dealer.id}) %}
+                      {% else %}
+                        {% set path = path('mbs_model', {id: model.id}) %}
+                      {% endif %}
+
+                      <tr class="even:bg-gray-50 dark:even:bg-gray-800/50">
                       <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                           <div class="flex items-center">
                               <div class="size-11 shrink-0">
@@ -90,7 +127,7 @@
                       </td>
                       <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                           <div class="ml-4">
-                              <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_model', {id: model.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ model.name }}</a></div>
+                              <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ model.name }}</a></div>
                           </div>
                       </td>
                       <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
@@ -124,7 +161,7 @@
                           {% endif %}
                       </td>
                       <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
-                          <a href="{{ path('mbs_model', {id: model.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ model.name }}</span></a>
+                          <a href="{{ path }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ model.name }}</span></a>
                       </td>
                   </tr>
                   {% endfor %}
