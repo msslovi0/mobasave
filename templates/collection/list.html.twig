@@ -11,9 +11,12 @@
     {% set current = 'company' %}
     {% set path_history = path('mbs_company', {id: models[0].company.id}) %}
     {% set text_history = 'company.back'|trans({name: models[0].company.name}) %}
-{% else %}
+{% elseif(models|length>0) %}
     {% set current = 'model' %}
     {% set path_history = path('mbs_database', {id: models[0].modeldatabase.id}) %}
+    {% set text_history = 'global.back'|trans %}
+{% else %}
+    {% set path_history = path('mbs_database', {id: app.session.get('database')}) %}
     {% set text_history = 'global.back'|trans %}
 {% endif %}
 
@@ -121,7 +124,7 @@
                       <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                           <div class="flex items-center">
                               <div class="size-11 shrink-0">
-                                  <img src="{% if model.image!="" %}{{ asset('data/image/' ~ model.image) }}{% else %}{{ asset('images/blank.svg') }}{% endif %}" alt="{{ model.name }}" class="size-11 rounded-full dark:outline dark:outline-white/10" />
+                                  <img src="{% if model.image!="" %}{{ absolute_url(asset('data/image/' ~ model.image))|replace({"localhost:8000": remotehost}) }}{% else %}{{ asset('images/blank.svg') }}{% endif %}" alt="{{ model.name }}" class="size-11 rounded-md dark:outline dark:outline-white/10" />
                               </div>
                           </div>
                       </td>

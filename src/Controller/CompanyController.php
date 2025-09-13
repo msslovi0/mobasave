@@ -72,6 +72,12 @@ class CompanyController extends AbstractController
                     unlink($imageDirectory."/".$currentImage);
                 }
                 $company->setImage($newFilename);
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'logo/company/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
                 if($imageFile->guessExtension()=='svg') {
                     $company->setVector(1);
                 }
@@ -139,6 +145,12 @@ class CompanyController extends AbstractController
                     // ... handle exception if something happens during file upload
                 }
                 $company->setImage($newFilename);
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'logo/company/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
                 if($extension=='svg') {
                     $company->setVector(1);
                 }

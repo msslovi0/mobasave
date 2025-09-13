@@ -83,6 +83,12 @@ class ManufacturerController extends AbstractController
                     // ... handle exception if something happens during file upload
                 }
                 $manufacturer->setImage($newFilename);
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'logo/manufacturer/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
                 if($imageFile->guessExtension()=='svg') {
                     $manufacturer->setVector(1);
                 }
@@ -167,6 +173,12 @@ class ManufacturerController extends AbstractController
                     unlink($imageDirectory."/".$currentImage);
                 }
                 $manufacturer->setImage($newFilename);
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'logo/manufacturer/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
                 if($extension=='svg') {
                     $manufacturer->setVector(1);
                 }

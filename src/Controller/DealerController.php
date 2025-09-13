@@ -82,6 +82,12 @@ class DealerController extends AbstractController
                     // ... handle exception if something happens during file upload
                 }
                 $dealer->setImage($newFilename);
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'logo/dealer/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
                 if($extension=='svg') {
                     $dealer->setVector(1);
                 }
@@ -164,6 +170,12 @@ class DealerController extends AbstractController
                     unlink($imageDirectory."/".$currentImage);
                 }
                 $dealer->setImage($newFilename);
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'logo/dealer/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
                 if($extension=='svg') {
                     $dealer->setVector(1);
                 }

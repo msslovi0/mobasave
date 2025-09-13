@@ -31,7 +31,7 @@
             {%  include 'collection/nav.html.twig' with {'template': 'details'} %}
             <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 md:grid-cols-3 dark:border-white/10">
                 <div>
-                    {% if model.image!="" %}<img src="{{ asset('data/image/' ~ model.image) }}" alt="{{ model.name }}" class="mx-auto h-auto w-200" />{% endif %}
+                    {% if model.image!="" %}<img src="{{ absolute_url(asset('data/image/' ~ model.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ model.name }}" class="mx-auto h-auto w-200" />{% endif %}
                 </div>
 
                 <div class="grid max-w-2xl grid-cols-2 gap-2 sm:grid-cols-6 md:col-span-2">

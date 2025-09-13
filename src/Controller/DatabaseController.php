@@ -401,6 +401,12 @@ class DatabaseController extends AbstractController
                     // ... handle exception if something happens during file upload
                 }
                 $model->setImage($newFilename);
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'image/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
             }
             switch($model->getCategory()->getId()) {
                 case 1:
@@ -569,17 +575,23 @@ class DatabaseController extends AbstractController
                 try {
                     $imageFile->move($imageDirectory, $newFilename);
                 } catch (FileException $e) {
-                $this->addFlash(
-                    'error',
-                    $translator->trans('upload.failed', ['message' => $e->getMessage()])
-                );
-                return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
-                    // ... handle exception if something happens during file upload
+                    $this->addFlash(
+                        'error',
+                        $translator->trans('upload.failed', ['message' => $e->getMessage()])
+                    );
+                    return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
                 }
-                if(file_exists($imageDirectory."/".$currentImage)) {
+                if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
                     unlink($imageDirectory."/".$currentImage);
                 }
                 $model->setImage($newFilename);
+
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'image/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
             } elseif(isset($currentImage) && $currentImage!="") {
                 $model->setImage($currentImage);
             }
