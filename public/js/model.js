@@ -1,6 +1,7 @@
 $(function() {
     $('#submit-form').on('click', function() {
         $('#modelform').submit();
+        return false;
     });
     if($('.mbs_model').length>0) {
         var id = parseInt($('#form_category').find(':selected').data('id'));

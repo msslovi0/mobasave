@@ -165,6 +165,16 @@ class CompanyController extends AbstractController
                 $translator->trans('company.saved', ['name' => $company->getName()])
             );
             return $this->redirectToRoute('mbs_company', ['id' => $company->getId()]);
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+            $this->addFlash(
+                'error',
+                $translator->trans('model.resubmit', ['name' => $model->getName()])
+            );
+        } else {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_OK);
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
@@ -180,7 +190,7 @@ class CompanyController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $companies = $entityManager->getRepository(Company::class)->findBy(array("vector" => 0, "user" => [null, $user->getId()]), ['name' => 'ASC']);
+        $companies = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), ['name' => 'ASC']);
 
         $pagination = $paginator->paginate(
             $companies,
