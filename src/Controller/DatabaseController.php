@@ -73,6 +73,168 @@ class DatabaseController extends AbstractController
     public function __construct(private Security $security)
     {
     }
+    #[Route('/collection/create', name: 'mbs_database_create', methods: ['GET','POST'])]
+    public function create(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/collection')] string $imageDirectory): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+
+        $database = new Database();
+
+        $form = $this->createFormBuilder($database)
+            ->add('name', TextType::class)
+            ->add('color', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
+            ->add('image', FileType::class, ['data_class' => null, 'required' => false, 'constraints' => [
+                new File(
+                    extensions: ['jpg', 'webp', 'png', 'svg']
+                )
+            ]])
+            ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
+
+        $form = $form->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                try {
+                    $imageFile->move($imageDirectory, $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash(
+                        'error',
+                        $translator->trans('upload.failed', ['message' => $e->getMessage()])
+                    );
+                    return $this->redirectToRoute('mbs_database_create', ['id' => $database->getId()]);
+                }
+                if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
+                    unlink($imageDirectory."/".$currentImage);
+                }
+                $database->setImage($newFilename);
+
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'collection/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
+            } elseif(isset($currentImage) && $currentImage!="") {
+                $database->setImage($currentImage);
+            }
+            $database->setUser($user);
+            $entityManager->persist($database);
+            $entityManager->flush();
+            $this->addFlash(
+                'success',
+                $translator->trans('collection.saved', ['name' => $database->getName()])
+            );
+            return $this->redirectToRoute('mbs_database_edit', ['id' => $database->getId()]);
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+            $this->addFlash(
+                'error',
+                $translator->trans('collection.resubmit', ['name' => $database->getName()])
+            );
+        } else {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_OK);
+        }
+
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        return $this->render('collection/database.html.twig', [
+            "databases" => $databases,
+            "databaseform" => $form->createView(),
+            "database" => $database,
+        ], response: $response);
+    }
+    #[Route('/collection/edit/{id}', name: 'mbs_database_edit', methods: ['GET','POST'])]
+    public function edit(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/collection')] string $imageDirectory): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+
+        $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+        if($database->getImage()!="") {
+            $currentImage = $database->getImage();
+        }
+
+        $form = $this->createFormBuilder($database)
+            ->add('name', TextType::class)
+            ->add('color', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
+            ->add('image', FileType::class, ['data_class' => null, 'required' => false, 'constraints' => [
+                new File(
+                    extensions: ['jpg', 'webp', 'png', 'svg']
+                )
+            ]])
+            ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
+
+        $form = $form->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                try {
+                    $imageFile->move($imageDirectory, $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash(
+                        'error',
+                        $translator->trans('upload.failed', ['message' => $e->getMessage()])
+                    );
+                    return $this->redirectToRoute('mbs_database_edit', ['id' => $database->getId()]);
+                }
+                if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
+                    unlink($imageDirectory."/".$currentImage);
+                }
+                if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
+                    unlink($imageDirectory."/".$currentImage);
+                }
+                $database->setImage($newFilename);
+
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'collection/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
+            } elseif(isset($currentImage) && $currentImage!="") {
+                $database->setImage($currentImage);
+            }
+            $database->setUser($user);
+            $entityManager->persist($database);
+            $entityManager->flush();
+            $this->addFlash(
+                'success',
+                $translator->trans('collection.saved', ['name' => $database->getName()])
+            );
+            return $this->redirectToRoute('mbs_database_edit', ['id' => $database->getId()]);
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+            $this->addFlash(
+                'error',
+                $translator->trans('collection.resubmit', ['name' => $database->getName()])
+            );
+        } else {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_OK);
+        }
+
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        return $this->render('collection/database.html.twig', [
+            "databases" => $databases,
+            "databaseform" => $form->createView(),
+            "database" => $database,
+        ], response: $response);
+    }
     #[Route('/collection/{id}', name: 'mbs_database', methods: ['GET'])]
     public function index(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
     {
@@ -105,6 +267,7 @@ class DatabaseController extends AbstractController
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('collection/list.html.twig', [
             "databases" => $databases,
+            "database" => $database,
             "models" => $pagination
         ]);
     }

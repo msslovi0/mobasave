@@ -6,7 +6,7 @@
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
             <img src="{{ asset('images/mobasave-notext.svg') }}" alt="mobasave" class="mx-auto h-auto w-200" />
-            <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">Tickets please!</h2>
+            <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">{{ 'login.title'|trans }}</h2>
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -28,7 +28,7 @@
             {% endif %}
             <form action="#" method="POST" class="space-y-6">
                 <div>
-                    <label for="email" class="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">Email address</label>
+                    <label for="email" class="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">{{ 'login.field.email'|trans }}</label>
                     <div class="mt-2">
                         <input type="email" value="{{ last_username }}" name="_username" id="email" class="form-control block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-green-700" autocomplete="email" required autofocus/>
                     </div>
@@ -36,9 +36,9 @@
 
                 <div>
                     <div class="flex items-center justify-between">
-                        <label for="password" class="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">Password</label>
+                        <label for="password" class="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">{{ 'login.field.password'|trans }}</label>
                         <div class="text-sm">
-                            <a href="#" class="font-semibold text-green-800 hover:text-green-700 dark:text-green-600 dark:hover:text-green-500">Forgot password?</a>
+                            <a href="{{ path('app_forgot_password_request') }}" class="font-semibold text-green-800 hover:text-green-700 dark:text-green-600 dark:hover:text-green-500">{{ 'login.forgot-password'|trans }}</a>
                         </div>
                     </div>
                     <div class="mt-2">
@@ -56,19 +56,22 @@
                         </div>
                     </div>
                     <div class="text-sm/6">
-                        <label for="_remember_me" class="font-medium text-gray-900 dark:text-white">Remember me</label>
+                        <label for="_remember_me" class="font-medium text-gray-900 dark:text-white">{{ 'login.remember-me'|trans }}</label>
                     </div>
                 </div>
 
                 <div>
-                    <button type="submit" class="flex w-full justify-center rounded-md bg-green-800 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:hover:bg-green-+00 dark:focus-visible:outline-green-700">Sign in</button>
+                    <button type="submit" class="flex w-full justify-center rounded-md bg-green-800 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:hover:bg-green-+00 dark:focus-visible:outline-green-700">
+                        {{ 'login.sign-in'|trans }}</button>
                 </div>
                 <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
             </form>
 
             <p class="mt-10 text-center text-sm/6 text-gray-500 dark:text-gray-400">
-                Not a member?
-                <a href="#" class="font-semibold text-green-800 hover:text-green-700 dark:text-green-600 dark:hover:text-green-500">Start a 14 day free trial</a>
+                {{ 'login.not-a-member'|trans }}
+                <a href='{{ path('mbs_home') }}' class="font-semibold text-green-800 hover:text-green-700 dark:text-green-600 dark:hover:text-green-500">
+                    {{ 'login.trial'|trans }}
+                </a>
             </p>
         </div>
     </div>

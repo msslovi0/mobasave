@@ -187,6 +187,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Edition::class, mappedBy: 'user')]
     private Collection $editions;
 
+    #[ORM\Column(length: 255)]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $lastname = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $dark = null;
+
     public function __construct()
     {
         $this->userdatabases = new ArrayCollection();
@@ -1043,6 +1055,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $edition->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): static
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): static
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function isDark(): ?bool
+    {
+        return $this->dark;
+    }
+
+    public function setDark(?bool $dark): static
+    {
+        $this->dark = $dark;
 
         return $this;
     }

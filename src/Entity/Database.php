@@ -20,7 +20,7 @@ class Database
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $icon = null;
+    private ?string $image = null;
 
     #[ORM\Column(length: 30, nullable: true)]
     private ?string $color = null;
@@ -56,14 +56,14 @@ class Database
         return $this;
     }
 
-    public function getIcon(): ?string
+    public function getImage(): ?string
     {
-        return $this->icon;
+        return $this->image;
     }
 
-    public function setIcon(?string $icon): static
+    public function setImage(?string $image): static
     {
-        $this->icon = $icon;
+        $this->image = $image;
 
         return $this;
     }

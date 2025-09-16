@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-full bg-white dark:bg-gray-900 scheme-light dark:scheme-dark">
+<html class="h-full bg-white dark:bg-gray-900 scheme-light dark:scheme-dark{% if is_granted('IS_AUTHENTICATED_FULLY') %} {{ app.user.dark==1 ? 'dark' : '' }}{% endif %}">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>

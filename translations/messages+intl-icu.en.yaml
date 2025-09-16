@@ -5,7 +5,14 @@ collection:
     no-collection:
         fact: No collection
         claim: Get started by creating a new collection.
-    new: New collection
+    new: New Collection
+    edit: Edit Collection “{name}”
+    field:
+        name: Name
+        image: Image
+        color: Color
+    saved: Collection “{name}” has been successfully saved
+    resubmit: Please re-select your newly created values and re-submit the form in order to save it.
     count: >-
         {count, plural,
             =0    {No collections}
@@ -19,6 +26,9 @@ collection:
             other {# models}
         }
 global:
+    yes: Yes
+    no: No
+    auto: Auto
     edit: Edit
     searchresult: >-
         {count, plural,
@@ -39,11 +49,15 @@ global:
         index: MoBaSaVe - Welcome!
         search: Search result for “{query}”
         add:
-            model: Add model
-            dealer: Add dealer
-            manufacturer: Add manufacturer
-            company: Add company
+            model: Add Model
+            dealer: Add Dealer
+            manufacturer: Add Manufacturer
+            company: Add Company
     back: Back
+    user-menu: Open user menu
+    main-menu: Open main menu
+    notifications:
+        view: View notifications
     nav:
         model: Model
         details: Details
@@ -54,14 +68,38 @@ global:
         manufacturer: Manufacturer
         dealer: Dealer
         company: Company
+        profile: Profile
+        change-password: Change Password
+        add-database: Database
     error:
         filetype-invalid: Not a valid filetype
     logo: Logo
     vector: Vector
 
+login:
+    title: Tickets please!
+    field:
+        email: Email address
+        password: Password
+    forgot-password: Forgot password?
+    remember-me: Remember me
+    sign-in: Sign in
+    not-a-member: Not a member?
+    trial: Start a 14 day free trial
+
+user:
+    field:
+        image: Profile Image
+        firstname: Firstname
+        lastname: Lastname
+        email: Email address
+        dark: Dark Mode
+    resubmit: Please re-submit the form in order to save it.
+    saved: Your changes to your profile where saved successfully
+
 manufacturer:
     list:
-        add: Add manufacturer
+        add: Add Manufacturer
         edit: Edit
         logo: Logo
     field:
@@ -105,7 +143,7 @@ manufacturer:
 
 dealer:
     list:
-        add: Add dealer
+        add: Add Dealer
         edit: Edit
         logo: Logo
     field:
@@ -149,7 +187,7 @@ dealer:
 
 company:
     list:
-        add: Add company
+        add: Add Company
         edit: Edit
         logo: Logo
     field:
@@ -192,11 +230,15 @@ company:
         }
 model:
     list:
-        add: Add model
+        add: Add Model
         sound: Sound
         light: Light
         image: Image
     details: Details {category}
+    no-model:
+        fact: No model
+        claim: Get started by adding your first model.
+
     delete:
         delete: Delete
         cancel: Cancel

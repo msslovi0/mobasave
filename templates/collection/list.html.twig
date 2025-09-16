@@ -16,6 +16,7 @@
     {% set path_history = path('mbs_database', {id: models[0].modeldatabase.id}) %}
     {% set text_history = 'global.back'|trans %}
 {% else %}
+    {% set current = '' %}
     {% set path_history = path('mbs_database', {id: app.session.get('database')}) %}
     {% set text_history = 'global.back'|trans %}
 {% endif %}
@@ -30,7 +31,7 @@
   {% elseif current == "company"  %}
       {{ 'company.models'|trans({'name': models[0].company.name}) }}
   {% else %}
-    {{ 'collection.name'|trans({'name': models[0].modeldatabase.name}) }}
+    {{ 'collection.name'|trans({'name': database.name}) }}
   {% endif %}
 {% endblock %}
 {% block body %}
@@ -47,7 +48,7 @@
           {% elseif current == "company"  %}
               {{ 'company.models'|trans({'name': models[0].company.name}) }}
           {% else %}
-              {{ 'collection.name'|trans({'name': models[0].modeldatabase.name}) }}
+              {{ 'collection.name'|trans({'name': database.name}) }}
           {% endif %}
           </h1>
           <div class="flex gap-1">
@@ -173,6 +174,22 @@
               </div>
             </div>
             {{ knp_pagination_render(models) }}
+              {% else %}
+                  <div class="text-center relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-2 focus:outline-offset-2 focus:outline-green-800 dark:border-white/15 dark:hover:border-white/25 dark:focus:outline-green-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" class="mx-auto size-12 text-gray-400 dark:text-gray-500">
+                          <path d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">{% trans %}model.no-model.fact{% endtrans %}</h3>
+                      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{%  trans %}model.no-model.claim{% endtrans %}</p>
+                      <div class="mt-6">
+                          <a href="{{ path('mbs_model_add') }}" type="button" class="inline-flex items-center rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:hover:bg-green-600 dark:focus-visible:outline-green-700">
+                              <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="mr-1.5 -ml-0.5 size-5">
+                                  <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+                              </svg>
+                              {% trans %}model.list.add{% endtrans %}
+                          </a>
+                      </div>
+                  </div>
             {% endif %}
           </div>
         </div>
