@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,6 +59,8 @@ class ManufacturerController extends AbstractController
             ->add('linkedin', UrlType::class, ['required' => false])
             ->add('abbr2', TextType::class, ['required' => false, 'attr' => ['maxlength' => 2]])
             ->add('abbr3', TextType::class, ['required' => false, 'attr' => ['maxlength' => 3]])
+            ->add('gtin_base', IntegerType::class, ['required' => false, 'attr' => ['maxlength' => 7]])
+            ->add('gtin_mode', ChoiceType::class, ['required' => true, 'choices' => [$translator->trans('global.gtin.calc') => 'calc' ,$translator->trans('global.gtin.use') => 'use', $translator->trans('global.gtin.ignore') => null]])
             ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
             ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
             ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
@@ -144,6 +147,8 @@ class ManufacturerController extends AbstractController
             ->add('linkedin', UrlType::class, ['required' => false])
             ->add('abbr2', TextType::class, ['required' => false, 'attr' => ['maxlength' => 2]])
             ->add('abbr3', TextType::class, ['required' => false, 'attr' => ['maxlength' => 3]])
+            ->add('gtin_base', IntegerType::class, ['required' => false, 'attr' => ['maxlength' => 7]])
+            ->add('gtin_mode', ChoiceType::class, ['required' => true, 'choices' => [$translator->trans('global.gtin.calc') => 'calc' ,$translator->trans('global.gtin.use') => 'use', $translator->trans('global.gtin.ignore') => null]])
             ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
             ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
             ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])

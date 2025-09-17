@@ -44,6 +44,15 @@ class Company
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $color1 = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $color2 = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $color3 = null;
+
     public function __construct()
     {
         $this->models = new ArrayCollection();
@@ -164,6 +173,42 @@ class Company
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getColor1(): ?string
+    {
+        return $this->color1;
+    }
+
+    public function setColor1(?string $color1): static
+    {
+        $this->color1 = $color1;
+
+        return $this;
+    }
+
+    public function getColor2(): ?string
+    {
+        return $this->color2;
+    }
+
+    public function setColor2(?string $color2): static
+    {
+        $this->color2 = $color2;
+
+        return $this;
+    }
+
+    public function getColor3(): ?string
+    {
+        return $this->color3;
+    }
+
+    public function setColor3(?string $color3): static
+    {
+        $this->color3 = $color3;
 
         return $this;
     }

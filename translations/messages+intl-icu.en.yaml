@@ -30,6 +30,10 @@ global:
     no: No
     auto: Auto
     edit: Edit
+    gtin:
+        ignore: No automated EAN calculation
+        use: Use model for EAN as is (already contains checksum)
+        calc: Use model for EAN and calculate checksum
     searchresult: >-
         {count, plural,
             =0    {No results for “{query}”}
@@ -121,6 +125,8 @@ manufacturer:
         linkedin: LinkedIn
         abbr2: Abbreviation (2 chars)
         abbr3: Abbreviation (3 chars)
+        gtin_base: EAN base part
+        gtin_mode: EAN calculation mode
     delete:
         delete: Delete
         cancel: Cancel
@@ -209,6 +215,7 @@ company:
         linkedin: LinkedIn
         abbr2: Abbreviation (2 chars)
         abbr3: Abbreviation (3 chars)
+        colors: Default colors
     delete:
         delete: Delete
         cancel: Cancel

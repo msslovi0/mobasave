@@ -10,6 +10,7 @@ use App\Entity\State;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -46,6 +47,9 @@ class CompanyController extends AbstractController
             ->add('name', TextType::class)
             ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
             ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
+            ->add('color1', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
+            ->add('color2', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
+            ->add('color3', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
             ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
 
@@ -121,6 +125,9 @@ class CompanyController extends AbstractController
             ->add('name', TextType::class)
             ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
             ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
+            ->add('color1', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
+            ->add('color2', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
+            ->add('color3', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
             ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
 

@@ -31,7 +31,7 @@
             {%  include 'collection/nav.html.twig' with {'template': 'details'} %}
             <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 md:grid-cols-3 dark:border-white/10">
                 <div>
-                    {% if model.image!="" %}<img src="{{ absolute_url(asset('data/image/' ~ model.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ model.name }}" class="mx-auto h-auto w-200" />{% endif %}
+                    {% if model.image!="" %}<img src="{{ absolute_url(asset('data/image/' ~ model.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ model.name }}" class="border-gray-300 dark:border-white/10 rounded-md border mx-auto h-auto w-200" />{% endif %}
                 </div>
 
                 <div class="grid max-w-2xl grid-cols-2 gap-2 sm:grid-cols-6 md:col-span-2">
@@ -76,6 +76,13 @@
                             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                             </svg>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <div class="grid grid-cols-3 gap-2">
+                            {% if model.vehicle.maker is defined and model.vehicle.maker.image!="" %}
+                                <img class="rounded-md outline-1 dark:outline-white/10 outline-gray-300" src="{{ absolute_url(asset('data/logo/maker/' ~ model.vehicle.maker.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ model.vehicle.maker.name }}"/>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="sm:col-span-3 sm:row-span-40">

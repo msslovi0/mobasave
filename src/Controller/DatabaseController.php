@@ -492,7 +492,7 @@ class DatabaseController extends AbstractController
         $dealer         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
-        $country        = $entityManager->getRepository(Country::class)->findAll();
+        $country        = $entityManager->getRepository(Country::class)->findBy([], ["name" => "ASC"]);
         $modelset       = $entityManager->getRepository(Modelset::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
 
         $model = new Model();
@@ -502,8 +502,8 @@ class DatabaseController extends AbstractController
             ->add('status', ChoiceType::class, ['choices' => $status, 'choice_label' => 'name'])
             ->add('category', ChoiceType::class, ['choices' => $category, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
             ->add('subcategory', ChoiceType::class, ['choices' => $subcategory, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "subcategory-option category-".$choice->getCategory()->getId()];}, 'required' => false])
-            ->add('manufacturer', ChoiceType::class, ['choices' => $manufacturer, 'choice_label' => 'name', 'required' => false])
-            ->add('company', ChoiceType::class, ['choices' => $company, 'choice_label' => 'name', 'required' => false])
+            ->add('manufacturer', ChoiceType::class, ['choices' => $manufacturer, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-gtin-base' => $choice->getGtinBase(), 'data-gtin-mode' => $choice->getGtinMode(), 'data-image' => $choice->getImage()];}])
+            ->add('company', ChoiceType::class, ['choices' => $company, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-image' => $choice->getImage(), 'data-color1' => $choice->getColor1(), 'data-color2' => $choice->getColor2(), 'data-color3' => $choice->getColor3(), 'data-country' => is_object($choice->getCountry()) ? $choice->getCountry()->getIso2() : null];}])
             ->add('scale', ChoiceType::class, ['choices' => $scale, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
             ->add('track', ChoiceType::class, ['choices' => $track, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "track-option scale-".$choice->getScale()->getId()];}, 'required' => false])
             ->add('epoch', ChoiceType::class, ['choices' => $epoch, 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
@@ -514,10 +514,10 @@ class DatabaseController extends AbstractController
             }, 'choice_attr' => function ($choice) {return ['class' => "subepoch-option epoch-".$choice->getEpoch()->getId()];}, 'required' => false])
             ->add('storage', ChoiceType::class, ['choices' => $storage, 'choice_label' => 'name', 'required' => false])
             ->add('project', ChoiceType::class, ['choices' => $project, 'choice_label' => 'name', 'required' => false])
-            ->add('dealer', ChoiceType::class, ['choices' => $dealer, 'choice_label' => 'name', 'required' => false])
+            ->add('dealer', ChoiceType::class, ['choices' => $dealer, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-image' => $choice->getImage()];}])
             ->add('box', ChoiceType::class, ['choices' => $box, 'choice_label' => 'name', 'required' => false])
             ->add('modelcondition', ChoiceType::class, ['choices' => $condition, 'choice_label' => 'name', 'required' => false])
-            ->add('country', ChoiceType::class, ['choices' => $country, 'choice_label' => 'name', 'required' => false])
+            ->add('country', ChoiceType::class, ['choices' => $country, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-image' => $choice->getIso2().".svg", 'data-iso' => $choice->getIso2()];}])
             ->add('modelset', ChoiceType::class, ['choices' => $modelset, 'choice_label' => 'name', 'required' => false])
             ->add('instructions', CheckboxType::class, ['required' => false])
             ->add('parts', CheckboxType::class, ['required' => false])
@@ -677,7 +677,7 @@ class DatabaseController extends AbstractController
         $dealer         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $box            = $entityManager->getRepository(Box::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $condition      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
-        $country        = $entityManager->getRepository(Country::class)->findAll();
+        $country        = $entityManager->getRepository(Country::class)->findBy([], ["name" => "ASC"]);
         $modelset       = $entityManager->getRepository(Modelset::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
 
         $form = $this->createFormBuilder($model)
@@ -685,8 +685,8 @@ class DatabaseController extends AbstractController
             ->add('status', ChoiceType::class, ['choices' => $status, 'choice_label' => 'name'])
             ->add('category', ChoiceType::class, ['choices' => $category, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
             ->add('subcategory', ChoiceType::class, ['choices' => $subcategory, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "subcategory-option category-".$choice->getCategory()->getId()];}, 'required' => false])
-            ->add('manufacturer', ChoiceType::class, ['choices' => $manufacturer, 'choice_label' => 'name', 'required' => false])
-            ->add('company', ChoiceType::class, ['choices' => $company, 'choice_label' => 'name', 'required' => false])
+            ->add('manufacturer', ChoiceType::class, ['choices' => $manufacturer, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-gtin-base' => $choice->getGtinBase(), 'data-gtin-mode' => $choice->getGtinMode(), 'data-image' => $choice->getImage()];}])
+            ->add('company', ChoiceType::class, ['choices' => $company, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-image' => $choice->getImage(), 'data-color1' => $choice->getColor1(), 'data-color2' => $choice->getColor2(), 'data-color3' => $choice->getColor3(), 'data-country' => is_object($choice->getCountry()) ? $choice->getCountry()->getIso2() : null];}])
             ->add('scale', ChoiceType::class, ['choices' => $scale, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}, 'required' => false])
             ->add('track', ChoiceType::class, ['choices' => $track, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "track-option scale-".$choice->getScale()->getId()];}, 'required' => false])
             ->add('epoch', ChoiceType::class, ['choices' => $epoch, 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
@@ -697,10 +697,10 @@ class DatabaseController extends AbstractController
             }, 'choice_attr' => function ($choice) {return ['class' => "subepoch-option epoch-".$choice->getEpoch()->getId()];}, 'required' => false])
             ->add('storage', ChoiceType::class, ['choices' => $storage, 'choice_label' => 'name', 'required' => false])
             ->add('project', ChoiceType::class, ['choices' => $project, 'choice_label' => 'name', 'required' => false])
-            ->add('dealer', ChoiceType::class, ['choices' => $dealer, 'choice_label' => 'name', 'required' => false])
+            ->add('dealer', ChoiceType::class, ['choices' => $dealer, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-image' => $choice->getImage()];}])
             ->add('box', ChoiceType::class, ['choices' => $box, 'choice_label' => 'name', 'required' => false])
             ->add('modelcondition', ChoiceType::class, ['choices' => $condition, 'choice_label' => 'name', 'required' => false])
-            ->add('country', ChoiceType::class, ['choices' => $country, 'choice_label' => 'name', 'required' => false])
+            ->add('country', ChoiceType::class, ['choices' => $country, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-image' => $choice->getIso2().".svg", 'data-iso' => $choice->getIso2()];}])
             ->add('modelset', ChoiceType::class, ['choices' => $modelset, 'choice_label' => 'name', 'required' => false])
             ->add('instructions', CheckboxType::class, ['required' => false])
             ->add('parts', CheckboxType::class, ['required' => false])
@@ -816,6 +816,10 @@ class DatabaseController extends AbstractController
         switch($model->getCategory()->getId()) {
             case 1:
                 $detail = $model->getLocomotive();
+                if(!is_object($detail)) {
+                    $detail = new Locomotive();
+                    $model->setCar($detail);
+                }
                 $template = "collection/".$model->getCategory()->getClass().".html.twig";
                 $form = $this->createFormBuilder($detail)
                     ->add('class', TextType::class, ['required' => false])
@@ -834,6 +838,10 @@ class DatabaseController extends AbstractController
             break;
             case 2:
                 $detail = $model->getCar();
+                if(!is_object($detail)) {
+                    $detail = new Car();
+                    $model->setCar($detail);
+                }
                 $template = "collection/".$model->getCategory()->getClass().".html.twig";
                 $form = $this->createFormBuilder($detail)
                     ->add('class', TextType::class, ['required' => false])
@@ -844,6 +852,10 @@ class DatabaseController extends AbstractController
             break;
             case 3:
                 $detail = $model->getContainer();
+                if(!is_object($detail)) {
+                    $detail = new Container();
+                    $model->setCar($detail);
+                }
                 $containertype = $entityManager->getRepository(Containertype::class)->findBy(array("user" => [null, $user->getId()]));
                 $template = "collection/".$model->getCategory()->getClass().".html.twig";
                 $form = $this->createFormBuilder($detail)
@@ -853,6 +865,10 @@ class DatabaseController extends AbstractController
             break;
             case 6:
                 $detail = $model->getVehicle();
+                if(!is_object($detail)) {
+                    $detail = new Vehicle();
+                    $model->setCar($detail);
+                }
                 $template = "collection/".$model->getCategory()->getClass().".html.twig";
                 $form = $this->createFormBuilder($detail)
                     ->add('class', TextType::class, ['required' => false])
@@ -862,6 +878,10 @@ class DatabaseController extends AbstractController
             break;
             case 7:
                 $detail = $model->getTram();
+                if(!is_object($detail)) {
+                    $detail = new Tram();
+                    $model->setCar($detail);
+                }
                 $template = "collection/".$model->getCategory()->getClass().".html.twig";
                 $form = $this->createFormBuilder($detail)
                     ->add('class', TextType::class, ['required' => false])

@@ -21,7 +21,7 @@
             <div class="space-y-12">
                 <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                     <div>
-                        {% if company.image!="" %}<img src="{{ absolute_url(asset('data/logo/company/' ~ company.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ company.name }}" class="mx-auto h-auto w-200" />{% endif %}
+                        {% if company.image!="" %}<img src="{{ absolute_url(asset('data/logo/company/' ~ company.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ company.name }}" class="border-gray-300 dark:border-white/10 rounded-md border mx-auto h-auto w-200" />{% endif %}
                         <div class="col-span-full">
                             <label for="form_image" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'company.field.logo'|trans }}</label>
                             <div id="drop-zone" class="hover:bg-gray-100 mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 dark:border-white/25">
@@ -80,6 +80,20 @@
                             <label for="form_name" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'company.field.name'|trans }}</label>
                             <div>
                                 {{ form_widget(companyform.name, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-full">
+                            <span class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'company.field.colors'|trans }}</span>
+                            <div class="grid grid-cols-3 gap-2">
+                                {%  set color1 = company.color1=='' ? 'rgba(255,255,255,0)' : company.color1  %}
+                                {%  set color2 = company.color2=='' ? 'rgba(255,255,255,0)' : company.color2  %}
+                                {%  set color3 = company.color3=='' ? 'rgba(255,255,255,0)' : company.color3  %}
+                                <label for="form_color1" class="sr-only">{{ 'model.field.color1'|trans }}</label>
+                                {{ form_widget(companyform.color1, {'attr': {'value': color1, 'class': 'p-1 h-9 w-50 appearance-none rounded-md bg-white text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                <label for="form_color2" class="sr-only">{{ 'model.field.color1'|trans }}</label>
+                                {{ form_widget(companyform.color2, {'attr': {'value': color2, 'class': 'p-1 h-9 w-50 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700'}}) }}
+                                <label for="form_color3" class="sr-only">{{ 'model.field.color1'|trans }}</label>
+                                {{ form_widget(companyform.color3, {'attr': {'value': color3, 'class': 'p-1 h-9 w-50 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">

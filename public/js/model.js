@@ -21,7 +21,6 @@ $(function() {
     }
     $('#form_country').on('change', function() {
         if($('#form_state').length==0) {
-            console.log('No state');
             return;
         }
         var id    = parseInt($(this).find(':selected').data('id'));
@@ -71,6 +70,90 @@ $(function() {
             $('#form_subepoch').removeClass('ring-3 ring-green-600/20 bg-green-50 outline-green-600/20 animate-pulse');
         }, 1500);
     });
+
+    // Logo, Color and Country-Update
+    $('#form_manufacturer').on('change', function() {
+        const image = $('#form_manufacturer').find(':selected').data('image');
+        if(typeof image != 'undefined' && image!="") {
+            $('#image-manufacturer').attr('src', "/data/logo/manufacturer/"+image).addClass('rounded-md outline-1 dark:outline-white/10 outline-gray-300');
+        } else {
+            $('#image-manufacturer').attr('src', "/images/blank.svg").attr('class', '');
+        }
+    });
+    $('#form_dealer').on('change', function() {
+        const image = $('#form_dealer').find(':selected').data('image');
+        if(typeof image != 'undefined' && image!="") {
+            $('#image-dealer').attr('src', "/data/logo/dealer/"+image).addClass('rounded-md outline-1 dark:outline-white/10 outline-gray-300');
+        } else {
+            $('#image-dealer').attr('src', "/images/blank.svg").attr('class', '');
+        }
+    });
+    $('#form_country').on('change', function() {
+        const image = $('#form_country').find(':selected').data('image');
+        if(typeof image != 'undefined' && image!="") {
+            $('#image-flag').attr('src', "/data/flag/"+image).addClass('rounded-md outline-1 dark:outline-white/10 outline-gray-300');
+        } else {
+            $('#image-flag').attr('src', "/images/blank.svg").attr('class', '');
+        }
+    });
+    $('#form_company').on('change', function() {
+        const image = $('#form_company').find(':selected').data('image');
+        const country = $('#form_company').find(':selected').data('country');
+        const color1 = $('#form_company').find(':selected').data('color1');
+        const color2 = $('#form_company').find(':selected').data('color2');
+        const color3 = $('#form_company').find(':selected').data('color3');
+        if(typeof country != 'undefined' && country!="") {
+            $('#form_country option[data-iso="'+country+'"]').prop('selected', true);
+            $('#image-flag').attr('src', "/data/flag/"+country+".svg").addClass('rounded-md outline-1 dark:outline-white/10 outline-gray-300');
+        } else {
+            $('#image-flag').attr('src', "/images/blank.svg").attr('class', '');
+        }
+        if(typeof image != 'undefined' && image!="") {
+            $('#image-company').attr('src', "/data/logo/company/"+image).addClass('rounded-md outline-1 dark:outline-white/10 outline-gray-300');
+        } else {
+            $('#image-company').attr('src', "/images/blank.svg").attr('class', '');
+        }
+        if(typeof color1 != 'undefined' && color1!="") {
+            $('#form_color1').val(color1);
+        } else {
+            $('#form_color1').val("rgba(255,255,255,0)");
+        }
+        if(typeof color2 != 'undefined' && color2!="") {
+            $('#form_color2').val(color2);
+        } else {
+            $('#form_color2').val("rgba(255,255,255,0)");
+        }
+        if(typeof color3 != 'undefined' && color3!="") {
+            $('#form_color3').val(color3);
+        } else {
+            $('#form_color3').val("rgba(255,255,255,0)");
+        }
+    });
+
+
+    // EAN caluclation
+    $('#form_manufacturer').on('change', function() {
+        const gtinbase = $('#form_manufacturer').find(':selected').data('gtin-base');
+        const gtinmode = $('#form_manufacturer').find(':selected').data('gtin-mode');
+        const model = $('#form_model').val();
+        if(gtinmode!="" && model!="") {
+            gtin = gtinbase+model+(checkDigitEAN13(gtinbase+model));
+            if($('#form_ean').val()=="") {
+                $('#form_ean').val(gtin);
+            } else {
+                console.log(gtin);
+            }
+        }
+    })
+
+    function checkDigitEAN13(barcode) {
+        const sum = barcode.split('')
+            .map((n, i) => n * (i % 2 ? 3 : 1)) // alternate between multiplying with 3 and 1
+            .reduce((sum, n) => sum + n, 0) // sum all values
+        const roundedUp = Math.ceil(sum / 10) * 10; // round sum to nearest 10
+        const checkDigit = roundedUp - sum; // subtract round to sum = check digit
+        return checkDigit;
+    }
 
     $('#load').on('keyup', function() {
         const search = $('#load').val();

@@ -88,6 +88,12 @@ class Manufacturer
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $gtin_base = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $gtin_mode = null;
+
     public function __construct()
     {
         $this->models = new ArrayCollection();
@@ -376,6 +382,30 @@ class Manufacturer
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getGtinBase(): ?string
+    {
+        return $this->gtin_base;
+    }
+
+    public function setGtinBase(?string $gtin_base): static
+    {
+        $this->gtin_base = $gtin_base;
+
+        return $this;
+    }
+
+    public function getGtinMode(): ?string
+    {
+        return $this->gtin_mode;
+    }
+
+    public function setGtinMode(?string $gtin_mode): static
+    {
+        $this->gtin_mode = $gtin_mode;
 
         return $this;
     }

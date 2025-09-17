@@ -39,7 +39,7 @@
             {% endif %}
             <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                 <div>
-                    {% if model.image!="" %}<img src="{{ absolute_url(asset('data/image/' ~ model.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ model.name }}" class="mx-auto h-auto w-200" />{% endif %}
+                    {% if model.image!="" %}<img src="{{ absolute_url(asset('data/image/' ~ model.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ model.name }}" class="border-gray-300 dark:border-white/10 rounded-md border mx-auto h-auto w-200" />{% endif %}
                     <div class="col-span-full">
                         <label for="form_image" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.image'|trans }}</label>
                         <div id="drop-zone" class="hover:bg-gray-100 mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 dark:border-white/25">
@@ -215,6 +215,29 @@
                         </div>
                     </div>
                     <div class="sm:col-span-3">
+                        <div class="grid grid-cols-3 gap-2">
+                            {% if model.manufacturer is defined and model.manufacturer.image is defined and model.manufacturer.image!="" %}
+                            <img id="image-manufacturer" class="rounded-md outline-1 dark:outline-white/10 outline-gray-300" src="{{ absolute_url(asset('data/logo/manufacturer/' ~ model.manufacturer.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ model.manufacturer.name }}"/>
+                            {% else %}
+                            <img id="image-manufacturer" src="{{ (asset('images/blank.svg')) }}" alt=""/>
+                            {% endif %}
+                            {% if model.company is defined and model.company.image is defined and model.company.image!="" %}
+                            <img id="image-company" class="rounded-md outline-1 dark:outline-white/10 outline-gray-300" src="{{ absolute_url(asset('data/logo/company/' ~ model.company.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ model.company.name }}"/>
+                            {% else %}
+                            <img id="image-company" src="{{ (asset('images/blank.svg')) }}" alt=""/>
+                            {% endif %}
+                            {% if model.country is defined and model.country.iso2 is defined %}
+                            <img id="image-flag" class="rounded-md outline-1 dark:outline-white/10 outline-gray-300" src="{{ absolute_url(asset('data/flag/' ~ model.country.iso2))|replace({"localhost:8000": remotehost}) }}.svg" alt="{{ model.country.name }}"/>
+                            {% else %}
+                            <img id="image-flag" src="{{ (asset('images/blank.svg')) }}" alt=""/>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                    <div class="col-span-full">
+                        <div class="flex items-center">
+                            <div aria-hidden="true" class="w-full mt-3 border-t border-gray-300 dark:border-white/15"></div>
+                        </div>
                     </div>
                     <div class="sm:col-span-3">
                         <span class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.gauge'|trans }}</span>
@@ -502,6 +525,15 @@
                         <label for="form_quantity" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'model.field.quantity'|trans }}</label>
                         <div class="grid grid-cols-2 items-center gap-3">
                             {{ form_widget(modelform.quantity, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <div class="grid grid-cols-3 gap-2">
+                            {% if model.dealer is defined and model.dealer.image is defined and model.dealer.image!="" %}
+                                <img id="image-dealer" class="rounded-md outline-1 dark:outline-white/10 outline-gray-300" src="{{ absolute_url(asset('data/logo/dealer/' ~ model.dealer.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ model.dealer.name }}"/>
+                            {% else %}
+                                <img id="image-dealer" src="{{ (asset('images/blank.svg')) }}" alt=""/>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
