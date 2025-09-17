@@ -40,7 +40,7 @@
         <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
           <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
           {% if app.request.get('search') is defined and app.request.get('search') != "" %}
-              {{ 'global.title.search'|trans({'query': app.request.get('search')}) }}
+              {{ 'global.title.searchresults'|trans({'query': app.request.get('search'), 'count': models|length}) }}
           {% elseif current == "manufacturer"  %}
               {{ 'manufacturer.models'|trans({'name': models[0].manufacturer.name}) }}
           {% elseif current == "dealer"  %}
@@ -97,16 +97,16 @@
                 <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
                   <thead>
                     <tr>
-                      <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'model.list.image'|trans }}</span></th>
-                      <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.name'|trans }}</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.manufacturer'|trans }}</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.category'|trans }}</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.subcategory'|trans }}</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.model'|trans }}</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.gtin13'|trans }}</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.status'|trans }}</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.purchased'|trans }}</th>
-                      <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'global.edit'|trans }}</span></th>
+                      <th scope="col" class="whitespace-nowrap py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'model.list.image'|trans }}</span></th>
+                      <th scope="col" class="whitespace-nowrap py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.name'|trans }}</th>
+                      <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.manufacturer'|trans }}</th>
+                      <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.category'|trans }}</th>
+                      <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.subcategory'|trans }}</th>
+                      <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.model'|trans }}</th>
+                      <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.gtin13'|trans }}</th>
+                      <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.status'|trans }}</th>
+                      <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'model.field.purchased'|trans }}</th>
+                      <th scope="col" class="whitespace-nowrap py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'global.edit'|trans }}</span></th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">

@@ -57,6 +57,12 @@ global:
     add: Add
     name: MoBaSaVe
     title:
+        searchresults: >-
+            {count, plural,
+                =0    {No results found for “{query}”}
+                =1    {One result for “{query}”}
+                other {# results for “{query}”}
+            }
         index: MoBaSaVe - Welcome!
         search: Search result for “{query}”
         add:
