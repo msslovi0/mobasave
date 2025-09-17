@@ -26,6 +26,11 @@ collection:
             other {# Modelle}
         }
 global:
+    social:
+        facebook: Facebook
+        instagram: Instagram
+        youtube: YouTube
+        tiktok: TikTok
     yes: Ja
     no: Nein
     auto: Automatisch
@@ -49,6 +54,7 @@ global:
     login: Login
     logout: Logout
     add: Hinzufügen
+    name: MoBaSaVe
     title:
         index: MoBaSaVe - Willkommen!
         search: Suchergebnisse für „{query}“
@@ -351,3 +357,54 @@ status:
         button: Zurück zur Startseite
 pagination:
     results: Zeige <span class="font-medium">{ start }</span> bis <span class="font-medium">{ end }</span> von <span class="font-medium">{ total }</span> Ergebnissen
+
+welcome:
+    screenshot: Screenshot
+    whats-new: Neue Funktionen
+    latest-version: "Aktuelle Version: 1.0"
+    headline: Eine Modellbahnsammlung verwalten war noch sie so einfach
+    claim: Von Modellbahnern für Modellbahner. MoBaSaVa ist genau auf die Bedürfnisse der Modellbahner zugeschnitten. Die perfekte Sammlungsverwaltung für jeden Modelleisenbahner!
+    get-started: Jetzt kostenlos testen
+    learn-more: Mehr erfahren
+    manufacturer:
+        headline: Viele Hersteller direkt verfügbar
+        claim: Damit kann jeder direkt loslegen!
+    pricing:
+        headline: Preise
+        best-fit: Für jeden das passende Paket
+        claim: Egal ob kleine Sammlung oder große Sammelleidenschaft, egal ob man nur Grunddaten erfassen will oder sich in Details austobt, MoBaSaVe hat für jeden Modellbahner das passende Paket.
+    level:
+        beginner:
+            name: Schaffner
+            price: €2
+            claim: Das perfekte Paket für den Einstieg
+            benefit:
+                1: Bis zu 100 Modelle
+                2: Bis zu 2 Datenbanken
+                3: Vordefinierte Hersteller
+                4: Erfassung von Grunddaten
+        intermediate:
+            name: Lokführer
+            price: €5
+            claim: Perfekt für den ambitionierten Modellbahner, der alles erfassen will
+            benefit:
+                1: Bis zu 1000 Modelle
+                2: Bis zu 10 Datenbanken
+                3: Erfassung von Detailinformationen
+                4: Eigene Hersteller und Gesellschaften
+                5: Individuelle Zusatzfelder *
+                6: Detaillierte Statistiken *
+        month: Monat
+        todo: "* Feature noch in der Entwicklung"
+    team:
+        headline: Über MoBaSaVe
+        claim: Weil wir der Meinung sind, dass nur ambitionierte Modellbahner eine wirklich gute Sammlungsverwaltung entwicklen können, die auf die Bedürfnisse von Modellbahnern zugeschnitten ist, besteht unser Team ausschließlich aus solchen. Gut, aktuell ist es ein 1-Mann-Team. Aus ambitionierten Modellbahnern.
+        ms:
+            name: Matthias Slovig
+            title: Mädchen für alles
+            claim: Programmierer, Einzelhändler, YouTuber und begeisterter Schachtelbahner - alles in einer Person!
+            url:
+                facebook: https://www.facebook.com/fwrw.co
+                instagram: https://www.instagram.com/fwrw.co/
+                tiktok: https://www.instagram.com/fwrw.co/
+                youtube: https://www.youtube.com/@fwrw
