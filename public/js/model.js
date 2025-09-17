@@ -73,7 +73,6 @@ $(function() {
 
     // Logo, Color and Country-Update
     $('#language').on('change', function() {
-        console.log('changed');
         const href = $('#language').find(':selected').data('href');
         window.location.href = href;
     });
@@ -143,8 +142,10 @@ $(function() {
         const model = $('#form_model').val();
         if(gtinmode!="" && model!="") {
             gtin = gtinbase+model+(checkDigitEAN13(gtinbase+model));
-            if($('#form_ean').val()=="") {
-                $('#form_ean').val(gtin);
+            const ean = $('#form_gtin13').val();
+            console.log(ean);
+            if(typeof ean != 'undefined' || ean=="") {
+                $('#form_gtin13').val(gtin);
             } else {
                 console.log(gtin);
             }

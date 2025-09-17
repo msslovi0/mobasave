@@ -80,7 +80,7 @@
                     </div>
                     <div class="sm:col-span-3">
                         <div class="grid grid-cols-3 gap-2">
-                            {% if model.vehicle.maker is defined and model.vehicle.maker.image!="" %}
+                            {% if model.vehicle.maker is defined and model.vehicle.maker.image is defined and model.vehicle.maker.image!="" %}
                                 <img class="rounded-md outline-1 dark:outline-white/10 outline-gray-300" src="{{ absolute_url(asset('data/logo/maker/' ~ model.vehicle.maker.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ model.vehicle.maker.name }}"/>
                             {% endif %}
                         </div>

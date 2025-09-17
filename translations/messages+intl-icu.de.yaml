@@ -26,6 +26,7 @@ collection:
             other {# Modelle}
         }
 global:
+    search: Suche
     social:
         facebook: Facebook
         instagram: Instagram

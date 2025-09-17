@@ -26,6 +26,7 @@ collection:
             other {# models}
         }
 global:
+    search: Search
     social:
         facebook: Facebook
         instagram: Instagram
