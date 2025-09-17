@@ -72,6 +72,11 @@ $(function() {
     });
 
     // Logo, Color and Country-Update
+    $('#language').on('change', function() {
+        console.log('changed');
+        const href = $('#language').find(':selected').data('href');
+        window.location.href = href;
+    });
     $('#form_manufacturer').on('change', function() {
         const image = $('#form_manufacturer').find(':selected').data('image');
         if(typeof image != 'undefined' && image!="") {

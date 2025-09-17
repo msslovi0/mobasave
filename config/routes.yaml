@@ -1,5 +1,15 @@
+homepage:
+    path: /{_locale}
+    controller: App\Controller\HomeController::index
+    defaults:
+        template: home/index.html.twig
+        _locale: '%app.locale%'
+
 controllers:
     resource:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+    prefix: /{_locale}
+    defaults:
+        _locale: '%app.locale%'

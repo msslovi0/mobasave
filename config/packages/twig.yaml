@@ -3,6 +3,7 @@ twig:
     form_themes: ['tailwind_2_layout.html.twig']
     globals:
       remotehost: "%remote_url%"
+      locales: "%locales%"
 
 when@test:
     twig:

@@ -71,10 +71,10 @@ global:
         collections: Collections
         manufacturer: Manufacturer
         dealer: Dealer
-        company: Company
+        company: Companies
         profile: Profile
         change-password: Change Password
-        add-database: Database
+        add-database: Collection
     error:
         filetype-invalid: Not a valid filetype
     logo: Logo

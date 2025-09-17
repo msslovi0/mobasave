@@ -1,0 +1,353 @@
+footer:
+    claim: © {year} Modellbahnerei. Ein <a href='https://fwrw.co/' class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline" target='_blank' rel='noopener'>F&amp;W</a> Projekt. Made with <span class="text-red-500">♥</span> in Mainz.
+collection:
+    name: Sammlung „{name}“
+    no-collection:
+        fact: Keine Sammlung
+        claim: Get started by creating a new collection.
+    new: Neue Sammlung
+    edit: Sammlung „{name}“ bearbeiten
+    field:
+        name: Name
+        image: Bild
+        color: Farbe
+    saved: Die Sammlung „{name}“ wurde erfolgreich gespeichert
+    resubmit: Bitte die neuen Werte erneut auswählen und das Formular noch einmal absenden.
+    count: >-
+        {count, plural,
+            =0    {Keine Sammlungen}
+            =1    {Eine Sammlung}
+            other {# Sammlungen}
+        }
+    models: >-
+        {count, plural,
+            =0    {Keine Modelle}
+            =1    {Ein Modell}
+            other {# Modelle}
+        }
+global:
+    yes: Ja
+    no: Nein
+    auto: Automatisch
+    edit: Bearbeiten
+    gtin:
+        ignore: EAN-Codes nicht automatisch erzeugen
+        use: Artikelnummer an EAN anhängen (enthält bereits Checksumme)
+        calc: EAN auf Basis der Artikelnummer berechnen
+    searchresult: >-
+        {count, plural,
+            =0    {Keine Ergebnisse für „{query}“ gefunden}
+            =1    {Ein Ergebnis für „{query}“}
+            other {# Ergebnisse für „{query}“}
+        }
+    collections: Sammlungen
+    save: Speichern
+    upload:
+        file: Datei auswählen
+        drag-n-drop: oder per Drag&Drop hier hin ziehen
+        filetypes: PNG, JPG, WebP, SVG
+    login: Login
+    logout: Logout
+    add: Hinzufügen
+    title:
+        index: MoBaSaVe - Willkommen!
+        search: Suchergebnisse für „{query}“
+        add:
+            model: Modell hinzufügen
+            dealer: Händler hinzufügen
+            manufacturer: Hersteller hinzufügen
+            company: Gesellschaft hinzugüen
+    back: Zurück
+    user-menu: Benutzermenü öffnen
+    main-menu: Hauptmenü öffnen
+    notifications:
+        view: Benachrichtigungen anzeigen
+    nav:
+        model: Modell
+        details: Details
+        digital: Digital
+        load: Beladung
+        logout: Logout
+        collections: Sammlungen
+        manufacturer: Hersteller
+        dealer: Händler
+        company: Gesellschaften
+        profile: Profil
+        change-password: Passwort ändern
+        add-database: Sammlung
+    error:
+        filetype-invalid: Ungültiger Dateityp
+    logo: Logo
+    vector: Vector
+
+login:
+    title: Die Fahrkarten bitte!
+    field:
+        email: E-Mail-Adresse
+        password: Passwort
+    forgot-password: Passwort vergessen?
+    remember-me: Eingeloggt bleiben
+    sign-in: Anmelden
+    not-a-member: Noch kein Mitglied?
+    trial: Jetzt 14 Tage kostenlos testen!
+
+user:
+    field:
+        image: Profilbild
+        firstname: Vorname
+        lastname: Nachname
+        email: E-Mail-Adresse
+        dark: Dunkler Modus
+    resubmit: Bitte das Formular erneut absenden, um es zu speichern.
+    saved: Deine Profiländerungen wurden erfolgreich gespeichert.
+
+manufacturer:
+    list:
+        add: Hersteller hinzufügen
+        edit: Bearbeiten
+        logo: Logo
+    field:
+        name: Name
+        street: Straße
+        zip: PLZ
+        city: Ort
+        country: Land
+        state: Staat
+        logo: Logo
+        extra: Adresszusatz
+        email: E-Mail-Adresse
+        url: Homepage
+        facebook: Facebook
+        instagram: Instagram
+        youtube: YouTube
+        twitter: Twitter
+        tiktok: TikTok
+        linkedin: LinkedIn
+        abbr2: Abkürzung (2 Zeichen)
+        abbr3: Abkürzung (3 Zeichen)
+        gtin_base: EAN-Basis
+        gtin_mode: EAN-Berechnung
+    delete:
+        delete: Löschen
+        cancel: Abbrechen
+        headline: Hersteller löschen
+        text: Der Hersteller wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Deine Änderungen für den Hersteller „{name}“ wurden erfolgreich gespeichert
+    deleted: Der Hersteller „{name}“ wurde gelöscht
+    models: Modelle von „{name}“
+    back: Zurück zu „{name}“
+    show-all: >-
+        {count, plural,
+            =1    {Zeige ein Modell von „{name}“}
+            other {Zeige # Modelle von „{name}“}
+        }
+    has-models: >-
+        {count, plural,
+            =1    {Der Hersteller „{name}“ kann nicht gelöscht werden, da noch ein Modell zugewiesen ist.}
+            other {Der Hersteller „{name}“ kann nicht gelöscht werden, da ihm noch # Modelle zugewiesen sind.}
+        }
+
+dealer:
+    list:
+        add: Händler hinzufügen
+        edit: Bearbeiten
+        logo: Logo
+    field:
+        name: Name
+        street: Straße
+        zip: PLZ
+        city: Ort
+        country: Land
+        state: Staat
+        logo: Logo
+        extra: Adresszusatz
+        email: E-Mail-Adresse
+        url: Homepage
+        facebook: Facebook
+        instagram: Instagram
+        youtube: YouTube
+        twitter: Twitter
+        tiktok: TikTok
+        linkedin: LinkedIn
+        abbr2: Abkürzung (2 Zeichen)
+        abbr3: Abkürzung (3 Zeichen)
+    delete:
+        delete: Löschen
+        cancel: Abbrechen
+        headline: Händler löschen
+        text: Der Händler wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Deine Änderungen für den Händler „{name}“ wurden erfolgreich gespeichert
+    deleted: Der Händler „{name}“ wurde gelöscht
+    models: Modelle von „{name}“
+    back: Zurück zu „{name}“
+    show-all: >-
+        {count, plural,
+            =1    {Zeige ein Modell von „{name}“}
+            other {Zeige # Modelle von „{name}“}
+        }
+    has-models: >-
+        {count, plural,
+            =1    {Der Händler „{name}“ kann nicht gelöscht werden, da noch ein Modell zugewiesen ist.}
+            other {Der Händler „{name}“ kann nicht gelöscht werden, da ihm noch # Modelle zugewiesen sind.}
+        }
+
+company:
+    list:
+        add: Gesellschaft hinzufügen
+        edit: Bearbeiten
+        logo: Logo
+    field:
+        name: Name
+        street: Straße
+        zip: PLZ
+        city: Ort
+        country: Land
+        state: Staat
+        logo: Logo
+        extra: Adresszusatz
+        email: E-Mail-Adresse
+        url: Homepage
+        facebook: Facebook
+        instagram: Instagram
+        youtube: YouTube
+        twitter: Twitter
+        tiktok: TikTok
+        linkedin: LinkedIn
+        abbr2: Abkürzung (2 Zeichen)
+        abbr3: Abkürzung (3 Zeichen)
+    delete:
+        delete: Löschen
+        cancel: Abbrechen
+        headline: Gesellschaft löschen
+        text: Die Gesellschaft wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Deine Änderungen für die Gesellschaft „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Gesellschaft „{name}“ wurde gelöscht
+    models: Modelle von „{name}“
+    back: Zurück zu „{name}“
+    show-all: >-
+        {count, plural,
+            =1    {Zeige ein Modell von „{name}“}
+            other {Zeige # Modelle von „{name}“}
+        }
+    has-models: >-
+        {count, plural,
+            =1    {Der Händler „{name}“ kann nicht gelöscht werden, da noch ein Modell zugewiesen ist.}
+            other {Der Händler „{name}“ kann nicht gelöscht werden, da ihm noch # Modelle zugewiesen sind.}
+        }
+model:
+    list:
+        add: Modell hinzufügen
+        sound: Sound
+        light: Licht
+        image: Bild
+    details: Details {category}
+    no-model:
+        fact: Kein Modell
+        claim: Jetzt Modell hinzufügen!
+
+    delete:
+        delete: Löschen
+        cancel: Abbrechen
+        headline: Modell löschen
+        text: Das Modell wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    field:
+        name: Name
+        model: Art-Nr.
+        image: Bild
+        gtin13: EAN/GTIN13
+        category: Kategorie
+        subcategory: Unterkategorie
+        manufacturer: Hersteller
+        company: Gesellschaft
+        country: Land
+        color1: Farbe 1
+        color2: Farbe 2
+        color3: Farbe 3
+        colors: Farben
+        gauge: Spur
+        scale: Maßstab
+        track: Spurweite
+        epoch: Epoche
+        subepoch: Perioden
+        storage: Aufbewahrung
+        project: Projekt
+        condition: Zustand
+        conditiondetails: Zustandsdetails
+        instructions: Anleitung
+        parts: Zurüstteile
+        displaycase: Vitrine
+        weathered: Gealtert
+        enhanced: Gesupert
+        purchased: Kaufdatum
+        dealer: Händler
+        msrp: UVP
+        notes: Notizen
+        description: Beschreibung
+        box: Verpackung
+        price: Preis
+        quantity: Menge
+        status: Status
+        registration: Betriebsnummer
+        class: Baureihe
+        length: Länge
+        nickname: Spitzname
+        axle: Achsfolge
+        power: Strom
+        coupler: Kupplung
+        maker: Produzent
+        digital: Digital
+        sound: Sound
+        smoke: Rauch
+        dccready: DCC ready
+        containertype: Containertyp
+        year: Baujahr
+        address: Adresse
+        pininterface: Schnittstelle
+        decoder: Decoder
+        protocol: Protokoll
+        functions: Funktionen
+        loads: Beladungen
+        function: Funktion
+        functionkey: Funktionstaste
+        modelset: Set
+        new: Neuer Wert für „{name}“
+        parent: Elternelement ist:
+    epoch:
+        till-today: heute
+    function:
+        sound: Soundfunktion
+        light: Lichtfunktion
+        trash: Funktion „{function}“ löschen
+        add: Hinzufügen
+        delete:
+            headline: Funktion „{function}“ löschen
+            text: Die Funktion wird nicht länger mit diesem Modell verknüpft sein. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+        deleted: Die Funktionszuordnung „{function}“ wurde gelöscht
+    value:
+        add:
+            hint: Nach dem Klick auf „Speichern“ lädt das Formular erneut, der neu hinzugefügte Wert muss noch einmal ausgewählt und das Hauptformular erneut gespeichert werden. Das ist technisch leider anders nicht möglich.
+    load:
+        delete:
+            headline: Beladung „{load}“ löschen
+            text: Die Ladung wird nicht länger mit diesem Modell verknüpft sein. Der Hauptdatensatz der Beladung wird nicht verändert. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+        deleted: Die Beladung „{load}“ wurde gelöscht
+    saved: Deine Änderungen an „{name}“ wurden erfolgreich gespeichert
+    nodetails: Diese Kategorie hat keine Detailinformationen
+    created: Dein Modell „{name}“ wurde erfolgreich angelegt
+    deleted: Dein Modell „{name}“ wurde gelöscht
+    assign-load: Beladung hinzufügen
+    resubmit: Bitte den neu erstellten Eintrag erneut auswählen und das Formular erneut absenden.
+
+status:
+    notfound:
+        code: 404
+        headline: Seite nicht gefunden
+        subline: Leider konnten wir die gewünschte Seite nicht finden.
+        button: Zurück zur Startseite
+    forbidden:
+        code: 403
+        headline: Nicht autorisiert
+        subline: Du hast keine Berechtigung diese Seite anzuzeigen.
+        button: Zurück zur Startseite
+pagination:
+    results: Zeige <span class="font-medium">{ start }</span> bis <span class="font-medium">{ end }</span> von <span class="font-medium">{ total }</span> Ergebnissen
