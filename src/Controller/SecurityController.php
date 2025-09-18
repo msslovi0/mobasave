@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -12,9 +13,16 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
+    function __construct(private Security $security) {
+
+    }
     #[Route(path: '/login', name: 'mbs_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        $user = $this->security->getUser();
+        if(is_object($user)) {
+            return $this->redirectToRoute('mbs_home');
+        }
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 

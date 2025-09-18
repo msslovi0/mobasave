@@ -213,13 +213,22 @@ class ManufacturerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
+
+        $limit = $request->query->get('limit');
+        $limits = $this->getParameter('limits');
+        if($limit=="" || !in_array($limit, $limits)) {
+            $limit = $request->getSession()->get('limit');
+        } else {
+            $request->getSession()->set('limit', $limit);
+        }
+
         $manufacturer = $entityManager->getRepository(Manufacturer::class)->find($id);
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         $models = $entityManager->getRepository(Model::Class)->findBy(["manufacturer" => $manufacturer, "modeldatabase" => $databases]);
         $pagination = $paginator->paginate(
             $models,
             $request->query->getInt('page', 1), /* page number */
-            100 /* limit per page */
+            $limit /* limit per page */
         );
 
         return $this->render('collection/list.html.twig', [
@@ -235,10 +244,18 @@ class ManufacturerController extends AbstractController
         $user = $this->security->getUser();
         $manufacturers = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]), ['name' => 'ASC']);
 
+        $limit = $request->query->get('limit');
+        $limits = $this->getParameter('limits');
+        if($limit=="" || !in_array($limit, $limits)) {
+            $limit = $request->getSession()->get('limit');
+        } else {
+            $request->getSession()->set('limit', $limit);
+        }
+
         $pagination = $paginator->paginate(
             $manufacturers,
             $request->query->getInt('page', 1), /* page number */
-            100 /* limit per page */
+            $limit /* limit per page */
         );
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);

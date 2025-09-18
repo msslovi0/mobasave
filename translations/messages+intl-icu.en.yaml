@@ -111,6 +111,8 @@ user:
         lastname: Lastname
         email: Email address
         dark: Dark Mode
+        pagination: Entries per page
+        language: Default language
     resubmit: Please re-submit the form in order to save it.
     saved: Your changes to your profile where saved successfully
 
@@ -367,16 +369,23 @@ pagination:
     results: Showing <span class="font-medium">{ start }</span> to <span class="font-medium">{ end }</span> of <span class="font-medium">{ total }</span> results
 
 welcome:
+    logo:
+        maerklin: Märklin
+        fleischmann: Fleischmann
+        roco: Roco
+        nme: nme
+        brawa: BRAWA
+        piko: PIKO
     screenshot: Screenshot
     whats-new: Neue Funktionen
     latest-version: "Aktuelle Version: 1.0"
-    headline: Eine Modellbahnsammlung verwalten war noch sie so einfach
+    headline: Eine Modellbahn&shy;sammlung verwalten war noch sie so einfach
     claim: Von Modellbahnern für Modellbahner. MoBaSaVa ist genau auf die Bedürfnisse der Modellbahner zugeschnitten. Die perfekte Sammlungsverwaltung für jeden Modelleisenbahner!
     get-started: Jetzt kostenlos testen
     learn-more: Mehr erfahren
     manufacturer:
         headline: Viele Hersteller direkt verfügbar
-        claim: Damit kann jeder direkt loslegen!
+        claim: Und viele mehr! Damit kann jeder sofort loslegen!
     pricing:
         headline: Preise
         best-fit: Für jeden das passende Paket

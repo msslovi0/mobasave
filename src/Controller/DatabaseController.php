@@ -241,6 +241,14 @@ class DatabaseController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
 
+        $limit = $request->query->get('limit');
+        $limits = $this->getParameter('limits');
+        if($limit=="" || !in_array($limit, $limits)) {
+            $limit = $request->getSession()->get('limit');
+        } else {
+            $request->getSession()->set('limit', $limit);
+        }
+
         $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
         if(!$database) {
             $response = new Response();
@@ -261,7 +269,7 @@ class DatabaseController extends AbstractController
         $pagination = $paginator->paginate(
             $models,
             $request->query->getInt('page', 1), /* page number */
-            100 /* limit per page */
+            $limit /* limit per page */
         );
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
@@ -277,6 +285,14 @@ class DatabaseController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
+
+        $limit = $request->query->get('limit');
+        $limits = $this->getParameter('limits');
+        if($limit=="" || !in_array($limit, $limits)) {
+            $limit = $request->getSession()->get('limit');
+        } else {
+            $request->getSession()->set('limit', $limit);
+        }
 
         $query = $request->get('search');
         $qb = $entityManager->createQueryBuilder();
@@ -333,7 +349,7 @@ class DatabaseController extends AbstractController
         $pagination = $paginator->paginate(
             $result,
             $request->query->getInt('page', 1), /* page number */
-            $_format=="json" ? 10 : 100 /* limit per page */
+            $_format=="json" ? 10 : $limit /* limit per page */
         );
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);

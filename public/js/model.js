@@ -110,6 +110,7 @@ $(function() {
             $('#form_country option[data-iso="'+country+'"]').prop('selected', true);
             $('#image-flag').attr('src', "/data/flag/"+country+".svg").addClass('rounded-md outline-1 dark:outline-white/10 outline-gray-300');
         } else {
+            $('#form_country option:first').prop('selected', true);
             $('#image-flag').attr('src', "/images/blank.svg").attr('class', '');
         }
         if(typeof image != 'undefined' && image!="") {

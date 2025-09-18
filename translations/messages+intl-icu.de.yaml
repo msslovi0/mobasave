@@ -111,6 +111,8 @@ user:
         lastname: Nachname
         email: E-Mail-Adresse
         dark: Dunkler Modus
+        pagination: Einträge pro Seite
+        language: Standardsprache
     resubmit: Bitte das Formular erneut absenden, um es zu speichern.
     saved: Deine Profiländerungen wurden erfolgreich gespeichert.
 
@@ -366,16 +368,24 @@ pagination:
     results: Zeige <span class="font-medium">{ start }</span> bis <span class="font-medium">{ end }</span> von <span class="font-medium">{ total }</span> Ergebnissen
 
 welcome:
+    logo:
+        maerklin: Märklin
+        fleischmann: Fleischmann
+        roco: Roco
+        nme: nme
+        brawa: BRAWA
+        piko: PIKO
     screenshot: Screenshot
     whats-new: Neue Funktionen
     latest-version: "Aktuelle Version: 1.0"
-    headline: Eine Modellbahnsammlung verwalten war noch sie so einfach
+    headline: Eine Modellbahn&shy;sammlung verwalten war noch sie so einfach
     claim: Von Modellbahnern für Modellbahner. MoBaSaVa ist genau auf die Bedürfnisse der Modellbahner zugeschnitten. Die perfekte Sammlungsverwaltung für jeden Modelleisenbahner!
     get-started: Jetzt kostenlos testen
+    most-popular: Am beliebstesten
     learn-more: Mehr erfahren
     manufacturer:
         headline: Viele Hersteller direkt verfügbar
-        claim: Damit kann jeder direkt loslegen!
+        claim: Und viele mehr! Damit kann jeder sofort loslegen!
     pricing:
         headline: Preise
         best-fit: Für jeden das passende Paket
@@ -399,8 +409,17 @@ welcome:
                 2: Bis zu 10 Datenbanken
                 3: Erfassung von Detailinformationen
                 4: Eigene Hersteller und Gesellschaften
+                5: Detaillierte Statistiken *
+        pro:
+            name: Bahnchef
+            price: €20
+            claim: Das Rechts-Unten-Modell für alle, die auch sonst immer „mit allem und scharf“ bestellen
+            benefit:
+                1: Unbegrenzte Anzahl an Modellen
+                2: Bis zu 100 Datenbanken
+                3: API-Zugriff *
+                4: Vorabzugriff auf neue Features *
                 5: Individuelle Zusatzfelder *
-                6: Detaillierte Statistiken *
         month: Monat
         todo: "* Feature noch in der Entwicklung"
     team:

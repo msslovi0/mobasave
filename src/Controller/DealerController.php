@@ -205,13 +205,22 @@ class DealerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
+
+        $limit = $request->query->get('limit');
+        $limits = $this->getParameter('limits');
+        if($limit=="" || !in_array($limit, $limits)) {
+            $limit = $request->getSession()->get('limit');
+        } else {
+            $request->getSession()->set('limit', $limit);
+        }
+
         $dealer = $entityManager->getRepository(Dealer::class)->find($id);
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         $models = $entityManager->getRepository(Model::Class)->findBy(["dealer" => $dealer, "modeldatabase" => $databases]);
         $pagination = $paginator->paginate(
             $models,
             $request->query->getInt('page', 1), /* page number */
-            100 /* limit per page */
+            $limit /* limit per page */
         );
 
         return $this->render('collection/list.html.twig', [
@@ -225,12 +234,21 @@ class DealerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
+
+        $limit = $request->query->get('limit');
+        $limits = $this->getParameter('limits');
+        if($limit=="" || !in_array($limit, $limits)) {
+            $limit = $request->getSession()->get('limit');
+        } else {
+            $request->getSession()->set('limit', $limit);
+        }
+
         $dealers = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]), ['name' => 'ASC']);
 
         $pagination = $paginator->paginate(
             $dealers,
             $request->query->getInt('page', 1), /* page number */
-            100 /* limit per page */
+            $limit /* limit per page */
         );
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);

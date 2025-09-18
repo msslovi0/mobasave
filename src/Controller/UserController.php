@@ -35,12 +35,23 @@ class UserController extends AbstractController
         if($user->getImage()!="") {
             $currentImage = $user->getImage();
         }
+        $locales = $this->getParameter('locales');
+        $limits = $this->getParameter('limits');
+        foreach($limits as $limit) {
+            $limitchoice[$limit] = $limit;
+        }
+        foreach($locales as $locale) {
+            $localechoice[$locale['name']] = $locale['code'];
+        }
+
 
         $form = $this->createFormBuilder($user)
             ->add('firstname', TextType::class)
             ->add('lastname', TextType::class)
             ->add('email', EmailType::class)
             ->add('dark', ChoiceType::class, ['choices' => [$translator->trans('global.auto') => null ,$translator->trans('global.yes') => true, $translator->trans('global.no') => false]])
+            ->add('pagination', ChoiceType::class, ['choices' => $limitchoice])
+            ->add('language', ChoiceType::class, ['choices' => $localechoice])
             ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
 

@@ -4,6 +4,7 @@ twig:
     globals:
       remotehost: "%remote_url%"
       locales: "%locales%"
+      limits: "%limits%"
 
 when@test:
     twig:

@@ -199,6 +199,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $dark = null;
 
+    #[ORM\Column(length: 2)]
+    private ?string $language = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $pagination = null;
+
     public function __construct()
     {
         $this->userdatabases = new ArrayCollection();
@@ -1103,6 +1109,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDark(?bool $dark): static
     {
         $this->dark = $dark;
+
+        return $this;
+    }
+
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(string $language): static
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
+    public function getPagination(): ?int
+    {
+        return $this->pagination;
+    }
+
+    public function setPagination(?int $pagination): static
+    {
+        $this->pagination = $pagination;
 
         return $this;
     }

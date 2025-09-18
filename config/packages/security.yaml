@@ -21,6 +21,7 @@ security:
                 check_path: mbs_login
                 enable_csrf: true
                 use_referer: true
+                success_handler: App\Security\Authentication\AuthenticationSuccessHandler
             logout:
                 path: mbs_logout
                 # where to redirect after logout
