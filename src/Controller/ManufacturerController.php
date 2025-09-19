@@ -224,7 +224,7 @@ class ManufacturerController extends AbstractController
 
         $manufacturer = $entityManager->getRepository(Manufacturer::class)->find($id);
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
-        $models = $entityManager->getRepository(Model::Class)->findBy(["manufacturer" => $manufacturer, "modeldatabase" => $databases]);
+        $models = $entityManager->getRepository(Model::Class)->findBy(["manufacturer" => $manufacturer, "modeldatabase" => $databases], ['purchased' => 'DESC']);
         $pagination = $paginator->paginate(
             $models,
             $request->query->getInt('page', 1), /* page number */

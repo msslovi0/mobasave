@@ -237,7 +237,7 @@ class CompanyController extends AbstractController
 
         $company = $entityManager->getRepository(Company::class)->find($id);
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
-        $models = $entityManager->getRepository(Model::Class)->findBy(["company" => $company, "modeldatabase" => $databases]);
+        $models = $entityManager->getRepository(Model::Class)->findBy(["company" => $company, "modeldatabase" => $databases], ['purchased' => 'DESC']);
         $pagination = $paginator->paginate(
             $models,
             $request->query->getInt('page', 1), /* page number */
