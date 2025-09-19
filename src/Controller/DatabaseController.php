@@ -250,6 +250,9 @@ class DatabaseController extends AbstractController
         }
 
         $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+        if(!is_object($database)) {
+            return $this->redirectToRoute('mbs_home');
+        }
         if(!$database) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
@@ -489,6 +492,10 @@ class DatabaseController extends AbstractController
         $user = $this->security->getUser();
         $id = $request->getSession()->get('database');
         $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+
+        if(!is_object($database)) {
+            return $this->redirectToRoute('mbs_home');
+        }
 
         if(is_object($user) and $database->getUser()->getId()!=$user->getId()) {
             $response = new Response();
