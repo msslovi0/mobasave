@@ -304,6 +304,7 @@ class DatabaseController extends AbstractController
             ->leftJoin('m.tram','t','WITH','m.tram = t.id')
             ->leftJoin('m.dealer','d','WITH','m.dealer = d.id')
             ->leftJoin('m.manufacturer','w','WITH','m.manufacturer = w.id')
+            ->leftJoin('m.company','co','WITH','m.company = co.id')
             ->leftJoin('l.maker','lm','WITH','l.maker = lm.id')
             ->leftJoin('v.maker','vm','WITH','v.maker = vm.id')
             ->leftJoin('t.maker','tm','WITH','t.maker = tm.id')
@@ -318,6 +319,8 @@ class DatabaseController extends AbstractController
                 $qb->expr()->like('d.name', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
                 $qb->expr()->like('w.name', $qb->expr()->literal('%' . $query . '%')),
+            )->orWhere(
+                $qb->expr()->like('co.name', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
                 $qb->expr()->like('l.class', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
