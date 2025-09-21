@@ -16,6 +16,11 @@ class HomeController extends AbstractController
     public function __construct(private Security $security)
     {
     }
+    #[Route('/render/', name: 'mbs_render', methods: ['GET'])]
+    public function renderDefaults(): Response
+    {
+        return $this->render('render.html.twig', []);
+    }
     #[Route('/', name: 'mbs_home', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authChecker): Response
     {

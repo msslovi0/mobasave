@@ -31,6 +31,15 @@ class Storage
     #[ORM\ManyToOne(inversedBy: 'storages')]
     private ?User $user = null;
 
+    #[ORM\Column()]
+    private ?int $fill = null;
+
+    #[ORM\ManyToOne(inversedBy: 'storages')]
+    private ?Country $country = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slot = null;
+
     public function __construct()
     {
         $this->models = new ArrayCollection();
@@ -103,6 +112,42 @@ class Storage
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getFill(): ?int
+    {
+        return $this->fill;
+    }
+
+    public function setFill(?int $fill): static
+    {
+        $this->fill = $fill;
+
+        return $this;
+    }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?Country $country): static
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getSlot(): ?string
+    {
+        return $this->slot;
+    }
+
+    public function setSlot(?string $slot): static
+    {
+        $this->slot = $slot;
 
         return $this;
     }

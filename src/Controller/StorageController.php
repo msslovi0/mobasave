@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,13 +40,42 @@ class StorageController extends AbstractController
         $user = $this->security->getUser();
 
         $country        = $entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
-        $state          = $entityManager->getRepository(State::class)->findBy([], ['name' => 'ASC']);
 
         $storage = new Storage();
 
         $form = $this->createFormBuilder($storage)
             ->add('name', TextType::class)
-            ->add('color', ChoiceType::class, ['required' => false, 'choices' => [$translator->trans('global.color.gray') => 'gray' ,$translator->trans('global.color.red') => 'red', $translator->trans('global.color.yellow') => 'yellow', $translator->trans('global.color.green') => 'green', $translator->trans('global.color.blue') => 'blue', $translator->trans('global.color.indigo') => 'indigo', $translator->trans('global.color.purple') => 'purple', $translator->trans('global.color.pink') => 'pink']])
+            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('fill', RangeType::class, ['required' => false, 'attr' => ["min" => 0, "max" => 100, "step" => 5]])
+            ->add('slot', ChoiceType::class, ['required' => false, 'choices' => [
+                $translator->trans('default') => 'default',
+                $translator->trans('narrow') => 'narrow',
+                $translator->trans('wide') => 'wide',
+            ]])
+            ->add('color', ChoiceType::class, ['required' => false, 'choices' => [
+                $translator->trans('red') => 'red',
+                $translator->trans('orange') => 'orange',
+                $translator->trans('amber') => 'amber',
+                $translator->trans('yellow') => 'yellow',
+                $translator->trans('lime') => 'lime',
+                $translator->trans('green') => 'green',
+                $translator->trans('emerald') => 'emerald',
+                $translator->trans('teal') => 'teal',
+                $translator->trans('cyan') => 'cyan',
+                $translator->trans('sky') => 'sky',
+                $translator->trans('blue') => 'blue',
+                $translator->trans('indigo') => 'indigo',
+                $translator->trans('violet') => 'violet',
+                $translator->trans('purple') => 'purple',
+                $translator->trans('fuchsia') => 'fuchsia',
+                $translator->trans('pink') => 'pink',
+                $translator->trans('rose') => 'rose',
+                $translator->trans('slate') => 'slate',
+                $translator->trans('gray') => 'gray',
+                $translator->trans('zinc') => 'zinc',
+                $translator->trans('neutral') => 'neutral',
+                $translator->trans('stone') => 'stone',
+            ]])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
 
         $form = $form->getForm();
@@ -75,9 +105,41 @@ class StorageController extends AbstractController
         $user = $this->security->getUser();
         $storage = $entityManager->getRepository(Storage::class)->findOneBy(["id" => $id]);
 
+        $country        = $entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
+
         $form = $this->createFormBuilder($storage)
             ->add('name', TextType::class)
-            ->add('color', ChoiceType::class, ['required' => false, 'choices' => [$translator->trans('global.color.gray') => 'gray' ,$translator->trans('global.color.red') => 'red', $translator->trans('global.color.yellow') => 'yellow', $translator->trans('global.color.green') => 'green', $translator->trans('global.color.blue') => 'blue', $translator->trans('global.color.indigo') => 'indigo', $translator->trans('global.color.purple') => 'purple', $translator->trans('global.color.pink') => 'pink']])
+            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('fill', RangeType::class, ['required' => false, 'attr' => ["min" => 0, "max" => 100, "step" => 5]])
+            ->add('slot', ChoiceType::class, ['required' => false, 'choices' => [
+                $translator->trans('default') => 'default',
+                $translator->trans('narrow') => 'narrow',
+                $translator->trans('wide') => 'wide',
+            ]])
+            ->add('color', ChoiceType::class, ['required' => false, 'choices' => [
+                $translator->trans('red') => 'red',
+                $translator->trans('orange') => 'orange',
+                $translator->trans('amber') => 'amber',
+                $translator->trans('yellow') => 'yellow',
+                $translator->trans('lime') => 'lime',
+                $translator->trans('green') => 'green',
+                $translator->trans('emerald') => 'emerald',
+                $translator->trans('teal') => 'teal',
+                $translator->trans('cyan') => 'cyan',
+                $translator->trans('sky') => 'sky',
+                $translator->trans('blue') => 'blue',
+                $translator->trans('indigo') => 'indigo',
+                $translator->trans('violet') => 'violet',
+                $translator->trans('purple') => 'purple',
+                $translator->trans('fuchsia') => 'fuchsia',
+                $translator->trans('pink') => 'pink',
+                $translator->trans('rose') => 'rose',
+                $translator->trans('slate') => 'slate',
+                $translator->trans('gray') => 'gray',
+                $translator->trans('zinc') => 'zinc',
+                $translator->trans('neutral') => 'neutral',
+                $translator->trans('stone') => 'stone',
+            ]])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
 
         $form = $form->getForm();

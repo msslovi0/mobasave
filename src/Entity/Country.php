@@ -52,6 +52,12 @@ class Country
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'country')]
     private Collection $models;
 
+    /**
+     * @var Collection<int, Storage>
+     */
+    #[ORM\OneToMany(targetEntity: Storage::class, mappedBy: 'country')]
+    private Collection $storages;
+
     public function __construct()
     {
         $this->states = new ArrayCollection();
@@ -59,6 +65,7 @@ class Country
         $this->manufacturers = new ArrayCollection();
         $this->companies = new ArrayCollection();
         $this->models = new ArrayCollection();
+        $this->storages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -234,6 +241,36 @@ class Country
             // set the owning side to null (unless already changed)
             if ($model->getCountry() === $this) {
                 $model->setCountry(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Storage>
+     */
+    public function getStorages(): Collection
+    {
+        return $this->storages;
+    }
+
+    public function addStorage(Storage $storage): static
+    {
+        if (!$this->storages->contains($storage)) {
+            $this->storages->add($storage);
+            $storage->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStorage(Storage $storage): static
+    {
+        if ($this->storages->removeElement($storage)) {
+            // set the owning side to null (unless already changed)
+            if ($storage->getCountry() === $this) {
+                $storage->setCountry(null);
             }
         }
 

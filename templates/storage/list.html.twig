@@ -54,21 +54,51 @@
                                 <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
                                     <thead>
                                     <tr>
-                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'storage.field.name'|trans }}</span></th>
-                                        <th scope="col" colspan="2" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'storage.field.color'|trans }}</th>
+                                      <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'storage.field.name'|trans }}</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'storage.field.country'|trans }}</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'storage.field.fill'|trans }}</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'storage.field.slot'|trans }}</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'storage.field.color'|trans }}</th>
+                                        <th>
+                                        </th>
                                     </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
                                     {% for storage in storages %}
                                         <tr class="even:bg-gray-50 dark:even:bg-gray-800/50">
                                             <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                <div class="md:ml-4">
                                                     <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_storage', {id: storage.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ storage.name }}</a></div>
                                                 </div>
                                             </td>
-                                            <td class="py-5 pr-3 text-sm whitespace-nowrap sm:pl-0">
-                                            {% if storage.color!="" %}
-                                                <span class="inline-flex items-center rounded-md bg-{{ storage.color }}-50 px-2 py-1 text-xs font-medium text-{{ storage.color }}-700 inset-ring inset-ring-{{ storage.color }}-700/10 dark:bg-{{ storage.color }}-400/10 dark:text-{{ storage.color }}-400 dark:inset-ring-{{ storage.color }}-400/20">{{ storage.color|trans }}</span>
+                                            <td class="py-5 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                <div class="flex items-center pr-5">
+                                                    <div class="size-11 shrink-0">
+                                                        <img src="{% if storage.country.name is defined %}{{ absolute_url(asset('data/flag/' ~ storage.country.iso2 ~ ".svg"))|replace({"localhost:8000": remotehost})|replace({"127.0.0.1:8000": remotehost}) }}{% else %}{{ asset('images/blank.svg') }}{% endif %}" alt="" class="rounded-md outline-1 dark:outline-white/10 outline-gray-300" />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="relative size-8" {% if storage.fill!=0 %}title="{{storage.fill}}%"{% endif %} >
+                                                {% if storage.fill!=0 %}
+                                                  <svg class="size-full -rotate-90" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                                                    <!-- Background Circle -->
+                                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-200 dark:text-neutral-700" stroke-width="4"></circle>
+                                                    <!-- Progress Circle -->
+                                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-green-800 dark:text-green-700" stroke-width="4" stroke-dasharray="100" stroke-dashoffset="{{100-storage.fill}}" stroke-linecap="round"></circle>
+                                                  </svg>
+                                                </div>
                                             {% endif %}
+                                            </td>
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                <div class="md:ml-4">
+                                                    <div class="font-medium text-gray-900 dark:text-white">{{ storage.slot|trans }}</div>
+                                                </div>
+                                            </td>
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                {% if storage.color!="" %}
+                                                    <span class="inline-flex items-center rounded-md bg-{{storage.color}}-50 px-2 py-1 text-xs font-medium text-{{storage.color}}-600 inset-ring inset-ring-{{storage.color}}-500/10 dark:bg-{{storage.color}}-400/10 dark:text-{{storage.color}}-400 dark:inset-ring-{{storage.color}}-400/20">{{ storage.color|trans }}</span>
+                                                {% endif %}
                                             </td>
                                             <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
                                                 <a href="{{ path('mbs_storage', {id: storage.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ storage.name }}</span></a>

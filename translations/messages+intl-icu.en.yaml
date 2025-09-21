@@ -1,11 +1,29 @@
-gray: Gray
+default: Default
+narrow: Narrow
+wide: Wide
+
 red: Red
+orange: Orange
+amber: Amber
 yellow: Yellow
+lime: Lime
 green: Green
+emerald: Emerald
+teal: Teal
+cyan: Cyan
+sky: Sky
 blue: Blue
 indigo: Indigo
+violet: Violet
 purple: Purple
+fuchsia: Fuchsia
 pink: Pink
+rose: Rose
+slate: Slate
+gray: Gray
+zinc: Zinc
+neutral: Neutral
+stone: Stone
 
 footer:
     claim: © {year} Modellbahnerei. A <a href='https://fwrw.co/' class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline" target='_blank' rel='noopener'>F&amp;W</a> project. Made with <span class="text-red-500">♥</span> in Mainz.
@@ -47,15 +65,6 @@ global:
         tiktok: TikTok
     yes: Yes
     no: No
-    color:
-        gray: Gray
-        red: Red
-        yellow: Yellow
-        green: Green
-        blue: Blue
-        indigo: Indigo
-        purple: Purple
-        pink: Pink
     auto: Auto
     edit: Edit
     gtin:
@@ -139,6 +148,7 @@ user:
     saved: Your changes to your profile where saved successfully
 
 manufacturer:
+    add: New Manufacturer
     list:
         add: Add Manufacturer
         edit: Edit
@@ -185,6 +195,7 @@ manufacturer:
         }
 
 dealer:
+    add: New Dealer
     list:
         add: Add Dealer
         edit: Edit
@@ -229,12 +240,16 @@ dealer:
         }
 
 storage:
+    add: New Storage
     list:
         add: Add Storage
         edit: Edit
     field:
         name: Name
         color: Color
+        country: Country
+        slot: Slot Width
+        fill: Fill Percentage
     delete:
         delete: Delete
         cancel: Cancel
@@ -255,6 +270,7 @@ storage:
     saved: Your changes to “{name}” have been successfully saved
 
 company:
+    add: New Company
     list:
         add: Add Company
         edit: Edit

@@ -10,7 +10,7 @@
     <div class="py-10">
         <header>
             <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ company.name }}</h1>
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ company.name != "" ? company.name : 'company.add'|trans }}</h1>
                 <div class="flex gap-1">
                     <a href="{{ path('mbs_company_add') }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'company.list.add'|trans }}</a>
                 </div>

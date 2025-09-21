@@ -1,11 +1,29 @@
-gray: Grau
+default: Standard
+narrow: Schmal
+wide: Breit
+
 red: Rot
+orange: Orange
+amber: Bernstein
 yellow: Gelb
+lime: Limette
 green: Grün
+emerald: Smaragdgrün
+teal: Petrol
+cyan: Cyan
+sky: Himmelblau
 blue: Blau
 indigo: Indigo
+violet: Violett
 purple: Lila
+fuchsia: Fuchsia
 pink: Pink
+rose: Rosé
+slate: Schiefergrau
+gray: Grau
+zinc: Zinkgrau
+neutral: Neutralgrau
+stone: Steingrau
 
 footer:
     claim: © {year} Modellbahnerei. Ein <a href='https://fwrw.co/' class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline" target='_blank' rel='noopener'>F&amp;W</a> Projekt. Made with <span class="text-red-500">♥</span> in Mainz.
@@ -47,16 +65,6 @@ global:
         tiktok: TikTok
     yes: Ja
     no: Nein
-    color:
-        gray: Grau
-        red: Rot
-        yellow: Gelb
-        green: Grün
-        blue: Blau
-        indigo: Indigo
-        purple: Lila
-        pink: Pink
-
     auto: Automatisch
     edit: Bearbeiten
     gtin:
@@ -141,6 +149,7 @@ user:
     saved: Deine Profiländerungen wurden erfolgreich gespeichert.
 
 manufacturer:
+    add: Neuer Hersteller
     list:
         add: Hersteller hinzufügen
         edit: Bearbeiten
@@ -187,6 +196,7 @@ manufacturer:
         }
 
 dealer:
+    add: Neuer Händler
     list:
         add: Händler hinzufügen
         edit: Bearbeiten
@@ -231,12 +241,16 @@ dealer:
         }
 
 storage:
+    add: Neue Aufbewahrung
     list:
         add: Aufbewahrung hinzufügen
         edit: Bearbeiten
     field:
         name: Name
         color: Farbe
+        country: Land
+        slot: Schachtbreite
+        fill: Füllstand
     delete:
         delete: Löschen
         cancel: Abbrechen
@@ -257,6 +271,7 @@ storage:
     saved: Deine Änderungen für die Aufbewahrung „{name}“ wurden erfolgreich gespeichert
 
 company:
+    add: Neue Gesellschaft
     list:
         add: Gesellschaft hinzufügen
         edit: Bearbeiten
