@@ -1,3 +1,12 @@
+gray: Gray
+red: Red
+yellow: Yellow
+green: Green
+blue: Blue
+indigo: Indigo
+purple: Purple
+pink: Pink
+
 footer:
     claim: © {year} Modellbahnerei. A <a href='https://fwrw.co/' class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline" target='_blank' rel='noopener'>F&amp;W</a> project. Made with <span class="text-red-500">♥</span> in Mainz.
 collection:
@@ -38,6 +47,15 @@ global:
         tiktok: TikTok
     yes: Yes
     no: No
+    color:
+        gray: Gray
+        red: Red
+        yellow: Yellow
+        green: Green
+        blue: Blue
+        indigo: Indigo
+        purple: Purple
+        pink: Pink
     auto: Auto
     edit: Edit
     gtin:
@@ -209,6 +227,32 @@ dealer:
             =1    {Can't delete dealer “{name}”. There is still one model assigned.}
             other {Can't delete dealer “{name}”. There are still # models assigned.}
         }
+
+storage:
+    list:
+        add: Add Storage
+        edit: Edit
+    field:
+        name: Name
+        color: Color
+    delete:
+        delete: Delete
+        cancel: Cancel
+        headline: Delete storage
+        text: The storage will be deleted. This action can't be undone! Proceed with caution!
+    models: Models in “{name}”
+    back: Back to “{name}”
+    show-all: >-
+        {count, plural,
+            =1    {Show one model in “{name}”}
+            other {Show all # models in “{name}”}
+        }
+    has-models: >-
+        {count, plural,
+            =1    {Can't delete storage “{name}”. There is still one model assigned.}
+            other {Can't delete storage “{name}”. There are still # models assigned.}
+        }
+    saved: Your changes to “{name}” have been successfully saved
 
 company:
     list:

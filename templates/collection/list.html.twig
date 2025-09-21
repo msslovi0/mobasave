@@ -11,6 +11,10 @@
     {% set current = 'company' %}
     {% set path_history = path('mbs_company', {id: models[0].company.id}) %}
     {% set text_history = 'company.back'|trans({name: models[0].company.name}) %}
+{% elseif 'mbs_storage' in app.request.attributes.get("_route") %}
+    {% set current = 'storage' %}
+    {% set path_history = path('mbs_storage', {id: models[0].storage.id}) %}
+    {% set text_history = 'storage.back'|trans({name: models[0].storage.name}) %}
 {% elseif(models|length>0) %}
     {% set current = 'model' %}
     {% set path_history = path('mbs_database', {id: models[0].modeldatabase.id}) %}
@@ -30,6 +34,8 @@
       {{ 'dealer.models'|trans({'name': models[0].dealer.name}) }}
   {% elseif current == "company"  %}
       {{ 'company.models'|trans({'name': models[0].company.name}) }}
+  {% elseif current == "storage"  %}
+      {{ 'storage.models'|trans({'name': models[0].storage.name}) }}
   {% else %}
     {{ 'collection.name'|trans({'name': database.name}) }}
   {% endif %}
@@ -47,6 +53,8 @@
               {{ 'dealer.models'|trans({'name': models[0].dealer.name}) }}
           {% elseif current == "company"  %}
               {{ 'company.models'|trans({'name': models[0].company.name}) }}
+          {% elseif current == "storage"  %}
+              {{ 'storage.models'|trans({'name': models[0].storage.name}) }}
           {% else %}
               {{ 'collection.name'|trans({'name': database.name}) }}
           {% endif %}
@@ -115,6 +123,8 @@
                           {% set path = path('mbs_manufacturer_model', {id: model.id, manufacturer: model.manufacturer.id}) %}
                       {% elseif current == 'company' %}
                           {% set path = path('mbs_company_model', {id: model.id, company: model.company.id}) %}
+                      {% elseif current == 'storage' %}
+                          {% set path = path('mbs_storage_model', {id: model.id, storage: model.storage.id}) %}
                       {% elseif current == 'dealer' %}
                           {% set path = path('mbs_dealer_model', {id: model.id, dealer: model.dealer.id}) %}
                       {% else %}

@@ -668,6 +668,7 @@ class DatabaseController extends AbstractController
     #[Route('/dealer/{dealer}/model/{id}', name: 'mbs_dealer_model', methods: ['GET','POST'])]
     #[Route('/manufacturer/{manufacturer}/model/{id}', name: 'mbs_manufacturer_model', methods: ['GET','POST'])]
     #[Route('/company/{company}/model/{id}', name: 'mbs_company_model', methods: ['GET','POST'])]
+    #[Route('/storage/{storage}/model/{id}', name: 'mbs_storage_model', methods: ['GET','POST'])]
     public function model(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/image')] string $imageDirectory): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');

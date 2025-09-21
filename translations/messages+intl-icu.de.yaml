@@ -1,3 +1,12 @@
+gray: Grau
+red: Rot
+yellow: Gelb
+green: Grün
+blue: Blau
+indigo: Indigo
+purple: Lila
+pink: Pink
+
 footer:
     claim: © {year} Modellbahnerei. Ein <a href='https://fwrw.co/' class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline" target='_blank' rel='noopener'>F&amp;W</a> Projekt. Made with <span class="text-red-500">♥</span> in Mainz.
 collection:
@@ -38,6 +47,16 @@ global:
         tiktok: TikTok
     yes: Ja
     no: Nein
+    color:
+        gray: Grau
+        red: Rot
+        yellow: Gelb
+        green: Grün
+        blue: Blau
+        indigo: Indigo
+        purple: Lila
+        pink: Pink
+
     auto: Automatisch
     edit: Bearbeiten
     gtin:
@@ -84,6 +103,7 @@ global:
         details: Details
         digital: Digital
         load: Beladung
+        storage: Aufbewahrung
         logout: Logout
         collections: Sammlungen
         manufacturer: Hersteller
@@ -209,6 +229,32 @@ dealer:
             =1    {Der Händler „{name}“ kann nicht gelöscht werden, da noch ein Modell zugewiesen ist.}
             other {Der Händler „{name}“ kann nicht gelöscht werden, da ihm noch # Modelle zugewiesen sind.}
         }
+
+storage:
+    list:
+        add: Aufbewahrung hinzufügen
+        edit: Bearbeiten
+    field:
+        name: Name
+        color: Farbe
+    delete:
+        delete: Löschen
+        cancel: Abbrechen
+        headline: Aufbewahrung löschen
+        text: Die Aufbewahrung wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    models: Modelle in „{name}“
+    back: Zurück zu „{name}“
+    show-all: >-
+        {count, plural,
+            =1    {Zeige ein Modell in „{name}“}
+            other {Zeige # Modelle in „{name}“}
+        }
+    has-models: >-
+        {count, plural,
+            =1    {Die Aufbewahrung „{name}“ kann nicht gelöscht werden, da noch ein Modell zugewiesen ist.}
+            other {Die Aufbewahrung „{name}“ kann nicht gelöscht werden, da ihm noch # Modelle zugewiesen sind.}
+        }
+    saved: Deine Änderungen für die Aufbewahrung „{name}“ wurden erfolgreich gespeichert
 
 company:
     list:
