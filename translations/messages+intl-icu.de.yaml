@@ -234,6 +234,10 @@ company:
         linkedin: LinkedIn
         abbr2: Abkürzung (2 Zeichen)
         abbr3: Abkürzung (3 Zeichen)
+        colors: Standardfarben
+        color1: Farbe 1
+        color2: Farbe 2
+        color3: Farbe 3
     delete:
         delete: Löschen
         cancel: Abbrechen

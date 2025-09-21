@@ -235,6 +235,9 @@ company:
         abbr2: Abbreviation (2 chars)
         abbr3: Abbreviation (3 chars)
         colors: Default colors
+        color1: Color 1
+        color2: Color 2
+        color3: Color 3
     delete:
         delete: Delete
         cancel: Cancel
