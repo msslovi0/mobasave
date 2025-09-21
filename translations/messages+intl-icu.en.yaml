@@ -26,6 +26,10 @@ collection:
             other {# models}
         }
 global:
+    previous: Previous
+    next: Next
+    last: Last
+    first: First
     search: Search
     social:
         facebook: Facebook

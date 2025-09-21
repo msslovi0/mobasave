@@ -26,6 +26,10 @@ collection:
             other {# Modelle}
         }
 global:
+    previous: Zurück
+    next: Weiter
+    last: Letzte
+    first: Erste
     search: Suche
     social:
         facebook: Facebook
