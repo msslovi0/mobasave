@@ -29,7 +29,7 @@
         <div class="isolate inline-flex -space-x-px rounded-md shadow-xs dark:shadow-none mr-5">
         {% for limit in limits %}
             {% if limit != app.session.get('limit') %}
-                <a href="?limit={{ limit }}{{ app.request.get('page')!=""? "&page=" ~ app.request.get('page') }}" class="{% if loop.first %}rounded-l-md{% endif %} {% if loop.last %}rounded-r-md{% endif%} relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:text-gray-200 dark:inset-ring-gray-700 dark:hover:bg-white/5">{{ limit }}</a>
+                <a href="?limit={{ limit }}{{ app.request.get('page')!=""? "&page=" ~ app.request.get('page') }}{{ app.request.get('search')!=""? "&search=" ~ app.request.get('search') }}" class="{% if loop.first %}rounded-l-md{% endif %} {% if loop.last %}rounded-r-md{% endif%} relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:text-gray-200 dark:inset-ring-gray-700 dark:hover:bg-white/5">{{ limit }}</a>
             {% else %}
                 <a href="#" class="{% if loop.first %}rounded-l-md{% endif %} {% if loop.last %}rounded-r-md{% endif%} relative z-10 inline-flex items-center bg-green-800 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:focus-visible:outline-green-700">{{ limit }}</a>
             {% endif %}

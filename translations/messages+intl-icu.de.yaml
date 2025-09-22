@@ -28,6 +28,7 @@ stone: Steingrau
 footer:
     claim: © {year} Modellbahnerei. Ein <a href='https://fwrw.co/' class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline" target='_blank' rel='noopener'>F&amp;W</a> Projekt. Made with <span class="text-red-500">♥</span> in Mainz.
 collection:
+    all: Alle Sammlungen
     name: Sammlung „{name}“
     no-collection:
         fact: Keine Sammlung

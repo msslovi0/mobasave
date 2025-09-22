@@ -314,7 +314,20 @@ class DatabaseController extends AbstractController
         $user = $this->security->getUser();
 
         $limit = $request->query->get('limit');
+        $sortcolumn = $request->query->get('sortcolumn');
+        $sortorder = $request->query->get('sortorder');
         $limits = $this->getParameter('limits');
+        $sortcolumns = $this->getParameter('model.sortcolumns');
+        if($sortcolumn!="" && in_array($sortcolumn, $sortcolumns)) {
+            $request->getSession()->set('sortcolumn', $sortcolumn);
+        } else {
+            $request->getSession()->set('sortcolumn', $this->getParameter('model.sortcolumn'));
+        }
+        if($sortorder!="" && in_array($sortorder, ['asc', 'desc'])) {
+            $request->getSession()->set('sortorder', $sortorder);
+        } else {
+            $request->getSession()->set('sortorder', $this->getParameter('model.sortorder'));
+        }
         if($limit=="" || !in_array($limit, $limits)) {
             $limit = $request->getSession()->get('limit');
         } else {
@@ -325,18 +338,21 @@ class DatabaseController extends AbstractController
         $qb = $entityManager->createQueryBuilder();
         $result = $qb->select('m')->from(Model::class, 'm')
             ->leftJoin('m.locomotive','l','WITH','m.locomotive = l.id')
-            ->leftJoin('m.car','c','WITH','m.car = c.id')
+            ->leftJoin('m.car','car','WITH','m.car = car.id')
             ->leftJoin('m.container','o','WITH','m.container = o.id')
             ->leftJoin('m.vehicle','v','WITH','m.vehicle = v.id')
             ->leftJoin('m.tram','t','WITH','m.tram = t.id')
             ->leftJoin('m.dealer','d','WITH','m.dealer = d.id')
-            ->leftJoin('m.manufacturer','w','WITH','m.manufacturer = w.id')
+            ->leftJoin('m.manufacturer','manu','WITH','m.manufacturer = manu.id')
             ->leftJoin('m.company','co','WITH','m.company = co.id')
             ->leftJoin('m.storage','s','WITH','m.storage = s.id')
             ->leftJoin('l.maker','lm','WITH','l.maker = lm.id')
             ->leftJoin('v.maker','vm','WITH','v.maker = vm.id')
             ->leftJoin('t.maker','tm','WITH','t.maker = tm.id')
+            ->leftJoin('m.category','c','WITH','m.category = c.id')
+            ->leftJoin('m.subcategory','sub','WITH','m.subcategory = sub.id')
             ->leftJoin('o.containertype','ot','WITH','o.containertype = ot.id')
+            ->leftJoin('m.status','status','WITH','m.status = status.id')
             ->where(
                 $qb->expr()->like('m.name', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
@@ -346,7 +362,7 @@ class DatabaseController extends AbstractController
             )->orWhere(
                 $qb->expr()->like('d.name', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
-                $qb->expr()->like('w.name', $qb->expr()->literal('%' . $query . '%')),
+                $qb->expr()->like('manu.name', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
                 $qb->expr()->like('co.name', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
@@ -358,9 +374,9 @@ class DatabaseController extends AbstractController
             )->orWhere(
                 $qb->expr()->like('l.nickname', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
-                $qb->expr()->like('c.class', $qb->expr()->literal('%' . $query . '%')),
+                $qb->expr()->like('car.class', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
-                $qb->expr()->like('c.registration', $qb->expr()->literal('%' . $query . '%')),
+                $qb->expr()->like('car.registration', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
                 $qb->expr()->like('o.registration', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
@@ -377,7 +393,12 @@ class DatabaseController extends AbstractController
                 $qb->expr()->like('lm.name', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
                 $qb->expr()->like('ot.name', $qb->expr()->literal('%' . $query . '%')),
-            )->andWhere('m.modeldatabase in (:databases)')->setParameters(new ArrayCollection([new Parameter('databases',  $user->getUserdatabases())]))->getQuery()->getResult();
+            )->andWhere('m.modeldatabase in (:databases)')->setParameters(new ArrayCollection([new Parameter('databases',  $user->getUserdatabases())]));
+            if($_format!="json") {
+                $result->addOrderBy($request->getSession()->get('sortcolumn'), $request->getSession()->get('sortorder'));
+            }
+
+            $result = $result->getQuery()->getResult();
 
         $pagination = $paginator->paginate(
             $result,
@@ -388,7 +409,8 @@ class DatabaseController extends AbstractController
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('collection/list.'.$_format.'.twig', [
             "databases" => $databases,
-            "models" => $pagination
+            "models" => $pagination,
+            "total" => count($result)
         ]);
     }
     #[Route('/model/load/delete/{id}', name: 'mbs_model_load_delete', methods: ['GET'])]
