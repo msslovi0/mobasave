@@ -22,6 +22,7 @@
         {%  set end = totalCount %}
         {% endif %}
         {{ 'pagination.results'|trans({'start':start, 'end': end, 'total': totalCount})|raw }}
+        {{ 'pagination.sorting'|trans({'column':app.session.get('sortcolumn')|trans, 'order': app.session.get('sortorder')|trans})|raw }}
       </p>
     </div>
     <div>
@@ -73,5 +74,19 @@
       </nav>
     </div>
   </div>
+</div>
+{% else %}
+<div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+    <div>
+        <p class="text-sm text-gray-700 dark:text-gray-300">
+            {% set start = ((current*numItemsPerPage)-numItemsPerPage+1)|number_format(0,'','') %}
+            {% set end = (((current+1)*numItemsPerPage)-numItemsPerPage)|number_format(0,'','') %}
+            {%  if end > totalCount %}
+                {%  set end = totalCount %}
+            {% endif %}
+            {{ 'pagination.results'|trans({'start':start, 'end': end, 'total': totalCount})|raw }}
+            {{ 'pagination.sorting'|trans({'column':app.session.get('sortcolumn')|trans, 'order': app.session.get('sortorder')|trans})|raw }}
+        </p>
+    </div>
 </div>
 {% endif %}

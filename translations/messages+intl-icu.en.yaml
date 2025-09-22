@@ -434,6 +434,7 @@ status:
         button: Go back home
 pagination:
     results: Showing <span class="font-medium">{ start }</span> to <span class="font-medium">{ end }</span> of <span class="font-medium">{ total }</span> results
+    sorting: sorted by {column} {order}
 
 welcome:
     logo:
@@ -492,3 +493,24 @@ welcome:
                 instagram: https://www.instagram.com/fwrw.co/
                 tiktok: https://www.instagram.com/fwrw.co/
                 youtube: https://www.youtube.com/@fwrw
+
+m.purchased: purchase date
+m.name: name
+m.model: model
+m.gtin13: EAN/GTIN13
+s.name: storage
+c.name: category
+sub.name: subcategory
+status.name: status
+manu.name: manufacturer
+desc: descending
+asc: ascending
+name: name
+street: street
+zip: zip
+city: city
+logo: logo
+vector: vector
+fill: fill percentage
+slot: slot width
+color: color

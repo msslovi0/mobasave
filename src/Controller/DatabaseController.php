@@ -242,7 +242,20 @@ class DatabaseController extends AbstractController
         $user = $this->security->getUser();
 
         $limit = $request->query->get('limit');
+        $sortcolumn = $request->query->get('sortcolumn');
+        $sortorder = $request->query->get('sortorder');
         $limits = $this->getParameter('limits');
+        $sortcolumns = $this->getParameter('model.sortcolumns');
+        if($sortcolumn!="" && in_array($sortcolumn, $sortcolumns)) {
+            $request->getSession()->set('sortcolumn', $sortcolumn);
+        } else {
+            $request->getSession()->set('sortcolumn', $this->getParameter('model.sortcolumn'));
+        }
+        if($sortorder!="" && in_array($sortorder, ['asc', 'desc'])) {
+            $request->getSession()->set('sortorder', $sortorder);
+        } else {
+            $request->getSession()->set('sortorder', $this->getParameter('model.sortorder'));
+        }
         if($limit=="" || !in_array($limit, $limits)) {
             $limit = $request->getSession()->get('limit');
         } else {
@@ -267,7 +280,18 @@ class DatabaseController extends AbstractController
         }
         $request->getSession()->set('database', $id);
 
-        $models = $entityManager->getRepository(Model::class)->findBy(["modeldatabase" => $database], ['purchased' => 'DESC']);
+        $qb = $entityManager->createQueryBuilder();
+        $models = $qb->select('m')->from(Model::class, 'm')
+            ->leftJoin('m.category','c')
+            ->leftJoin('m.subcategory','sub')
+            ->leftJoin('m.status','status')
+            ->leftJoin('m.storage','s')
+            ->leftJoin('m.manufacturer','manu')
+            ->where('m.modeldatabase = :database')
+            ->setParameters(new ArrayCollection([new Parameter('database',  $id)]))
+            ->addOrderBy($request->getSession()->get('sortcolumn'), $request->getSession()->get('sortorder'))
+            ->getQuery()
+            ->getResult();
 
         $pagination = $paginator->paginate(
             $models,

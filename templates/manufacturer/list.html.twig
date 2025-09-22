@@ -55,12 +55,40 @@
                                     <thead>
                                     <tr>
                                         <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'manufacturer.list.logo'|trans }}</span></th>
-                                        <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'manufacturer.field.name'|trans }}</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'manufacturer.field.street'|trans }}</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'manufacturer.field.zip'|trans }}</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'manufacturer.field.city'|trans }}</th>
+                                        <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'manufacturer.field.name'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'manufacturer.field.street'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'street', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'street', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'manufacturer.field.zip'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'zip', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'zip', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'manufacturer.field.city'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'city', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'city', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
                                         <th scope="col" colspan="2" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'manufacturer.field.country'|trans }}</th>
-                                        <th></th>
+                                        <th scope="col" colspan="2" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'global.logo'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'logo', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'logo', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>/{{ 'global.vector'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'vector', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'vector', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
                                         <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'manufacturer.list.edit'|trans }}</span></th>
                                     </tr>
                                     </thead>
@@ -76,7 +104,7 @@
                                             </td>
                                             <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                                                 <div class="md:ml-4">
-                                                    <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_manufacturer', {id: manufacturer.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ manufacturer.name }}</a></div>
+                                                    <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_manufacturer', {id: manufacturer.id}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ manufacturer.name }}</a></div>
                                                 </div>
                                             </td>
                                             <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
@@ -121,7 +149,7 @@
                                                 </span>
                                             </td>
                                             <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
-                                                <a href="{{ path('mbs_manufacturer', {id: manufacturer.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ manufacturer.name }}</span></a>
+                                                <a href="{{ path('mbs_manufacturer', {id: manufacturer.id}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ manufacturer.name }}</span></a>
                                             </td>
                                         </tr>
                                     {% endfor %}

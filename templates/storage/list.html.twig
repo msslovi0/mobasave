@@ -54,11 +54,31 @@
                                 <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
                                     <thead>
                                     <tr>
-                                      <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'storage.field.name'|trans }}</th>
+                                        <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                          {{ 'storage.field.name'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
                                         <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'storage.field.country'|trans }}</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'storage.field.fill'|trans }}</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'storage.field.slot'|trans }}</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'storage.field.color'|trans }}</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'storage.field.fill'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'fill', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'fill', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'storage.field.slot'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'slot', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'slot', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'storage.field.color'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'color', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'color', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
                                         <th>
                                         </th>
                                     </tr>
@@ -68,7 +88,7 @@
                                         <tr class="even:bg-gray-50 dark:even:bg-gray-800/50">
                                             <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                                                 <div class="md:ml-4">
-                                                    <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_storage', {id: storage.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ storage.name }}</a></div>
+                                                    <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_storage', {id: storage.id}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ storage.name }}</a></div>
                                                 </div>
                                             </td>
                                             <td class="py-5 pl-4 text-sm whitespace-nowrap sm:pl-0">
@@ -101,7 +121,7 @@
                                                 {% endif %}
                                             </td>
                                             <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
-                                                <a href="{{ path('mbs_storage', {id: storage.id}) }}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ storage.name }}</span></a>
+                                                <a href="{{ path('mbs_storage', {id: storage.id}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ storage.name }}</span></a>
                                             </td>
                                         </tr>
                                     {% endfor %}

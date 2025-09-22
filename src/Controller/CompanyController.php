@@ -7,6 +7,8 @@ use App\Entity\Database;
 use App\Entity\Company;
 use App\Entity\Model;
 use App\Entity\State;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -198,15 +200,29 @@ class CompanyController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $companies = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), ['name' => 'ASC']);
 
         $limit = $request->query->get('limit');
+        $sortcolumn = $request->query->get('sortcolumn');
+        $sortorder = $request->query->get('sortorder');
         $limits = $this->getParameter('limits');
+        $sortcolumns = $this->getParameter('company.sortcolumns');
+        if($sortcolumn!="" && in_array($sortcolumn, $sortcolumns)) {
+            $request->getSession()->set('sortcolumn', $sortcolumn);
+        } else {
+            $request->getSession()->set('sortcolumn', $this->getParameter('company.sortcolumn'));
+        }
+        if($sortorder!="" && in_array($sortorder, ['asc', 'desc'])) {
+            $request->getSession()->set('sortorder', $sortorder);
+        } else {
+            $request->getSession()->set('sortorder', $this->getParameter('company.sortorder'));
+        }
         if($limit=="" || !in_array($limit, $limits)) {
             $limit = $request->getSession()->get('limit');
         } else {
             $request->getSession()->set('limit', $limit);
         }
+
+        $companies = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), [$request->getSession()->get('sortcolumn') => $request->getSession()->get('sortorder'), $this->getParameter('company.sortcolumn') => $this->getParameter('company.sortorder')]);
 
         $pagination = $paginator->paginate(
             $companies,
@@ -228,7 +244,20 @@ class CompanyController extends AbstractController
         $user = $this->security->getUser();
 
         $limit = $request->query->get('limit');
+        $sortcolumn = $request->query->get('sortcolumn');
+        $sortorder = $request->query->get('sortorder');
         $limits = $this->getParameter('limits');
+        $sortcolumns = $this->getParameter('model.sortcolumns');
+        if($sortcolumn!="" && in_array($sortcolumn, $sortcolumns)) {
+            $request->getSession()->set('sortcolumn', $sortcolumn);
+        } else {
+            $request->getSession()->set('sortcolumn', $this->getParameter('model.sortcolumn'));
+        }
+        if($sortorder!="" && in_array($sortorder, ['asc', 'desc'])) {
+            $request->getSession()->set('sortorder', $sortorder);
+        } else {
+            $request->getSession()->set('sortorder', $this->getParameter('model.sortorder'));
+        }
         if($limit=="" || !in_array($limit, $limits)) {
             $limit = $request->getSession()->get('limit');
         } else {
@@ -237,7 +266,20 @@ class CompanyController extends AbstractController
 
         $company = $entityManager->getRepository(Company::class)->find($id);
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
-        $models = $entityManager->getRepository(Model::Class)->findBy(["company" => $company, "modeldatabase" => $databases], ['purchased' => 'DESC']);
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        $qb = $entityManager->createQueryBuilder();
+        $models = $qb->select('m')->from(Model::class, 'm')
+            ->leftJoin('m.category','c')
+            ->leftJoin('m.subcategory','sub')
+            ->leftJoin('m.status','status')
+            ->leftJoin('m.storage','s')
+            ->leftJoin('m.manufacturer','manu')
+            ->where('m.modeldatabase in (:databases)')
+            ->andWhere('m.company = :company')
+            ->setParameters(new ArrayCollection([new Parameter('databases',  $databases), new Parameter('company', $company)]))
+            ->addOrderBy($request->getSession()->get('sortcolumn'), $request->getSession()->get('sortorder'))
+            ->getQuery()
+            ->getResult();
         $pagination = $paginator->paginate(
             $models,
             $request->query->getInt('page', 1), /* page number */

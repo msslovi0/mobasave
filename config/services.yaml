@@ -9,6 +9,21 @@ parameters:
     remote_ssh: '%env(string:REMOTE_SSH)%'
     limits: [10,50,100,200]
     limit: 100
+    model.sortcolumns: [m.purchased,m.name,m.model,m.gtin13,s.name,c.name,sub.name,status.name,manu.name]
+    model.sortcolumn: m.purchased
+    model.sortorder: desc
+    manufacturer.sortcolumns: [name,street,zip,city,logo,vector]
+    manufacturer.sortcolumn: name
+    manufacturer.sortorder: asc
+    dealer.sortcolumns: [name,street,zip,city,logo,vector]
+    dealer.sortcolumn: name
+    dealer.sortorder: asc
+    company.sortcolumns: [name,logo,vector]
+    company.sortcolumn: name
+    company.sortorder: asc
+    storage.sortcolumns: [name,fill,slot,color]
+    storage.sortcolumn: name
+    storage.sortorder: asc
     locales:
         de:
             code: de

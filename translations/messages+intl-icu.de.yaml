@@ -26,7 +26,7 @@ neutral: Neutralgrau
 stone: Steingrau
 
 footer:
-    claim: © {year} Modellbahnerei. Ein <a href='https://fwrw.co/' class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline" target='_blank' rel='noopener'>F&amp;W</a> Projekt. Made with <span class="text-red-500">♥</span> in Mainz.
+    claim: © {year} Modellbahnerei. Ein <a href='https://fwrw.co/' class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline" target='_blank' rel='noopener'>F&amp;W</a> Projekt. Made with <span class="text-red-500">♥</span> in Mainz.
 collection:
     name: Sammlung „{name}“
     no-collection:
@@ -435,6 +435,7 @@ status:
         button: Zurück zur Startseite
 pagination:
     results: Zeige <span class="font-medium">{ start }</span> bis <span class="font-medium">{ end }</span> von <span class="font-medium">{ total }</span> Ergebnissen
+    sorting: sortiert nach {column} {order}
 
 welcome:
     logo:
@@ -503,3 +504,24 @@ welcome:
                 instagram: https://www.instagram.com/fwrw.co/
                 tiktok: https://www.instagram.com/fwrw.co/
                 youtube: https://www.youtube.com/@fwrw
+
+m.purchased: Kaufdatum
+m.name: Name
+m.model: Art.-Nr.
+m.gtin13: EAN/GTIN13
+s.name: Aufbewahrung
+c.name: Kategorie
+sub.name: Unterkategorie
+status.name: Status
+manu.name: Hersteller
+desc: absteigend
+asc: aufsteigend
+name: Name
+street: Straße
+zip: PLZ
+city: Ort
+logo: Logo
+vector: Vector
+fill: Füllstand
+slot: Schachtbreite
+color: Farbe

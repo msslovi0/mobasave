@@ -7,6 +7,8 @@ use App\Entity\Database;
 use App\Entity\Dealer;
 use App\Entity\State;
 use App\Entity\Model;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -207,7 +209,20 @@ class DealerController extends AbstractController
         $user = $this->security->getUser();
 
         $limit = $request->query->get('limit');
+        $sortcolumn = $request->query->get('sortcolumn');
+        $sortorder = $request->query->get('sortorder');
         $limits = $this->getParameter('limits');
+        $sortcolumns = $this->getParameter('model.sortcolumns');
+        if($sortcolumn!="" && in_array($sortcolumn, $sortcolumns)) {
+            $request->getSession()->set('sortcolumn', $sortcolumn);
+        } else {
+            $request->getSession()->set('sortcolumn', $this->getParameter('model.sortcolumn'));
+        }
+        if($sortorder!="" && in_array($sortorder, ['asc', 'desc'])) {
+            $request->getSession()->set('sortorder', $sortorder);
+        } else {
+            $request->getSession()->set('sortorder', $this->getParameter('model.sortorder'));
+        }
         if($limit=="" || !in_array($limit, $limits)) {
             $limit = $request->getSession()->get('limit');
         } else {
@@ -216,7 +231,19 @@ class DealerController extends AbstractController
 
         $dealer = $entityManager->getRepository(Dealer::class)->find($id);
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
-        $models = $entityManager->getRepository(Model::Class)->findBy(["dealer" => $dealer, "modeldatabase" => $databases], ['purchased' => 'DESC']);
+        $qb = $entityManager->createQueryBuilder();
+        $models = $qb->select('m')->from(Model::class, 'm')
+            ->leftJoin('m.category','c')
+            ->leftJoin('m.subcategory','sub')
+            ->leftJoin('m.status','status')
+            ->leftJoin('m.storage','s')
+            ->leftJoin('m.manufacturer','manu')
+            ->where('m.modeldatabase in (:databases)')
+            ->andWhere('m.dealer = :dealer')
+            ->setParameters(new ArrayCollection([new Parameter('databases',  $databases), new Parameter('dealer', $dealer)]))
+            ->addOrderBy($request->getSession()->get('sortcolumn'), $request->getSession()->get('sortorder'))
+            ->getQuery()
+            ->getResult();
         $pagination = $paginator->paginate(
             $models,
             $request->query->getInt('page', 1), /* page number */
@@ -236,14 +263,27 @@ class DealerController extends AbstractController
         $user = $this->security->getUser();
 
         $limit = $request->query->get('limit');
+        $sortcolumn = $request->query->get('sortcolumn');
+        $sortorder = $request->query->get('sortorder');
         $limits = $this->getParameter('limits');
+        $sortcolumns = $this->getParameter('dealer.sortcolumns');
+        if($sortcolumn!="" && in_array($sortcolumn, $sortcolumns)) {
+            $request->getSession()->set('sortcolumn', $sortcolumn);
+        } else {
+            $request->getSession()->set('sortcolumn', $this->getParameter('dealer.sortcolumn'));
+        }
+        if($sortorder!="" && in_array($sortorder, ['asc', 'desc'])) {
+            $request->getSession()->set('sortorder', $sortorder);
+        } else {
+            $request->getSession()->set('sortorder', $this->getParameter('dealer.sortorder'));
+        }
         if($limit=="" || !in_array($limit, $limits)) {
             $limit = $request->getSession()->get('limit');
         } else {
             $request->getSession()->set('limit', $limit);
         }
 
-        $dealers = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]), ['name' => 'ASC']);
+        $dealers = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]), [$request->getSession()->get('sortcolumn') => $request->getSession()->get('sortorder')]);
 
         $pagination = $paginator->paginate(
             $dealers,

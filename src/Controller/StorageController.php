@@ -177,15 +177,29 @@ class StorageController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $storages = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]), ['name' => 'ASC']);
 
         $limit = $request->query->get('limit');
+        $sortcolumn = $request->query->get('sortcolumn');
+        $sortorder = $request->query->get('sortorder');
         $limits = $this->getParameter('limits');
+        $sortcolumns = $this->getParameter('storage.sortcolumns');
+        if($sortcolumn!="" && in_array($sortcolumn, $sortcolumns)) {
+            $request->getSession()->set('sortcolumn', $sortcolumn);
+        } else {
+            $request->getSession()->set('sortcolumn', $this->getParameter('storage.sortcolumn'));
+        }
+        if($sortorder!="" && in_array($sortorder, ['asc', 'desc'])) {
+            $request->getSession()->set('sortorder', $sortorder);
+        } else {
+            $request->getSession()->set('sortorder', $this->getParameter('storage.sortorder'));
+        }
         if($limit=="" || !in_array($limit, $limits)) {
             $limit = $request->getSession()->get('limit');
         } else {
             $request->getSession()->set('limit', $limit);
         }
+        $storages = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]), [$request->getSession()->get('sortcolumn') => $request->getSession()->get('sortorder')]);
+
 
         $pagination = $paginator->paginate(
             $storages,
