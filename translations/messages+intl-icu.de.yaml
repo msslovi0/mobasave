@@ -100,17 +100,18 @@ global:
                 =1    {Ein Treffer für „{query}“}
                 other {# Treffer für „{query}“}
             }
-        searchresult-with-filter: >-
+        index: MoBaSaVe - Willkommen!
+        search: Suchergebnisse für „{query}“
+        filtercount: >-
             {count, plural,
                 =1    {(ein Filter aktiv)}
                 other {(# Filter aktiv)}
             }
-        index: MoBaSaVe - Willkommen!
-        search: Suchergebnisse für „{query}“
-        search-with-filter: >-
+        filter: >-
             {count, plural,
-                =1    {(ein Filter aktiv)}
-                other {(# Filter aktiv)}
+                =0    {Keine Ergebnisse für den gewählten Filter}
+                =1    {Ein Ergebnis für den gewählten Filter}
+                other {# Ergebnisse für den gewählten Filter}
             }
         add:
             model: Modell hinzufügen

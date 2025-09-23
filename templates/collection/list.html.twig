@@ -27,9 +27,11 @@
 
 {% block title %}
   {% if app.request.get('search') is defined and app.request.get('search') != "" and app.request.get('filter') is defined and app.request.get('filter') != "" %}
-      {{ 'global.title.search'|trans({'query': app.request.get('search')}) }} {{ 'global.title.search-with-filter'|trans({'count': app.request.get('filter')|length}) }}
+      {{ 'global.title.search'|trans({'query': app.request.get('search')}) }} {{ 'global.title.filtercount'|trans({'count': app.request.get('filter')|length}) }}
   {% elseif app.request.get('search') is defined and app.request.get('search') != "" %}
     {{ 'global.title.search'|trans({'query': app.request.get('search')}) }}
+  {% elseif app.request.get('filter') is defined and app.request.get('filter') != "" %}
+      {{ 'global.title.filter'|trans({'count': app.request.get('filter')|length}) }}
   {% elseif current == "manufacturer"  %}
       {{ 'manufacturer.models'|trans({'name': models[0].manufacturer.name}) }}
   {% elseif current == "dealer"  %}
@@ -50,9 +52,11 @@
         <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
           <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
           {% if app.request.get('search') is defined and app.request.get('search') != "" and app.request.get('filter') is defined and app.request.get('filter') != "" %}
-              {{ 'global.title.searchresult'|trans({'query': app.request.get('search'), 'count': total}) }} {{ 'global.title.searchresult-with-filter'|trans({'count': app.request.get('filter')|length}) }}
+              {{ 'global.title.searchresult'|trans({'query': app.request.get('search'), 'count': total}) }} {{ 'global.title.filtercount'|trans({'count': app.request.get('filter')|length}) }}
           {% elseif app.request.get('search') is defined and app.request.get('search') != "" %}
               {{ 'global.title.searchresult'|trans({'query': app.request.get('search'), 'count': total}) }}
+          {% elseif app.request.get('filter') is defined and app.request.get('filter') != "" %}
+              {{ 'global.title.filter'|trans({'count': total}) }} {{ 'global.title.filtercount'|trans({'count': app.request.get('filter')|length}) }}
           {% elseif current == "manufacturer"  %}
               {{ 'manufacturer.models'|trans({'name': models[0].manufacturer.name}) }}
           {% elseif current == "dealer"  %}
@@ -246,6 +250,11 @@
             </div>
             {{ knp_pagination_render(models) }}
               {% else %}
+                  {% if app.session.get('database')!="" %}
+                      <div class="pb-10">
+                      {%  include 'collection/filter.html.twig' %}
+                      </div>
+                  {% endif %}
                   <div class="text-center relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-2 focus:outline-offset-2 focus:outline-green-800 dark:border-white/15 dark:hover:border-white/25 dark:focus:outline-green-700">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" class="mx-auto size-12 text-gray-400 dark:text-gray-500">
                           <path d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
