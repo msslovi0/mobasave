@@ -739,7 +739,7 @@ class DatabaseController extends AbstractController
         } else {
             $request->getSession()->set('database', $model->getModeldatabase()->getId());
         }
-        $qb             = $entityManager->createQueryBuilder();
+
         $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $subcategory    = $entityManager->getRepository(Subcategory::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
