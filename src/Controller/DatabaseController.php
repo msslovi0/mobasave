@@ -235,77 +235,6 @@ class DatabaseController extends AbstractController
             "database" => $database,
         ], response: $response);
     }
-    #[Route('/collection/{id}', name: 'mbs_database', methods: ['GET'])]
-    public function index(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $user = $this->security->getUser();
-
-        $limit = $request->query->get('limit');
-        $sortcolumn = $request->query->get('sortcolumn');
-        $sortorder = $request->query->get('sortorder');
-        $limits = $this->getParameter('limits');
-        $sortcolumns = $this->getParameter('model.sortcolumns');
-        if($sortcolumn!="" && in_array($sortcolumn, $sortcolumns)) {
-            $request->getSession()->set('sortcolumn', $sortcolumn);
-        } else {
-            $request->getSession()->set('sortcolumn', $this->getParameter('model.sortcolumn'));
-        }
-        if($sortorder!="" && in_array($sortorder, ['asc', 'desc'])) {
-            $request->getSession()->set('sortorder', $sortorder);
-        } else {
-            $request->getSession()->set('sortorder', $this->getParameter('model.sortorder'));
-        }
-        if($limit=="" || !in_array($limit, $limits)) {
-            $limit = $request->getSession()->get('limit');
-        } else {
-            $request->getSession()->set('limit', $limit);
-        }
-
-        $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
-        if(!is_object($database)) {
-            return $this->redirectToRoute('mbs_home');
-        }
-        if(!$database) {
-            $response = new Response();
-            $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
-            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
-        }
-        if(is_object($user) and $database->getUser()->getId()!=$user->getId()) {
-            $response = new Response();
-            $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
-            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
-        }
-        $request->getSession()->set('database', $id);
-
-        $qb = $entityManager->createQueryBuilder();
-        $models = $qb->select('m')->from(Model::class, 'm')
-            ->leftJoin('m.category','c')
-            ->leftJoin('m.subcategory','sub')
-            ->leftJoin('m.status','status')
-            ->leftJoin('m.storage','s')
-            ->leftJoin('m.manufacturer','manu')
-            ->where('m.modeldatabase = :database')
-            ->setParameters(new ArrayCollection([new Parameter('database',  $id)]))
-            ->addOrderBy($request->getSession()->get('sortcolumn'), $request->getSession()->get('sortorder'))
-            ->getQuery()
-            ->getResult();
-
-        $pagination = $paginator->paginate(
-            $models,
-            $request->query->getInt('page', 1), /* page number */
-            $limit /* limit per page */
-        );
-
-        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
-        return $this->render('collection/list.html.twig', [
-            "databases" => $databases,
-            "database" => $database,
-            "models" => $pagination
-        ]);
-    }
     #[Route('/collection/search/', defaults: ['_format' => 'html'], name: 'mbs_database_search', methods: ['GET'])]
     #[Route('/collection/{id}/filter/', defaults: ['_format' => 'html'], name: 'mbs_database_filter', methods: ['GET'])]
     #[Route('/collection/autocomplete/', defaults: ['_format' => 'json'], name: 'mbs_database_autocomplete', methods: ['GET'])]
@@ -315,6 +244,15 @@ class DatabaseController extends AbstractController
         $user = $this->security->getUser();
 
         $limit = $request->query->get('limit');
+        $allData = $request->query->all();
+        $filterdata = [];
+        if(array_key_exists('filter', $allData)) {
+            $filter = $allData['filter'];
+            foreach($filter as $keyValue) {
+                $parts = explode("_", $keyValue);
+                $filterdata[$parts[0]][] = $parts[1];
+            }
+        }
         $sortcolumn = $request->query->get('sortcolumn');
         $sortorder = $request->query->get('sortorder');
         $limits = $this->getParameter('limits');
@@ -334,6 +272,26 @@ class DatabaseController extends AbstractController
         } else {
             $request->getSession()->set('limit', $limit);
         }
+
+        $filters['category']       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['status']         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['condition']      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['storage']        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['project']        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['scale']          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['manufacturer']   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['dealer']         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['company']        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+
+        $dbPrefix['category'] = 'c';
+        $dbPrefix['status'] = 'status';
+        $dbPrefix['condition'] = 'condition';
+        $dbPrefix['storage'] = 's';
+        $dbPrefix['project'] = 'p';
+        $dbPrefix['scale'] = 'scale';
+        $dbPrefix['manufacturer'] = 'manu';
+        $dbPrefix['dealer'] = 'd';
+        $dbPrefix['company'] = 'co';
 
         $query = $request->get('search');
         $qb = $entityManager->createQueryBuilder();
@@ -354,6 +312,9 @@ class DatabaseController extends AbstractController
             ->leftJoin('m.subcategory','sub','WITH','m.subcategory = sub.id')
             ->leftJoin('o.containertype','ot','WITH','o.containertype = ot.id')
             ->leftJoin('m.status','status','WITH','m.status = status.id')
+            ->leftJoin('m.modelcondition','condition','WITH','m.modelcondition = condition.id')
+            ->leftJoin('m.project','p','WITH','m.project = p.id')
+            ->leftJoin('m.scale','scale','WITH','m.scale = scale.id')
             ->where(
                 $qb->expr()->like('m.name', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
@@ -399,6 +360,14 @@ class DatabaseController extends AbstractController
                 $result->addOrderBy($request->getSession()->get('sortcolumn'), $request->getSession()->get('sortorder'));
             }
 
+            if(count($filterdata)>0) {
+                foreach($filterdata as $key => $value) {
+                    $values = implode(',',$value);
+                    $result->andWhere($dbPrefix[$key].'.id in ('.$values.')');
+                }
+//                print_r($filterdata);
+            }
+
             $result = $result->getQuery()->getResult();
 
         $pagination = $paginator->paginate(
@@ -411,9 +380,94 @@ class DatabaseController extends AbstractController
         return $this->render('collection/list.'.$_format.'.twig', [
             "databases" => $databases,
             "models" => $pagination,
-            "total" => count($result)
+            "total" => count($result),
+            "filters" => $filters,
+            "filterdata" => $filterdata,
         ]);
     }
+    #[Route('/collection/{id}', name: 'mbs_database', methods: ['GET'])]
+    public function index(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+
+        $limit = $request->query->get('limit');
+        $sortcolumn = $request->query->get('sortcolumn');
+        $sortorder = $request->query->get('sortorder');
+        $limits = $this->getParameter('limits');
+        $sortcolumns = $this->getParameter('model.sortcolumns');
+        if($sortcolumn!="" && in_array($sortcolumn, $sortcolumns)) {
+            $request->getSession()->set('sortcolumn', $sortcolumn);
+        } else {
+            $request->getSession()->set('sortcolumn', $this->getParameter('model.sortcolumn'));
+        }
+        if($sortorder!="" && in_array($sortorder, ['asc', 'desc'])) {
+            $request->getSession()->set('sortorder', $sortorder);
+        } else {
+            $request->getSession()->set('sortorder', $this->getParameter('model.sortorder'));
+        }
+        if($limit=="" || !in_array($limit, $limits)) {
+            $limit = $request->getSession()->get('limit');
+        } else {
+            $request->getSession()->set('limit', $limit);
+        }
+
+        $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+        if(!is_object($database)) {
+            return $this->redirectToRoute('mbs_home');
+        }
+        if(!$database) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        if(is_object($user) and $database->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
+        }
+        $request->getSession()->set('database', $id);
+
+        $filters['category']       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['status']         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['condition']      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['storage']        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['project']        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['scale']          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['manufacturer']   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['dealer']         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['company']        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+
+        $qb = $entityManager->createQueryBuilder();
+        $models = $qb->select('m')->from(Model::class, 'm')
+            ->leftJoin('m.category','c')
+            ->leftJoin('m.subcategory','sub')
+            ->leftJoin('m.status','status')
+            ->leftJoin('m.storage','s')
+            ->leftJoin('m.manufacturer','manu')
+            ->where('m.modeldatabase = :database')
+            ->setParameters(new ArrayCollection([new Parameter('database',  $id)]))
+            ->addOrderBy($request->getSession()->get('sortcolumn'), $request->getSession()->get('sortorder'))
+            ->getQuery()
+            ->getResult();
+
+        $pagination = $paginator->paginate(
+            $models,
+            $request->query->getInt('page', 1), /* page number */
+            $limit /* limit per page */
+        );
+
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        return $this->render('collection/list.html.twig', [
+            "databases" => $databases,
+            "database" => $database,
+            "models" => $pagination,
+            "filters" => $filters,
+        ]);
+    }
+
     #[Route('/model/load/delete/{id}', name: 'mbs_model_load_delete', methods: ['GET'])]
     public function deleteLoad(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
     {

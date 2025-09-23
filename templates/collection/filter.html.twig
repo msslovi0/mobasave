@@ -1,0 +1,281 @@
+<div class="bg-white">
+    <!-- Mobile filter dialog -->
+    <el-dialog>
+        <dialog id="mobile-menu" class="overflow-hidden backdrop:bg-transparent sm:hidden">
+            <el-dialog-backdrop class="fixed inset-0 bg-black/25 transition-opacity duration-300 ease-linear data-closed:opacity-0"></el-dialog-backdrop>
+
+            <div tabindex="0" class="fixed inset-0 flex focus:outline-none">
+                <el-dialog-panel class="relative ml-auto flex size-full max-w-xs transform flex-col overflow-y-auto bg-white pt-4 pb-6 shadow-xl transition duration-300 ease-in-out data-closed:translate-x-full">
+                    <div class="flex items-center justify-between px-4">
+                        <h2 class="text-lg font-medium text-gray-900">Filters</h2>
+                        <button type="button" command="close" commandfor="mobile-menu" class="relative -mr-2 flex size-10 items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-50 focus:ring-2 focus:ring-green-700 focus:outline-hidden">
+                            <span class="absolute -inset-0.5"></span>
+                            <span class="sr-only">Close menu</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+                                <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="mt-4">
+                        <div class="border-t border-gray-200 px-4 py-6">
+                            <h3 class="-mx-2 -my-3 flow-root">
+                                <button type="button" command="--toggle" commandfor="filter-section-category" class="flex w-full items-center justify-between bg-white px-2 py-3 text-sm text-gray-400">
+                                    <span class="font-medium text-gray-900">Category</span>
+                                    <span class="ml-6 flex items-center">
+                    <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 transform not-in-aria-expanded:rotate-0 in-aria-expanded:-rotate-180">
+                      <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                    </svg>
+                  </span>
+                                </button>
+                            </h3>
+                            <el-disclosure id="filter-section-category" hidden class="block pt-6">
+                                <div class="space-y-6">
+                                    <div class="flex gap-3">
+                                        <div class="flex h-5 shrink-0 items-center">
+                                            <div class="group grid size-4 grid-cols-1">
+                                                <input id="filter-mobile-category-0" type="checkbox" name="category[]" value="new-arrivals" class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-800 checked:bg-green-800 indeterminate:border-green-800 indeterminate:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto" />
+                                                <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25">
+                                                    <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                                                    <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <label for="filter-mobile-category-0" class="text-sm text-gray-500">All New Arrivals</label>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="flex h-5 shrink-0 items-center">
+                                            <div class="group grid size-4 grid-cols-1">
+                                                <input id="filter-mobile-category-1" type="checkbox" name="category[]" value="tees" class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-800 checked:bg-green-800 indeterminate:border-green-800 indeterminate:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto" />
+                                                <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25">
+                                                    <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                                                    <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <label for="filter-mobile-category-1" class="text-sm text-gray-500">Tees</label>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="flex h-5 shrink-0 items-center">
+                                            <div class="group grid size-4 grid-cols-1">
+                                                <input id="filter-mobile-category-2" type="checkbox" name="category[]" value="objects" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-800 checked:bg-green-800 indeterminate:border-green-800 indeterminate:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto" />
+                                                <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25">
+                                                    <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                                                    <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <label for="filter-mobile-category-2" class="text-sm text-gray-500">Objects</label>
+                                    </div>
+                                </div>
+                            </el-disclosure>
+                        </div>
+                        <div class="border-t border-gray-200 px-4 py-6">
+                            <h3 class="-mx-2 -my-3 flow-root">
+                                <button type="button" command="--toggle" commandfor="filter-section-color" class="flex w-full items-center justify-between bg-white px-2 py-3 text-sm text-gray-400">
+                                    <span class="font-medium text-gray-900">Color</span>
+                                    <span class="ml-6 flex items-center">
+                    <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 transform not-in-aria-expanded:rotate-0 in-aria-expanded:-rotate-180">
+                      <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                    </svg>
+                  </span>
+                                </button>
+                            </h3>
+                            <el-disclosure id="filter-section-color" hidden class="block pt-6">
+                                <div class="space-y-6">
+                                    <div class="flex gap-3">
+                                        <div class="flex h-5 shrink-0 items-center">
+                                            <div class="group grid size-4 grid-cols-1">
+                                                <input id="filter-mobile-color-0" type="checkbox" name="color[]" value="white" class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-800 checked:bg-green-800 indeterminate:border-green-800 indeterminate:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto" />
+                                                <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25">
+                                                    <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                                                    <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <label for="filter-mobile-color-0" class="text-sm text-gray-500">White</label>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="flex h-5 shrink-0 items-center">
+                                            <div class="group grid size-4 grid-cols-1">
+                                                <input id="filter-mobile-color-1" type="checkbox" name="color[]" value="beige" class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-800 checked:bg-green-800 indeterminate:border-green-800 indeterminate:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto" />
+                                                <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25">
+                                                    <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                                                    <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <label for="filter-mobile-color-1" class="text-sm text-gray-500">Beige</label>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="flex h-5 shrink-0 items-center">
+                                            <div class="group grid size-4 grid-cols-1">
+                                                <input id="filter-mobile-color-2" type="checkbox" name="color[]" value="blue" class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-800 checked:bg-green-800 indeterminate:border-green-800 indeterminate:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto" />
+                                                <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25">
+                                                    <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                                                    <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <label for="filter-mobile-color-2" class="text-sm text-gray-500">Blue</label>
+                                    </div>
+                                </div>
+                            </el-disclosure>
+                        </div>
+                        <div class="border-t border-gray-200 px-4 py-6">
+                            <h3 class="-mx-2 -my-3 flow-root">
+                                <button type="button" command="--toggle" commandfor="filter-section-sizes" class="flex w-full items-center justify-between bg-white px-2 py-3 text-sm text-gray-400">
+                                    <span class="font-medium text-gray-900">Sizes</span>
+                                    <span class="ml-6 flex items-center">
+                    <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 transform not-in-aria-expanded:rotate-0 in-aria-expanded:-rotate-180">
+                      <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                    </svg>
+                  </span>
+                                </button>
+                            </h3>
+                            <el-disclosure id="filter-section-sizes" hidden class="block pt-6">
+                                <div class="space-y-6">
+                                    <div class="flex gap-3">
+                                        <div class="flex h-5 shrink-0 items-center">
+                                            <div class="group grid size-4 grid-cols-1">
+                                                <input id="filter-mobile-sizes-0" type="checkbox" name="sizes[]" value="s" class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-800 checked:bg-green-800 indeterminate:border-green-800 indeterminate:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto" />
+                                                <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25">
+                                                    <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                                                    <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <label for="filter-mobile-sizes-0" class="text-sm text-gray-500">S</label>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="flex h-5 shrink-0 items-center">
+                                            <div class="group grid size-4 grid-cols-1">
+                                                <input id="filter-mobile-sizes-1" type="checkbox" name="sizes[]" value="m" class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-800 checked:bg-green-800 indeterminate:border-green-800 indeterminate:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto" />
+                                                <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25">
+                                                    <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                                                    <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <label for="filter-mobile-sizes-1" class="text-sm text-gray-500">M</label>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="flex h-5 shrink-0 items-center">
+                                            <div class="group grid size-4 grid-cols-1">
+                                                <input id="filter-mobile-sizes-2" type="checkbox" name="sizes[]" value="l" class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-800 checked:bg-green-800 indeterminate:border-green-800 indeterminate:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto" />
+                                                <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25">
+                                                    <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                                                    <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <label for="filter-mobile-sizes-2" class="text-sm text-gray-500">L</label>
+                                    </div>
+                                </div>
+                            </el-disclosure>
+                        </div>
+                    </div>
+                </el-dialog-panel>
+            </div>
+        </dialog>
+    </el-dialog>
+
+    <!-- Filters -->
+    <section aria-labelledby="filter-heading">
+        <h2 id="filter-heading" class="sr-only">Filters</h2>
+
+        <form  id="filterform" class="border-b border-gray-200 bg-white pb-4" action="{{ path('mbs_database_filter', {id: app.session.get('database')}) }}" method="get">
+            <input type="hidden" name="search" value="{{ app.request.get('search') }}"/>
+            <div class="mx-3 flex items-center justify-between">
+                <button type="button" command="show-modal" commandfor="mobile-menu" class="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 sm:hidden">Filters</button>
+                <span></span>
+
+                <div class="hidden sm:block">
+                    <div class="flow-root">
+                        <el-popover-group class="-mx-4 flex items-center divide-x divide-gray-200">
+                            {% for key in filters|keys %}
+                                <div class="relative inline-block px-4 text-left">
+                                    <button popovertarget="desktop-menu-{{ key }}" class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                                        <span>{{ ('model.field.'~key)|trans }}</span>
+                                        {% if filterdata[key] is defined and filterdata[key]|length>0 %}
+                                        <span class="ml-1.5 rounded-sm bg-gray-200 px-1.5 py-0.5 text-xs font-semibold text-gray-700 tabular-nums">{{ filterdata[key]|length }}</span>
+                                        {% endif %}
+                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="-mr-1 ml-1 size-5 shrink-0 text-gray-400 group-hover:text-gray-500">
+                                            <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <el-popover id="desktop-menu-{{ key }}" anchor="bottom end" popover class="origin-top-right overflow-visible rounded-md bg-white p-4 shadow-2xl ring-1 ring-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] backdrop:bg-transparent open:block focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in overflow-y-scroll max-h-132">
+                                        <div class="space-y-4">
+                                            {% for value in filters[key] %}
+                                            <div class="flex gap-3">
+                                                <div class="flex h-5 shrink-0 items-center">
+                                                    <div class="group grid size-4 grid-cols-1">
+                                                        <input id="filter-{{ key }}-{{ loop.index }}" type="checkbox" name="filter[]" value="{{ key }}_{{ value.id }}" class="{{ key }}_{{ value.id }} col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-800 checked:bg-green-800 indeterminate:border-green-800 indeterminate:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto" {% if filterdata[key] is defined and value.id in filterdata[key] %}checked="true"{% endif %} />
+                                                        <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25">
+                                                            <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                                                            <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <label for="filter-{{ key }}-{{ loop.index }}" class="pr-6 text-sm font-medium whitespace-nowrap text-gray-900">
+                                                    {% if key=='status' or key=='storage' %}
+                                                        <span class="inline-flex items-center rounded-md bg-{{value.color}}-50 px-2 py-1 text-xs font-medium text-{{value.color}}-600 inset-ring inset-ring-{{value.color}}-500/10 dark:bg-{{value.color}}-400/10 dark:text-{{value.color}}-400 dark:inset-ring-{{value.color}}-400/20">{{ value.name }}</span>
+                                                    {% else %}
+                                                        {{ value.name }}
+                                                    {% endif %}
+                                                </label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </el-popover>
+
+                                </div>
+                            {% endfor %}
+                            <div class="flex gap-3">
+                                <button type="submit" href="{{ path('mbs_model_add') }}" type="button" class="inline-flex items-center rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:hover:bg-green-600 dark:focus-visible:outline-green-700">
+                                    <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="mr-2 size-5 flex-none">
+                                        <path d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 0 1 .628.74v2.288a2.25 2.25 0 0 1-.659 1.59l-4.682 4.683a2.25 2.25 0 0 0-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 0 1 8 18.25v-5.757a2.25 2.25 0 0 0-.659-1.591L2.659 6.22A2.25 2.25 0 0 1 2 4.629V2.34a.75.75 0 0 1 .628-.74Z" clip-rule="evenodd" fill-rule="evenodd"></path>
+                                    </svg>
+                                    {{ 'global.filter.apply'|trans }}
+                                </button>
+
+                            </div>
+                        </el-popover-group>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Active filters -->
+        <div class="bg-gray-100">
+            <div class="mx-3 py-3 sm:flex sm:items-center">
+                <h3 class="text-sm font-medium text-gray-500">
+                    {{ 'global.filter.filter'|trans }}
+                    <span class="sr-only">{{ 'global.filter.active'|trans }}</span>
+                </h3>
+
+                <div aria-hidden="true" class="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block"></div>
+
+                <div class="mt-2 sm:mt-0 sm:ml-4">
+                    <div class="-m-1 flex flex-wrap items-center">
+                        {% for key in filterdata|keys %}
+                            {% for value in filterdata[key] %}
+                        <span class="m-1 inline-flex items-center rounded-full border border-gray-200 bg-white py-1.5 pr-2 pl-3 text-sm font-medium text-gray-900">
+                            <span>{{ ("model.field."~key)|trans }}: {{ databasevalue(key, value) }}</span>
+                          <a data-database="{{ key }}" data-value="{{ value }}" href="#" title="{{ 'global.filter.remove'|trans({'name': ("model.field."~key)|trans~": "~ databasevalue(key, value)}) }}" type="button" class="remove-filter ml-1 inline-flex size-4 shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500">
+                            <span class="sr-only">{{ 'global.filter.remove'|trans({'name': ("model.field."~key)|trans~": "~ databasevalue(key, value)}) }}</span>
+                            <svg viewBox="0 0 8 8" fill="none" stroke="currentColor" class="size-2">
+                              <path d="M1 1l6 6m0-6L1 7" stroke-width="1.5" stroke-linecap="round" />
+                            </svg>
+                          </a>
+                        </span>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+

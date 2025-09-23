@@ -26,6 +26,7 @@
       </p>
     </div>
     <div>
+        {% if(app.request.get('filter')=="") %}
         <div class="isolate inline-flex -space-x-px rounded-md shadow-xs dark:shadow-none mr-5">
         {% for limit in limits %}
             {% if limit != app.session.get('limit') %}
@@ -35,6 +36,7 @@
             {% endif %}
         {% endfor %}
         </div>
+        {% endif %}
 
         <nav aria-label="Pagination" class="isolate inline-flex -space-x-px rounded-md shadow-xs dark:shadow-none">
         {% if first is defined and current != first %}

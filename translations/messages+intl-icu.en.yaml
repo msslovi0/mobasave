@@ -54,6 +54,11 @@ collection:
             other {# models}
         }
 global:
+    filter:
+        filter: Filters
+        active: , active
+        remove: Remove filter „{name}“
+        apply: Apply filter
     previous: Previous
     next: Next
     last: Last
@@ -89,14 +94,24 @@ global:
     add: Add
     name: MoBaSaVe
     title:
-        searchresults: >-
+        searchresult: >-
             {count, plural,
                 =0    {No results found for “{query}”}
                 =1    {One result for “{query}”}
                 other {# results for “{query}”}
             }
+        searchresult-with-filter: >-
+            {count, plural,
+                =1    {(one filter active)}
+                other {(# filters active)}
+            }
         index: MoBaSaVe - Welcome!
         search: Search result for “{query}”
+        search-with-filter: >-
+            {count, plural,
+                =1    {(one filter active)}
+                other {(# filters active)}
+            }
         add:
             model: Add Model
             dealer: Add Dealer

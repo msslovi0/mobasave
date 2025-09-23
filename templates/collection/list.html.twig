@@ -26,7 +26,9 @@
 {% endif %}
 
 {% block title %}
-  {% if app.request.get('search') is defined and app.request.get('search') != "" %}
+  {% if app.request.get('search') is defined and app.request.get('search') != "" and app.request.get('filter') is defined and app.request.get('filter') != "" %}
+      {{ 'global.title.search'|trans({'query': app.request.get('search')}) }} {{ 'global.title.search-with-filter'|trans({'count': app.request.get('filter')|length}) }}
+  {% elseif app.request.get('search') is defined and app.request.get('search') != "" %}
     {{ 'global.title.search'|trans({'query': app.request.get('search')}) }}
   {% elseif current == "manufacturer"  %}
       {{ 'manufacturer.models'|trans({'name': models[0].manufacturer.name}) }}
@@ -47,8 +49,10 @@
     <header>
         <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
           <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-          {% if app.request.get('search') is defined and app.request.get('search') != "" %}
-              {{ 'global.title.searchresults'|trans({'query': app.request.get('search'), 'count': total}) }}
+          {% if app.request.get('search') is defined and app.request.get('search') != "" and app.request.get('filter') is defined and app.request.get('filter') != "" %}
+              {{ 'global.title.searchresult'|trans({'query': app.request.get('search'), 'count': total}) }} {{ 'global.title.searchresult-with-filter'|trans({'count': app.request.get('filter')|length}) }}
+          {% elseif app.request.get('search') is defined and app.request.get('search') != "" %}
+              {{ 'global.title.searchresult'|trans({'query': app.request.get('search'), 'count': total}) }}
           {% elseif current == "manufacturer"  %}
               {{ 'manufacturer.models'|trans({'name': models[0].manufacturer.name}) }}
           {% elseif current == "dealer"  %}
@@ -104,6 +108,9 @@
             {% if models.getTotalItemCount>0 %}
             {{ knp_pagination_render(models) }}
           <div class="mt-8 flow-root">
+              {% if app.session.get('database')!="" %}
+              {%  include 'collection/filter.html.twig' %}
+              {% endif %}
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                 <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
@@ -113,55 +120,55 @@
                       <th scope="col" class="whitespace-nowrap py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
                           {{ 'model.field.name'|trans }}
                           <span class="sorter">
-                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▼</a>
+                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▼</a>
                           </span>
                       </th>
                       <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
                           {{ 'model.field.manufacturer'|trans }}
                           <span class="sorter">
-                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'manu.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'manu.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▼</a>
+                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'manu.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'manu.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▼</a>
                           </span>
                       </th>
                       <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
                           {{ 'model.field.category'|trans }}
                           <span class="sorter">
-                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'c.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'c.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▼</a>
+                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'c.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'c.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▼</a>
                           </span>
                       </th>
                       <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
                           {{ 'model.field.subcategory'|trans }}
                           <span class="sorter">
-                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'sub.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'sub.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▼</a>
+                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'sub.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'sub.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▼</a>
                           </span>
                       </th>
                       <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
                           {{ 'model.field.model'|trans }}
                           <span class="sorter">
-                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.model', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.model', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▼</a>
+                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.model', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.model', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▼</a>
                           </span>
                       </th>
                       <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
                           {{ 'model.field.gtin13'|trans }}
                           <span class="sorter">
-                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.gtin13', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.gtin13', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▼</a>
+                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.gtin13', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.gtin13', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▼</a>
                           </span>
                       </th>
                       <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
                           {{ 'model.field.status'|trans }}
                           <span class="sorter">
-                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'status.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'status.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▼</a>
+                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'status.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'status.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▼</a>
                           </span>
                       </th>
                       <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
                           {{ 'model.field.storage'|trans }}
                           <span class="sorter">
-                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 's.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 's.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▼</a>
+                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 's.name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 's.name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▼</a>
                           </span>
                       </th>
                       <th scope="col" class="whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
                           {{ 'model.field.purchased'|trans }}
                           <span class="sorter">
-                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.purchased', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.purchased', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search')}) }}">▼</a>
+                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.purchased', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'm.purchased', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page'), 'search': app.request.get('search'), 'filter': app.request.get('filter')}) }}">▼</a>
                           </span>
                       </th>
                       <th scope="col" class="whitespace-nowrap py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'global.edit'|trans }}</span></th>

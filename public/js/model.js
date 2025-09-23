@@ -135,6 +135,13 @@ $(function() {
         }
     });
 
+    $('.remove-filter').on('click', function(event) {
+        $("."+$(this).data('database')+"_"+$(this).data('value')).attr('checked', false);
+        $(this).parent().fadeOut();
+        $('#filterform').submit();
+        return event.preventDefault();
+    })
+
 
     // EAN caluclation
     $('#form_manufacturer').on('change', function() {

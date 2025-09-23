@@ -54,6 +54,11 @@ collection:
             other {# Modelle}
         }
 global:
+    filter:
+        filter: Filter
+        active: aktiv
+        remove: Filter „{name}“ entfernen
+        apply: Filter anwenden
     previous: Zurück
     next: Weiter
     last: Letzte
@@ -89,14 +94,24 @@ global:
     add: Hinzufügen
     name: MoBaSaVe
     title:
-        searchresults: >-
+        searchresult: >-
             {count, plural,
                 =0    {Keine Treffer für „{query}“ gefunden}
                 =1    {Ein Treffer für „{query}“}
                 other {# Treffer für „{query}“}
             }
+        searchresult-with-filter: >-
+            {count, plural,
+                =1    {(ein Filter aktiv)}
+                other {(# Filter aktiv)}
+            }
         index: MoBaSaVe - Willkommen!
         search: Suchergebnisse für „{query}“
+        search-with-filter: >-
+            {count, plural,
+                =1    {(ein Filter aktiv)}
+                other {(# Filter aktiv)}
+            }
         add:
             model: Modell hinzufügen
             dealer: Händler hinzufügen
