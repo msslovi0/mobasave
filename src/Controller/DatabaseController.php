@@ -306,8 +306,9 @@ class DatabaseController extends AbstractController
             "models" => $pagination
         ]);
     }
-    #[Route('/model/search/', defaults: ['_format' => 'html'], name: 'mbs_model_search', methods: ['GET'])]
-    #[Route('/model/autocomplete/', defaults: ['_format' => 'json'], name: 'mbs_model_autocomplete', methods: ['GET'])]
+    #[Route('/collection/search/', defaults: ['_format' => 'html'], name: 'mbs_database_search', methods: ['GET'])]
+    #[Route('/collection/{id}/filter/', defaults: ['_format' => 'html'], name: 'mbs_database_filter', methods: ['GET'])]
+    #[Route('/collection/autocomplete/', defaults: ['_format' => 'json'], name: 'mbs_database_autocomplete', methods: ['GET'])]
     public function search(string $_format, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
