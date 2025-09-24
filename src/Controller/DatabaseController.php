@@ -1135,6 +1135,151 @@ class DatabaseController extends AbstractController
             "functionkey" => $functionkey,
         ]);
     }
+    #[Route('/model/{id}/duplicate/', name: 'mbs_model_duplicate', methods: ['GET'])]
+    public function duplicate(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+
+        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
+        }
+
+        $duplicate = new Model();
+        $duplicate->setName($model->getName());
+        $duplicate->setCategory($model->getCategory());
+        $duplicate->setSubcategory($model->getSubcategory());
+        $duplicate->setManufacturer($model->getManufacturer());
+        $duplicate->setCompany($model->getCompany());
+        $duplicate->setScale($model->getScale());
+        $duplicate->setTrack($model->getTrack());
+        $duplicate->setEpoch($model->getEpoch());
+        $duplicate->setSubepoch($model->getSubepoch());
+        $duplicate->setStorage($model->getStorage());
+        $duplicate->setProject($model->getProject());
+        $duplicate->setDealer($model->getDealer());
+        $duplicate->setName($model->getName());
+        $duplicate->setModel($model->getModel());
+        $duplicate->setGtin13($model->getGtin13());
+        $duplicate->setColor1($model->getColor1());
+        $duplicate->setColor2($model->getColor2());
+        $duplicate->setColor3($model->getColor3());
+        $duplicate->setQuantity($model->getQuantity());
+        $duplicate->setPurchased(new \DateTime('now'));
+        $duplicate->setMsrp($model->getMsrp());
+        $duplicate->setPrice($model->getPrice());
+        $duplicate->setNotes($model->getNotes());
+        if(is_object($model->getLocomotive())) {
+            $duplicateLocomotive = new Locomotive();
+            $duplicateLocomotive->setMaker($model->getLocomotive()->getMaker());
+            $duplicateLocomotive->setAxle($model->getLocomotive()->getAxle());
+            $duplicateLocomotive->setPower($model->getLocomotive()->getPower());
+            $duplicateLocomotive->setCoupler($model->getLocomotive()->getCoupler());
+            $duplicateLocomotive->setClass($model->getLocomotive()->getClass());
+            $duplicateLocomotive->setRegistration($model->getLocomotive()->getRegistration());
+            $duplicateLocomotive->setLength($model->getLocomotive()->getLength());
+            $duplicateLocomotive->setDigital($model->getLocomotive()->getDigital());
+            $duplicateLocomotive->setSound($model->getLocomotive()->getSound());
+            $duplicateLocomotive->setSmoke($model->getLocomotive()->getSmoke());
+            $duplicateLocomotive->setDccready($model->getLocomotive()->getDccready());
+            $duplicateLocomotive->setNickname($model->getLocomotive()->getNickname());
+            $entityManager->persist($duplicateLocomotive);
+            $duplicate->setLocomotive($duplicateLocomotive);
+        }
+        if(is_object($model->getContainer())) {
+            $duplicateContainer = new Container();
+            $duplicateContainer->setContainertype((string)$model->getContainer()->getContainertype());
+            $duplicateContainer->setRegistration($model->getContainer()->getRegistration());
+            $duplicateContainer->setLength($model->getContainer()->getLength());
+            $entityManager->persist($duplicateContainer);
+            $duplicate->setContainer($duplicateContainer);
+        }
+        if(is_object($model->getCar())) {
+            $duplicateCar = new Car();
+            $duplicateCar->setRegistration($model->getCar()->getRegistration());
+            $duplicateCar->setLength($model->getCar()->getLength());
+            $duplicateCar->setPower($model->getCar()->getPower());
+            $duplicateCar->setCoupler($model->getCar()->getCoupler());
+            $duplicateCar->setClass($model->getCar()->getClass());
+            $entityManager->persist($duplicateCar);
+            $duplicate->setCar($duplicateCar);
+        }
+        if(is_object($model->getVehicle())) {
+            $duplicateVehicle = new Vehicle();
+            $duplicateVehicle->setRegistration($model->getVehicle()->getRegistration());
+            $duplicateVehicle->setMaker($model->getVehicle()->getMaker());
+            $duplicateVehicle->setClass($model->getVehicle()->getClass());
+            $duplicateVehicle->setYear($model->getVehicle()->getYear());
+            $entityManager->persist($duplicateVehicle);
+            $duplicate->setVehicle($duplicateVehicle);
+        }
+        if(is_object($model->getTram())) {
+            $duplicateTram = new Tram();
+            $duplicateTram->setRegistration($model->getTram()->getRegistration());
+            $duplicateTram->setMaker($model->getTram()->getMaker());
+            $duplicateTram->setClass($model->getTram()->getClass());
+            $duplicateTram->setPower($model->getTram()->getPower());
+            $duplicateTram->setCoupler($model->getTram()->getCoupler());
+            $duplicateTram->setAxle($model->getTram()->getAxle());
+            $duplicateTram->setLength($model->getTram()->getLength());
+            $duplicateTram->setNickname($model->getTram()->getNickname());
+            $entityManager->persist($duplicateTram);
+            $duplicate->setTram($duplicateTram);
+        }
+        if(is_object($model->getDigital())) {
+            $duplicateDigital = new Digital();
+            $duplicateDigital->setAddress($model->getDigital()->getAddress());
+            $duplicateDigital->setProtocol($model->getDigital()->getProtocol());
+            $duplicateDigital->setDecoder($model->getDigital()->getDecoder());
+            $duplicateDigital->setPininterface($model->getDigital()->getPininterface());
+            $entityManager->persist($duplicateDigital);
+            $duplicate->setDigital($duplicateDigital);
+            foreach($model->getDigital()->getDigitalFunctions() as $digitalFunction) {
+                $duplicateDigitalFunction = new DigitalFunction();
+                $duplicateDigitalFunction->setDigital($duplicateDigital);
+                $duplicateDigitalFunction->setFunctionkey($digitalFunction->getFunctionkey());
+                $duplicateDigitalFunction->setDecoderfunction($digitalFunction->getDecoderfunction());
+                $duplicateDigitalFunction->setHint($digitalFunction->getHint());
+                $entityManager->persist($duplicateDigitalFunction);
+            }
+        }
+        $duplicate->setModeldatabase($model->getModeldatabase());
+        $duplicate->setCountry($model->getCountry());
+        $duplicate->setCreated(new \DateTime('now'));
+        $duplicate->setUpdated(new \DateTime('now'));
+        $duplicate->setImage($model->getImage());
+        $duplicate->setInstructions($model->isInstructions());
+        $duplicate->setParts($model->isParts());
+        $duplicate->setDisplaycase($model->isDisplaycase());
+        $duplicate->setWeathered($model->isWeathered());
+        $duplicate->setEnhanced($model->isEnhanced());
+        $duplicate->setStatus($model->getStatus());
+        $duplicate->setBox($model->getBox());
+        $duplicate->setModelcondition($model->getModelcondition());
+        $duplicate->setListprice($model->getListprice());
+        $duplicate->setDescription($model->getDescription());
+        $duplicate->setAvailable($model->isAvailable());
+        $duplicate->setPower($model->getPower());
+        $duplicate->setEdition($model->getEdition());
+        $entityManager->persist($duplicate);
+        $entityManager->flush();
+        $this->addFlash(
+            'success',
+            $translator->trans('model.duplicated', ['name' => $duplicate->getName()])
+        );
+        return $this->redirectToRoute('mbs_model', ['id' => $duplicate->getId()]);
+
+    }
     #[Route('/model/{id}/load/', name: 'mbs_model_load', methods: ['GET','POST'])]
     #[Route('/dealer/{dealer}/model/{id}/load/', name: 'mbs_dealer_model_load', methods: ['GET','POST'])]
     #[Route('/manufacturer/{manufacturer}/model/{id}/load/', name: 'mbs_manufacturer_model_load', methods: ['GET','POST'])]

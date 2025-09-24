@@ -85,6 +85,7 @@ global:
         }
     collections: Collections
     save: Save
+    duplicate: Duplicate
     upload:
         file: Upload a file
         drag-n-drop: or drag and drop
@@ -432,6 +433,7 @@ model:
             text: The load will no longer be associated with this model. The loadentry itself remains untouched. This action can't be undone! Proceed with caution!
         deleted: The load “{load}” was deleted
     saved: Your changes to “{name}” have been successfully saved
+    duplicated: Model “{name}” successfully duplicated
     nodetails: This category has no detail information
     created: Your model “{name}” was created successfully
     deleted: Your model “{name}” was deleted

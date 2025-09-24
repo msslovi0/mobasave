@@ -85,6 +85,7 @@ global:
         }
     collections: Sammlungen
     save: Speichern
+    duplicate: Duplizieren
     upload:
         file: Datei auswählen
         drag-n-drop: oder per Drag&Drop hier hin ziehen
@@ -433,6 +434,7 @@ model:
             text: Die Ladung wird nicht länger mit diesem Modell verknüpft sein. Der Hauptdatensatz der Beladung wird nicht verändert. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
         deleted: Die Beladung „{load}“ wurde gelöscht
     saved: Deine Änderungen an „{name}“ wurden erfolgreich gespeichert
+    duplicated: Das Modell „{name}” wurde erfolgreich dupliziert
     nodetails: Diese Kategorie hat keine Detailinformationen
     created: Dein Modell „{name}“ wurde erfolgreich angelegt
     deleted: Dein Modell „{name}“ wurde gelöscht
