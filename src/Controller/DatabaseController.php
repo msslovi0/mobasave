@@ -576,7 +576,12 @@ class DatabaseController extends AbstractController
                 break;
         }
         $digital = $model->getDigital();
-        $entityManager->remove($digital);
+        if(is_object($digital)) {
+            foreach($digital->getDigitalFunctions() as $digitalFunction) {
+                $entityManager->remove($digitalFunction);
+            }
+            $entityManager->remove($digital);
+        }
         $entityManager->remove($model);
         $this->addFlash(
             'success',
