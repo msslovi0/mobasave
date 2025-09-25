@@ -59,6 +59,7 @@ global:
         active: aktiv
         remove: Filter „{name}“ entfernen
         apply: Filter anwenden
+        show: Filter öffnen
     previous: Zurück
     next: Weiter
     last: Letzte

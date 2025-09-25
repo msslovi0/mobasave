@@ -248,9 +248,11 @@ class DatabaseController extends AbstractController
         $filterdata = [];
         if(array_key_exists('filter', $allData)) {
             $filter = $allData['filter'];
-            foreach($filter as $keyValue) {
-                $parts = explode("_", $keyValue);
-                $filterdata[$parts[0]][] = $parts[1];
+            if(is_array($filter)) {
+                foreach($filter as $keyValue) {
+                    $parts = explode("_", $keyValue);
+                    $filterdata[$parts[0]][] = $parts[1];
+                }
             }
         }
         $sortcolumn = $request->query->get('sortcolumn');

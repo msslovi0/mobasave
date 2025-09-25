@@ -59,6 +59,7 @@ global:
         active: , active
         remove: Remove filter „{name}“
         apply: Apply filter
+        show: Show filter
     previous: Previous
     next: Next
     last: Last
