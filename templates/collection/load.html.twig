@@ -13,7 +13,7 @@
     {% set path_back = path('mbs_database', {id: app.session.get('database')}) %}
 {% endif %}
 
-{% block title %}{{ 'global.nav.details'|trans }} {{ model.name }} ({{ model.model }}){% endblock %}
+{% block title %}{{ 'global.nav.load'|trans }} {{ model.name }} ({{ model.model }}){% endblock %}
 {% block body %}
     <div class="py-10">
         <header>
