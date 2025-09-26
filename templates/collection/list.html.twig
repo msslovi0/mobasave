@@ -196,7 +196,9 @@
                       <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                           <div class="flex items-center">
                               <div class="size-11 shrink-0">
-                                  <img src="{% if model.image!="" %}{{ absolute_url(asset('data/image/' ~ model.image))|replace({"localhost:8000": remotehost})|replace({"127.0.0.1:8000": remotehost}) }}{% else %}{{ asset('images/blank.svg') }}{% endif %}" alt="{{ model.name }}" class="p-1 rounded-md outline-1 dark:outline-white/10 outline-gray-300" />
+                                  {% if model.image!="" %}
+                                  <img src="{{ absolute_url(asset('data/image/' ~ model.image))|replace({"localhost:8000": remotehost})|replace({"127.0.0.1:8000": remotehost}) }}" alt="{{ model.name }}" class="p-1 rounded-md outline-1 dark:outline-white/10 outline-gray-300" />
+                                  {% endif %}
                               </div>
                           </div>
                       </td>
