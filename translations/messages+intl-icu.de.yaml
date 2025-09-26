@@ -471,6 +471,10 @@ pagination:
     results: Zeige <span class="font-medium">{ start }</span> bis <span class="font-medium">{ end }</span> von <span class="font-medium">{ total }</span> Ergebnissen
     sorting: sortiert nach {column} {order}
 
+upload:
+    failed: Beim Upload ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.
+    success: Der Upload war erfolgreich
+
 welcome:
     logo:
         maerklin: Märklin
