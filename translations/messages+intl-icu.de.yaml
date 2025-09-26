@@ -91,6 +91,7 @@ global:
         file: Datei auswählen
         drag-n-drop: oder per Drag&Drop hier hin ziehen
         filetypes: PNG, JPG, WebP, SVG
+        filetypes-document: PNG, JPG, WebP, SVG, DOC, DOCX, XLS, XLSX, PPT, PPTX, ZIP, PDF
     login: Login
     logout: Logout
     add: Hinzufügen
@@ -130,6 +131,7 @@ global:
         details: Details
         digital: Digital
         load: Beladung
+        documents: Dokumente
         storage: Aufbewahrung
         logout: Logout
         collections: Sammlungen
@@ -340,6 +342,7 @@ company:
 model:
     list:
         add: Modell hinzufügen
+        edit: Modell bearbeiten
         sound: Sound
         light: Licht
         image: Bild
@@ -347,7 +350,6 @@ model:
     no-model:
         fact: Kein Modell
         claim: Jetzt Modell hinzufügen!
-
     delete:
         delete: Löschen
         cancel: Abbrechen
@@ -414,9 +416,16 @@ model:
         functionkey: Funktionstaste
         modelset: Set
         new: Neuer Wert für „{name}“
-        parent: Elternelement ist:
+        parent: "Elternelement ist:"
+        file: Datei
+        documenttype: Dokumententyp
     epoch:
         till-today: heute
+    document:
+        delete:
+            headline: Dokument „{name}“ löschen
+            text: Das Dokument wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+        deleted: Das Dokument „{name}“ wurde gelöscht
     function:
         sound: Soundfunktion
         light: Lichtfunktion

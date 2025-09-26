@@ -91,6 +91,7 @@ global:
         file: Upload a file
         drag-n-drop: or drag and drop
         filetypes: PNG, JPG, WebP, SVG
+        filetypes-document: PNG, JPG, WebP, SVG, DOC, DOCX, XLS, XLSX, PPT, PPTX, ZIP, PDF
     login: Login
     logout: Logout
     add: Add
@@ -130,6 +131,7 @@ global:
         details: Details
         digital: Digital
         load: Load
+        documents: Documents
         logout: Logout
         collections: Collections
         manufacturer: Manufacturer
@@ -413,9 +415,16 @@ model:
         functionkey: Key
         modelset: Set
         new: New value for “{name}”
-        parent: Parent is:
+        parent: "Parent is:"
+        file: File
+        documenttype: Document type
     epoch:
         till-today: today
+    document:
+        delete:
+            headline: Delete document „{name}“
+            text: The document will be deleted. This action can't be undone! Proceed with caution!
+        deleted: Das Dokument „{name}“ wurde gelöscht
     function:
         sound: Sound function
         light: Light function

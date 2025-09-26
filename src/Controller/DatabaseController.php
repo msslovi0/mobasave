@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Containertype;
 use App\Entity\Database;
+use App\Entity\DocumentType;
 use App\Entity\Manufacturer;
 use App\Entity\Model;
 use App\Entity\Status;
@@ -39,6 +40,7 @@ use App\Entity\Functionkey;
 use App\Entity\Decoderfunction;
 use App\Entity\Description;
 use App\Entity\Modelload;
+use App\Entity\Document;
 use BcMath\Number;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -1393,6 +1395,145 @@ class DatabaseController extends AbstractController
 
         return new Response('ok-'.(int)$sound."-".(int)$light);
     }
+
+
+    #[Route('/model/{id}/document/', name: 'mbs_model_document', methods: ['GET','POST'])]
+    #[Route('/dealer/{dealer}/model/{id}/document/', name: 'mbs_dealer_model_document', methods: ['GET','POST'])]
+    #[Route('/manufacturer/{manufacturer}/model/{id}/document/', name: 'mbs_manufacturer_model_document', methods: ['GET','POST'])]
+    #[Route('/company/{company}/model/{id}/document/', name: 'mbs_company_model_document', methods: ['GET','POST'])]
+    public function document(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/document')] string $documentDirectory): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+
+        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
+        }
+        $documenttype = $entityManager->getRepository(DocumentType::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+
+        $document = new Document();
+        $form = $this->createFormBuilder($document)
+            ->add('documenttype', ChoiceType::class, ['choices' => $documenttype, 'choice_label' => 'name'])
+            ->add('file', FileType::class, ['data_class' => null, 'required' => false, 'constraints' => [
+                new File(
+                    extensions: ['jpg', 'webp', 'png', 'svg', 'pdf', 'zip', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']
+                )
+            ]])
+            ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
+
+        $form = $form->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $documentFile = $form->get('file')->getData();
+
+            if($documentFile) {
+                $originalFilename = pathinfo($documentFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$documentFile->guessExtension();
+                try {
+                    $documentFile->move($documentDirectory, $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash(
+                        'error',
+                        $translator->trans('upload.failed', ['message' => $e->getMessage()])
+                    );
+                    return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+                }
+                $document->setFile($newFilename);
+
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$documentDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'document/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
+                $document->setName($originalFilename);
+            } else {
+                $this->addFlash(
+                    'error',
+                    $translator->trans('upload.failed', ['message' => 'ABC'])
+                );
+                return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+            }
+            $document->setModel($model);
+            $entityManager->persist($document);
+            $entityManager->flush();
+            $this->addFlash(
+                'success',
+                $translator->trans('upload.success')
+            );
+            return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+            $this->addFlash(
+                'error',
+                $translator->trans('document.resubmit', ['name' => $database->getName()])
+            );
+        } else {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_OK);
+        }
+
+
+        $documents = $model->getDocuments();
+
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+
+        return $this->render('collection/document.html.twig', [
+            "databases" => $databases,
+            "model" => $model,
+            "documents" => $documents,
+            "documentform" => $form->createView(),
+        ]);
+    }
+    #[Route('/model/document/delete/{id}', name: 'mbs_model_document_delete', methods: ['GET'])]
+    public function deleteDocument(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request, #[Autowire('%kernel.project_dir%/public/data/document')] string $documentDirectory)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $document = $entityManager->getRepository(Document::class)->findOneBy(["id" =>$id]);
+        $user = $this->security->getUser();
+        $model = $document->getModel();
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
+        }
+
+        if(file_exists($documentDirectory."/".$document->getFile())) {
+            unlink($documentDirectory."/".$document->getFile());
+        }
+
+        $model->setUpdated(new \DateTime());
+        $entityManager->remove($document);
+        $entityManager->persist($model);
+        $this->addFlash(
+            'success',
+            $translator->trans('model.document.deleted', ['name' => $document->getName()])
+        );
+        $entityManager->flush();
+        return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+
+    }
+
     #[Route('/model/value/new/', name: 'mbs_value_new', format: 'json', methods: ['POST'])]
     public function newValue(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {

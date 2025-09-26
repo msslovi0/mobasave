@@ -326,43 +326,67 @@ $(function() {
     });
     const selectElement = document.querySelector("#form_image");
 
-    const fileTypes = [
+    const fileTypesImages = [
         "image/jpeg",
         "image/jpg",
         "image/png",
         "image/webp",
         "image/svg+xml",
     ];
+    const fileTypesDocuments = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp",
+        "image/svg+xml",
+        "application/pdf",
+        "application/vnd.ms-excel",
+        "application/msword",
+        "application/vnd.ms-powerpoint",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "application/zip",
+        "application/x-zip-compressed",
+    ];
 
-    function validFileType(file) {
-        return fileTypes.includes(file.type);
+    function validFileType(file, type) {
+        if(type=='file') {
+            return fileTypesDocuments.includes(file.type);
+        } else {
+            return fileTypesImages.includes(file.type);
+        }
     }
-    function dropHandler(event) {
+    function dropHandler(event, type) {
         // Prevent default behavior (Prevent file from being opened)
         event.preventDefault();
         let result = "";
         dropZone.classList.remove('bg-gray-100');
         // Use DataTransferItemList interface to access the file(s)
-        console.log(event.originalEvent.dataTransfer.files);
         [...event.originalEvent.dataTransfer.items].forEach((item, i) => {
             // If dropped items aren't files, reject them
             if (item.kind === "file") {
                 const file = item.getAsFile();
-                if (validFileType(file)) {
+                if (validFileType(file, type)) {
                     document.getElementById(('filetype-error')).classList.add('hidden');
                     document.getElementById(('drop-zone')).classList.remove('border-red-600','dark:border-red-400');
-                    const src = URL.createObjectURL(file);
-                    const image = document.createElement("img");
-                    image.classList.add('mx-auto','size-12','text-gray-300','dark:text-gray-500');
-                    image.src = src;
-                    document.getElementById(('preview-icon')).remove();
-                    document.getElementById('form_image').files = event.originalEvent.dataTransfer.files;
-                    document.getElementById('icon-holder').append(image);
-                    console.log(document.getElementById('form_image').value);
+                    if(type!="file") {
+                        const src = URL.createObjectURL(file);
+                        const image = document.createElement("img");
+                        image.classList.add('mx-auto', 'size-12', 'text-gray-300', 'dark:text-gray-500');
+                        image.src = src;
+                        document.getElementById(('preview-icon')).remove();
+                        document.getElementById('form_image').files = event.originalEvent.dataTransfer.files;
+                        document.getElementById('icon-holder').append(image);
+                    } else {
+                        document.getElementById('form_file').files = event.originalEvent.dataTransfer.files;
+                        $('#icon-holder').html(file.name)
+                    }
+                    console.log(document.getElementById('form_file').value);
+
                 } else {
                     document.getElementById(('filetype-error')).classList.remove('hidden');
                     document.getElementById(('drop-zone')).classList.add('border-red-600','dark:border-red-400');
-                    console.log('wrong.file.type');
                 }
             }
         });

@@ -167,9 +167,16 @@ class Model
     #[ORM\ManyToOne(inversedBy: 'models')]
     private ?Edition $edition = null;
 
+    /**
+     * @var Collection<int, Document>
+     */
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'model')]
+    private Collection $documents;
+
     public function __construct()
     {
         $this->modelloads = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -779,6 +786,36 @@ class Model
     public function setEdition(?Edition $edition): static
     {
         $this->edition = $edition;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Document>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): static
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setModel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Document $document): static
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getModel() === $this) {
+                $document->setModel(null);
+            }
+        }
 
         return $this;
     }
