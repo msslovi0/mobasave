@@ -450,6 +450,11 @@ model:
     deleted: Dein Modell „{name}“ wurde gelöscht
     assign-load: Beladung hinzufügen
     resubmit: Bitte den neu erstellten Eintrag erneut auswählen und das Formular erneut absenden.
+    registration:
+        invalid: "Prüfziffer {value} falsch, korrekt: {checksum}"
+        error-length: Falsche Länge
+        valid: Prüfziffer korrekt
+        checksum: Prüfziffer ist <b>{checksum}</b>
 
 status:
     notfound:

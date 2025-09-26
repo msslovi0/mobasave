@@ -449,6 +449,15 @@ model:
     deleted: Your model “{name}” was deleted
     assign-load: Assign load
     resubmit: Please re-select your newly created values and re-submit the form in order to save it.
+    registration:
+        invalid: "Checksum {value} wrong, correct: {checksum}"
+        error-length: Wrong length
+        valid: Checksum valid
+        checksum: Checksum is <b>{checksum}</b>
+
+upload:
+    failed: Upload failed. Please try again.
+    success: Upload successful
 
 status:
     notfound:
