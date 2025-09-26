@@ -1202,7 +1202,7 @@ class DatabaseController extends AbstractController
         }
         if(is_object($model->getContainer())) {
             $duplicateContainer = new Container();
-            $duplicateContainer->setContainertype((string)$model->getContainer()->getContainertype());
+            $duplicateContainer->setContainertype($model->getContainer()->getContainertype());
             $duplicateContainer->setRegistration($model->getContainer()->getRegistration());
             $duplicateContainer->setLength($model->getContainer()->getLength());
             $entityManager->persist($duplicateContainer);
