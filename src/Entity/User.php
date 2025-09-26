@@ -205,6 +205,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?int $pagination = null;
 
+    /**
+     * @var Collection<int, DocumentType>
+     */
+    #[ORM\OneToMany(targetEntity: DocumentType::class, mappedBy: 'user')]
+    private Collection $documentTypes;
+
     public function __construct()
     {
         $this->userdatabases = new ArrayCollection();
@@ -232,6 +238,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->pininterfaces = new ArrayCollection();
         $this->modelsets = new ArrayCollection();
         $this->editions = new ArrayCollection();
+        $this->documentTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1133,6 +1140,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPagination(?int $pagination): static
     {
         $this->pagination = $pagination;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocumentType>
+     */
+    public function getDocumentTypes(): Collection
+    {
+        return $this->documentTypes;
+    }
+
+    public function addDocumentType(DocumentType $documentType): static
+    {
+        if (!$this->documentTypes->contains($documentType)) {
+            $this->documentTypes->add($documentType);
+            $documentType->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocumentType(DocumentType $documentType): static
+    {
+        if ($this->documentTypes->removeElement($documentType)) {
+            // set the owning side to null (unless already changed)
+            if ($documentType->getUser() === $this) {
+                $documentType->setUser(null);
+            }
+        }
 
         return $this;
     }
