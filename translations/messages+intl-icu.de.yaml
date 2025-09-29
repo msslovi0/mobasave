@@ -54,6 +54,12 @@ collection:
             other {# Modelle}
         }
 global:
+    filter:
+        filter: Filter
+        active: aktiv
+        remove: Filter „{name}“ entfernen
+        apply: Filter anwenden
+        show: Filter öffnen
     previous: Zurück
     next: Weiter
     last: Letzte
@@ -80,16 +86,18 @@ global:
         }
     collections: Sammlungen
     save: Speichern
+    duplicate: Duplizieren
     upload:
         file: Datei auswählen
         drag-n-drop: oder per Drag&Drop hier hin ziehen
         filetypes: PNG, JPG, WebP, SVG
+        filetypes-document: PNG, JPG, WebP, SVG, DOC, DOCX, XLS, XLSX, PPT, PPTX, ZIP, PDF
     login: Login
     logout: Logout
     add: Hinzufügen
     name: MoBaSaVe
     title:
-        searchresults: >-
+        searchresult: >-
             {count, plural,
                 =0    {Keine Treffer für „{query}“ gefunden}
                 =1    {Ein Treffer für „{query}“}
@@ -97,6 +105,17 @@ global:
             }
         index: MoBaSaVe - Willkommen!
         search: Suchergebnisse für „{query}“
+        filtercount: >-
+            {count, plural,
+                =1    {(ein Filter aktiv)}
+                other {(# Filter aktiv)}
+            }
+        filter: >-
+            {count, plural,
+                =0    {Keine Ergebnisse für den gewählten Filter}
+                =1    {Ein Ergebnis für den gewählten Filter}
+                other {# Ergebnisse für den gewählten Filter}
+            }
         add:
             model: Modell hinzufügen
             dealer: Händler hinzufügen
@@ -112,6 +131,7 @@ global:
         details: Details
         digital: Digital
         load: Beladung
+        documents: Dokumente
         storage: Aufbewahrung
         logout: Logout
         collections: Sammlungen
@@ -322,6 +342,7 @@ company:
 model:
     list:
         add: Modell hinzufügen
+        edit: Modell bearbeiten
         sound: Sound
         light: Licht
         image: Bild
@@ -329,7 +350,6 @@ model:
     no-model:
         fact: Kein Modell
         claim: Jetzt Modell hinzufügen!
-
     delete:
         delete: Löschen
         cancel: Abbrechen
@@ -396,9 +416,16 @@ model:
         functionkey: Funktionstaste
         modelset: Set
         new: Neuer Wert für „{name}“
-        parent: Elternelement ist:
+        parent: "Elternelement ist:"
+        file: Datei
+        documenttype: Dokumententyp
     epoch:
         till-today: heute
+    document:
+        delete:
+            headline: Dokument „{name}“ löschen
+            text: Das Dokument wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+        deleted: Das Dokument „{name}“ wurde gelöscht
     function:
         sound: Soundfunktion
         light: Lichtfunktion
@@ -417,11 +444,17 @@ model:
             text: Die Ladung wird nicht länger mit diesem Modell verknüpft sein. Der Hauptdatensatz der Beladung wird nicht verändert. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
         deleted: Die Beladung „{load}“ wurde gelöscht
     saved: Deine Änderungen an „{name}“ wurden erfolgreich gespeichert
+    duplicated: Das Modell „{name}” wurde erfolgreich dupliziert
     nodetails: Diese Kategorie hat keine Detailinformationen
     created: Dein Modell „{name}“ wurde erfolgreich angelegt
     deleted: Dein Modell „{name}“ wurde gelöscht
     assign-load: Beladung hinzufügen
     resubmit: Bitte den neu erstellten Eintrag erneut auswählen und das Formular erneut absenden.
+    registration:
+        invalid: "Prüfziffer {value} falsch, korrekt: {checksum}"
+        error-length: Falsche Länge
+        valid: Prüfziffer korrekt
+        checksum: Prüfziffer ist <b>{checksum}</b>
 
 status:
     notfound:
@@ -437,6 +470,10 @@ status:
 pagination:
     results: Zeige <span class="font-medium">{ start }</span> bis <span class="font-medium">{ end }</span> von <span class="font-medium">{ total }</span> Ergebnissen
     sorting: sortiert nach {column} {order}
+
+upload:
+    failed: Beim Upload ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.
+    success: Der Upload war erfolgreich
 
 welcome:
     logo:

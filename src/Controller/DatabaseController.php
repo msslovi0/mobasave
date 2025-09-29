@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Containertype;
 use App\Entity\Database;
+use App\Entity\DocumentType;
 use App\Entity\Manufacturer;
 use App\Entity\Model;
 use App\Entity\Status;
@@ -39,6 +40,7 @@ use App\Entity\Functionkey;
 use App\Entity\Decoderfunction;
 use App\Entity\Description;
 use App\Entity\Modelload;
+use App\Entity\Document;
 use BcMath\Number;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -235,85 +237,26 @@ class DatabaseController extends AbstractController
             "database" => $database,
         ], response: $response);
     }
-    #[Route('/collection/{id}', name: 'mbs_database', methods: ['GET'])]
-    public function index(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $user = $this->security->getUser();
-
-        $limit = $request->query->get('limit');
-        $sortcolumn = $request->query->get('sortcolumn');
-        $sortorder = $request->query->get('sortorder');
-        $limits = $this->getParameter('limits');
-        $sortcolumns = $this->getParameter('model.sortcolumns');
-        if($sortcolumn!="" && in_array($sortcolumn, $sortcolumns)) {
-            $request->getSession()->set('sortcolumn', $sortcolumn);
-        } else {
-            $request->getSession()->set('sortcolumn', $this->getParameter('model.sortcolumn'));
-        }
-        if($sortorder!="" && in_array($sortorder, ['asc', 'desc'])) {
-            $request->getSession()->set('sortorder', $sortorder);
-        } else {
-            $request->getSession()->set('sortorder', $this->getParameter('model.sortorder'));
-        }
-        if($limit=="" || !in_array($limit, $limits)) {
-            $limit = $request->getSession()->get('limit');
-        } else {
-            $request->getSession()->set('limit', $limit);
-        }
-
-        $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
-        if(!is_object($database)) {
-            return $this->redirectToRoute('mbs_home');
-        }
-        if(!$database) {
-            $response = new Response();
-            $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
-            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
-        }
-        if(is_object($user) and $database->getUser()->getId()!=$user->getId()) {
-            $response = new Response();
-            $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
-            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
-        }
-        $request->getSession()->set('database', $id);
-
-        $qb = $entityManager->createQueryBuilder();
-        $models = $qb->select('m')->from(Model::class, 'm')
-            ->leftJoin('m.category','c')
-            ->leftJoin('m.subcategory','sub')
-            ->leftJoin('m.status','status')
-            ->leftJoin('m.storage','s')
-            ->leftJoin('m.manufacturer','manu')
-            ->where('m.modeldatabase = :database')
-            ->setParameters(new ArrayCollection([new Parameter('database',  $id)]))
-            ->addOrderBy($request->getSession()->get('sortcolumn'), $request->getSession()->get('sortorder'))
-            ->getQuery()
-            ->getResult();
-
-        $pagination = $paginator->paginate(
-            $models,
-            $request->query->getInt('page', 1), /* page number */
-            $limit /* limit per page */
-        );
-
-        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
-        return $this->render('collection/list.html.twig', [
-            "databases" => $databases,
-            "database" => $database,
-            "models" => $pagination
-        ]);
-    }
-    #[Route('/model/search/', defaults: ['_format' => 'html'], name: 'mbs_model_search', methods: ['GET'])]
-    #[Route('/model/autocomplete/', defaults: ['_format' => 'json'], name: 'mbs_model_autocomplete', methods: ['GET'])]
+    #[Route('/collection/search/', defaults: ['_format' => 'html'], name: 'mbs_database_search', methods: ['GET'])]
+    #[Route('/collection/{id}/filter/', defaults: ['_format' => 'html'], name: 'mbs_database_filter', methods: ['GET'])]
+    #[Route('/collection/autocomplete/', defaults: ['_format' => 'json'], name: 'mbs_database_autocomplete', methods: ['GET'])]
     public function search(string $_format, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
 
         $limit = $request->query->get('limit');
+        $allData = $request->query->all();
+        $filterdata = [];
+        if(array_key_exists('filter', $allData)) {
+            $filter = $allData['filter'];
+            if(is_array($filter)) {
+                foreach($filter as $keyValue) {
+                    $parts = explode("_", $keyValue);
+                    $filterdata[$parts[0]][] = $parts[1];
+                }
+            }
+        }
         $sortcolumn = $request->query->get('sortcolumn');
         $sortorder = $request->query->get('sortorder');
         $limits = $this->getParameter('limits');
@@ -333,6 +276,26 @@ class DatabaseController extends AbstractController
         } else {
             $request->getSession()->set('limit', $limit);
         }
+
+        $filters['category']       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['status']         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['condition']      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['storage']        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['project']        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['scale']          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['manufacturer']   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['dealer']         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['company']        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+
+        $dbPrefix['category'] = 'c';
+        $dbPrefix['status'] = 'status';
+        $dbPrefix['condition'] = 'condition';
+        $dbPrefix['storage'] = 's';
+        $dbPrefix['project'] = 'p';
+        $dbPrefix['scale'] = 'scale';
+        $dbPrefix['manufacturer'] = 'manu';
+        $dbPrefix['dealer'] = 'd';
+        $dbPrefix['company'] = 'co';
 
         $query = $request->get('search');
         $qb = $entityManager->createQueryBuilder();
@@ -353,6 +316,9 @@ class DatabaseController extends AbstractController
             ->leftJoin('m.subcategory','sub','WITH','m.subcategory = sub.id')
             ->leftJoin('o.containertype','ot','WITH','o.containertype = ot.id')
             ->leftJoin('m.status','status','WITH','m.status = status.id')
+            ->leftJoin('m.modelcondition','condition','WITH','m.modelcondition = condition.id')
+            ->leftJoin('m.project','p','WITH','m.project = p.id')
+            ->leftJoin('m.scale','scale','WITH','m.scale = scale.id')
             ->where(
                 $qb->expr()->like('m.name', $qb->expr()->literal('%' . $query . '%')),
             )->orWhere(
@@ -398,6 +364,14 @@ class DatabaseController extends AbstractController
                 $result->addOrderBy($request->getSession()->get('sortcolumn'), $request->getSession()->get('sortorder'));
             }
 
+            if(count($filterdata)>0) {
+                foreach($filterdata as $key => $value) {
+                    $values = implode(',',$value);
+                    $result->andWhere($dbPrefix[$key].'.id in ('.$values.')');
+                }
+//                print_r($filterdata);
+            }
+
             $result = $result->getQuery()->getResult();
 
         $pagination = $paginator->paginate(
@@ -410,9 +384,94 @@ class DatabaseController extends AbstractController
         return $this->render('collection/list.'.$_format.'.twig', [
             "databases" => $databases,
             "models" => $pagination,
-            "total" => count($result)
+            "total" => count($result),
+            "filters" => $filters,
+            "filterdata" => $filterdata,
         ]);
     }
+    #[Route('/collection/{id}', name: 'mbs_database', methods: ['GET'])]
+    public function index(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+
+        $limit = $request->query->get('limit');
+        $sortcolumn = $request->query->get('sortcolumn');
+        $sortorder = $request->query->get('sortorder');
+        $limits = $this->getParameter('limits');
+        $sortcolumns = $this->getParameter('model.sortcolumns');
+        if($sortcolumn!="" && in_array($sortcolumn, $sortcolumns)) {
+            $request->getSession()->set('sortcolumn', $sortcolumn);
+        } else {
+            $request->getSession()->set('sortcolumn', $this->getParameter('model.sortcolumn'));
+        }
+        if($sortorder!="" && in_array($sortorder, ['asc', 'desc'])) {
+            $request->getSession()->set('sortorder', $sortorder);
+        } else {
+            $request->getSession()->set('sortorder', $this->getParameter('model.sortorder'));
+        }
+        if($limit=="" || !in_array($limit, $limits)) {
+            $limit = $request->getSession()->get('limit');
+        } else {
+            $request->getSession()->set('limit', $limit);
+        }
+
+        $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+        if(!is_object($database)) {
+            return $this->redirectToRoute('mbs_home');
+        }
+        if(!$database) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        if(is_object($user) and $database->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
+        }
+        $request->getSession()->set('database', $id);
+
+        $filters['category']       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['status']         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['condition']      = $entityManager->getRepository(Condition::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['storage']        = $entityManager->getRepository(Storage::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['project']        = $entityManager->getRepository(Project::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['scale']          = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['manufacturer']   = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['dealer']         = $entityManager->getRepository(Dealer::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $filters['company']        = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+
+        $qb = $entityManager->createQueryBuilder();
+        $models = $qb->select('m')->from(Model::class, 'm')
+            ->leftJoin('m.category','c')
+            ->leftJoin('m.subcategory','sub')
+            ->leftJoin('m.status','status')
+            ->leftJoin('m.storage','s')
+            ->leftJoin('m.manufacturer','manu')
+            ->where('m.modeldatabase = :database')
+            ->setParameters(new ArrayCollection([new Parameter('database',  $id)]))
+            ->addOrderBy($request->getSession()->get('sortcolumn'), $request->getSession()->get('sortorder'))
+            ->getQuery()
+            ->getResult();
+
+        $pagination = $paginator->paginate(
+            $models,
+            $request->query->getInt('page', 1), /* page number */
+            $limit /* limit per page */
+        );
+
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        return $this->render('collection/list.html.twig', [
+            "databases" => $databases,
+            "database" => $database,
+            "models" => $pagination,
+            "filters" => $filters,
+        ]);
+    }
+
     #[Route('/model/load/delete/{id}', name: 'mbs_model_load_delete', methods: ['GET'])]
     public function deleteLoad(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
     {
@@ -521,7 +580,12 @@ class DatabaseController extends AbstractController
                 break;
         }
         $digital = $model->getDigital();
-        $entityManager->remove($digital);
+        if(is_object($digital)) {
+            foreach($digital->getDigitalFunctions() as $digitalFunction) {
+                $entityManager->remove($digitalFunction);
+            }
+            $entityManager->remove($digital);
+        }
         $entityManager->remove($model);
         $this->addFlash(
             'success',
@@ -738,7 +802,7 @@ class DatabaseController extends AbstractController
         } else {
             $request->getSession()->set('database', $model->getModeldatabase()->getId());
         }
-        $qb             = $entityManager->createQueryBuilder();
+
         $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
         $subcategory    = $entityManager->getRepository(Subcategory::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
@@ -1075,6 +1139,151 @@ class DatabaseController extends AbstractController
             "functionkey" => $functionkey,
         ]);
     }
+    #[Route('/model/{id}/duplicate/', name: 'mbs_model_duplicate', methods: ['GET'])]
+    public function duplicate(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+
+        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
+        }
+
+        $duplicate = new Model();
+        $duplicate->setName($model->getName());
+        $duplicate->setCategory($model->getCategory());
+        $duplicate->setSubcategory($model->getSubcategory());
+        $duplicate->setManufacturer($model->getManufacturer());
+        $duplicate->setCompany($model->getCompany());
+        $duplicate->setScale($model->getScale());
+        $duplicate->setTrack($model->getTrack());
+        $duplicate->setEpoch($model->getEpoch());
+        $duplicate->setSubepoch($model->getSubepoch());
+        $duplicate->setStorage($model->getStorage());
+        $duplicate->setProject($model->getProject());
+        $duplicate->setDealer($model->getDealer());
+        $duplicate->setName($model->getName());
+        $duplicate->setModel($model->getModel());
+        $duplicate->setGtin13($model->getGtin13());
+        $duplicate->setColor1($model->getColor1());
+        $duplicate->setColor2($model->getColor2());
+        $duplicate->setColor3($model->getColor3());
+        $duplicate->setQuantity($model->getQuantity());
+        $duplicate->setPurchased(new \DateTime('now'));
+        $duplicate->setMsrp($model->getMsrp());
+        $duplicate->setPrice($model->getPrice());
+        $duplicate->setNotes($model->getNotes());
+        if(is_object($model->getLocomotive())) {
+            $duplicateLocomotive = new Locomotive();
+            $duplicateLocomotive->setMaker($model->getLocomotive()->getMaker());
+            $duplicateLocomotive->setAxle($model->getLocomotive()->getAxle());
+            $duplicateLocomotive->setPower($model->getLocomotive()->getPower());
+            $duplicateLocomotive->setCoupler($model->getLocomotive()->getCoupler());
+            $duplicateLocomotive->setClass($model->getLocomotive()->getClass());
+            $duplicateLocomotive->setRegistration($model->getLocomotive()->getRegistration());
+            $duplicateLocomotive->setLength($model->getLocomotive()->getLength());
+            $duplicateLocomotive->setDigital($model->getLocomotive()->getDigital());
+            $duplicateLocomotive->setSound($model->getLocomotive()->getSound());
+            $duplicateLocomotive->setSmoke($model->getLocomotive()->getSmoke());
+            $duplicateLocomotive->setDccready($model->getLocomotive()->getDccready());
+            $duplicateLocomotive->setNickname($model->getLocomotive()->getNickname());
+            $entityManager->persist($duplicateLocomotive);
+            $duplicate->setLocomotive($duplicateLocomotive);
+        }
+        if(is_object($model->getContainer())) {
+            $duplicateContainer = new Container();
+            $duplicateContainer->setContainertype($model->getContainer()->getContainertype());
+            $duplicateContainer->setRegistration($model->getContainer()->getRegistration());
+            $duplicateContainer->setLength($model->getContainer()->getLength());
+            $entityManager->persist($duplicateContainer);
+            $duplicate->setContainer($duplicateContainer);
+        }
+        if(is_object($model->getCar())) {
+            $duplicateCar = new Car();
+            $duplicateCar->setRegistration($model->getCar()->getRegistration());
+            $duplicateCar->setLength($model->getCar()->getLength());
+            $duplicateCar->setPower($model->getCar()->getPower());
+            $duplicateCar->setCoupler($model->getCar()->getCoupler());
+            $duplicateCar->setClass($model->getCar()->getClass());
+            $entityManager->persist($duplicateCar);
+            $duplicate->setCar($duplicateCar);
+        }
+        if(is_object($model->getVehicle())) {
+            $duplicateVehicle = new Vehicle();
+            $duplicateVehicle->setRegistration($model->getVehicle()->getRegistration());
+            $duplicateVehicle->setMaker($model->getVehicle()->getMaker());
+            $duplicateVehicle->setClass($model->getVehicle()->getClass());
+            $duplicateVehicle->setYear($model->getVehicle()->getYear());
+            $entityManager->persist($duplicateVehicle);
+            $duplicate->setVehicle($duplicateVehicle);
+        }
+        if(is_object($model->getTram())) {
+            $duplicateTram = new Tram();
+            $duplicateTram->setRegistration($model->getTram()->getRegistration());
+            $duplicateTram->setMaker($model->getTram()->getMaker());
+            $duplicateTram->setClass($model->getTram()->getClass());
+            $duplicateTram->setPower($model->getTram()->getPower());
+            $duplicateTram->setCoupler($model->getTram()->getCoupler());
+            $duplicateTram->setAxle($model->getTram()->getAxle());
+            $duplicateTram->setLength($model->getTram()->getLength());
+            $duplicateTram->setNickname($model->getTram()->getNickname());
+            $entityManager->persist($duplicateTram);
+            $duplicate->setTram($duplicateTram);
+        }
+        if(is_object($model->getDigital())) {
+            $duplicateDigital = new Digital();
+            $duplicateDigital->setAddress($model->getDigital()->getAddress());
+            $duplicateDigital->setProtocol($model->getDigital()->getProtocol());
+            $duplicateDigital->setDecoder($model->getDigital()->getDecoder());
+            $duplicateDigital->setPininterface($model->getDigital()->getPininterface());
+            $entityManager->persist($duplicateDigital);
+            $duplicate->setDigital($duplicateDigital);
+            foreach($model->getDigital()->getDigitalFunctions() as $digitalFunction) {
+                $duplicateDigitalFunction = new DigitalFunction();
+                $duplicateDigitalFunction->setDigital($duplicateDigital);
+                $duplicateDigitalFunction->setFunctionkey($digitalFunction->getFunctionkey());
+                $duplicateDigitalFunction->setDecoderfunction($digitalFunction->getDecoderfunction());
+                $duplicateDigitalFunction->setHint($digitalFunction->getHint());
+                $entityManager->persist($duplicateDigitalFunction);
+            }
+        }
+        $duplicate->setModeldatabase($model->getModeldatabase());
+        $duplicate->setCountry($model->getCountry());
+        $duplicate->setCreated(new \DateTime('now'));
+        $duplicate->setUpdated(new \DateTime('now'));
+        $duplicate->setImage($model->getImage());
+        $duplicate->setInstructions($model->isInstructions());
+        $duplicate->setParts($model->isParts());
+        $duplicate->setDisplaycase($model->isDisplaycase());
+        $duplicate->setWeathered($model->isWeathered());
+        $duplicate->setEnhanced($model->isEnhanced());
+        $duplicate->setStatus($model->getStatus());
+        $duplicate->setBox($model->getBox());
+        $duplicate->setModelcondition($model->getModelcondition());
+        $duplicate->setListprice($model->getListprice());
+        $duplicate->setDescription($model->getDescription());
+        $duplicate->setAvailable($model->isAvailable());
+        $duplicate->setPower($model->getPower());
+        $duplicate->setEdition($model->getEdition());
+        $entityManager->persist($duplicate);
+        $entityManager->flush();
+        $this->addFlash(
+            'success',
+            $translator->trans('model.duplicated', ['name' => $duplicate->getName()])
+        );
+        return $this->redirectToRoute('mbs_model', ['id' => $duplicate->getId()]);
+
+    }
     #[Route('/model/{id}/load/', name: 'mbs_model_load', methods: ['GET','POST'])]
     #[Route('/dealer/{dealer}/model/{id}/load/', name: 'mbs_dealer_model_load', methods: ['GET','POST'])]
     #[Route('/manufacturer/{manufacturer}/model/{id}/load/', name: 'mbs_manufacturer_model_load', methods: ['GET','POST'])]
@@ -1186,6 +1395,145 @@ class DatabaseController extends AbstractController
 
         return new Response('ok-'.(int)$sound."-".(int)$light);
     }
+
+
+    #[Route('/model/{id}/document/', name: 'mbs_model_document', methods: ['GET','POST'])]
+    #[Route('/dealer/{dealer}/model/{id}/document/', name: 'mbs_dealer_model_document', methods: ['GET','POST'])]
+    #[Route('/manufacturer/{manufacturer}/model/{id}/document/', name: 'mbs_manufacturer_model_document', methods: ['GET','POST'])]
+    #[Route('/company/{company}/model/{id}/document/', name: 'mbs_company_model_document', methods: ['GET','POST'])]
+    public function document(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/document')] string $documentDirectory): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+
+        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
+        }
+        $documenttype = $entityManager->getRepository(DocumentType::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+
+        $document = new Document();
+        $form = $this->createFormBuilder($document)
+            ->add('documenttype', ChoiceType::class, ['choices' => $documenttype, 'choice_label' => 'name'])
+            ->add('file', FileType::class, ['data_class' => null, 'required' => false, 'constraints' => [
+                new File(
+                    extensions: ['jpg', 'webp', 'png', 'svg', 'pdf', 'zip', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']
+                )
+            ]])
+            ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
+
+        $form = $form->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $documentFile = $form->get('file')->getData();
+
+            if($documentFile) {
+                $originalFilename = pathinfo($documentFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$documentFile->guessExtension();
+                try {
+                    $documentFile->move($documentDirectory, $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash(
+                        'error',
+                        $translator->trans('upload.failed', ['message' => $e->getMessage()])
+                    );
+                    return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+                }
+                $document->setFile($newFilename);
+
+                if($this->getParameter('remote_ssh')!="") {
+                    try {
+                        exec('/usr/bin/scp '.$documentDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'document/'.$newFilename);
+                    } catch (Exception $e) {
+                    }
+                }
+                $document->setName($originalFilename);
+            } else {
+                $this->addFlash(
+                    'error',
+                    $translator->trans('upload.failed', ['message' => 'ABC'])
+                );
+                return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+            }
+            $document->setModel($model);
+            $entityManager->persist($document);
+            $entityManager->flush();
+            $this->addFlash(
+                'success',
+                $translator->trans('upload.success')
+            );
+            return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+            $this->addFlash(
+                'error',
+                $translator->trans('document.resubmit', ['name' => $database->getName()])
+            );
+        } else {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_OK);
+        }
+
+
+        $documents = $model->getDocuments();
+
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+
+        return $this->render('collection/document.html.twig', [
+            "databases" => $databases,
+            "model" => $model,
+            "documents" => $documents,
+            "documentform" => $form->createView(),
+        ]);
+    }
+    #[Route('/model/document/delete/{id}', name: 'mbs_model_document_delete', methods: ['GET'])]
+    public function deleteDocument(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request, #[Autowire('%kernel.project_dir%/public/data/document')] string $documentDirectory)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $document = $entityManager->getRepository(Document::class)->findOneBy(["id" =>$id]);
+        $user = $this->security->getUser();
+        $model = $document->getModel();
+        if(!$model) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        if(is_object($user) and $model->getModeldatabase()->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
+        }
+
+        if(file_exists($documentDirectory."/".$document->getFile())) {
+            unlink($documentDirectory."/".$document->getFile());
+        }
+
+        $model->setUpdated(new \DateTime());
+        $entityManager->remove($document);
+        $entityManager->persist($model);
+        $this->addFlash(
+            'success',
+            $translator->trans('model.document.deleted', ['name' => $document->getName()])
+        );
+        $entityManager->flush();
+        return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+
+    }
+
     #[Route('/model/value/new/', name: 'mbs_value_new', format: 'json', methods: ['POST'])]
     public function newValue(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
@@ -1387,4 +1735,39 @@ class DatabaseController extends AbstractController
             return new Response('{}');
         }
     }
+
+    #[Route('/api/checksum/', name: 'mbs_api_checksum', format: 'json', methods: ['POST'])]
+    public function checksum(EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $value = $request->get('value');
+
+        $char2num = ['A' => 10, 'B' => 12, 'C' => 13, 'D' => 14, 'E' => 15, 'F' => 16, 'G' => 17, 'H' => 18, 'I' => 19, 'J' => 20, 'K' => 21, 'L' => 23, 'M' => 24, 'N' => 25, 'O' => 26, 'P' => 27, 'Q' => 28, 'R' => 29, 'S' => 30, 'T' => 31, 'U' => 32, 'V' => 34, 'W' => 35, 'X' => 36, 'Y' => 37, 'Z' => 38];
+
+        $acc = 0;
+        $num = str_split($value);
+        for($i=0;$i<10;$i++){
+            if($i<4) $acc += ($char2num[$num[$i]]*pow(2,$i));
+            else $acc += $num[$i]*pow(2,$i);
+        }
+        $rem = $acc % 11;
+        if ($rem == 10) $rem = 0;
+        $return['checksum'] = $rem;
+        if(strlen($value)==11 && $num[10]==$rem) {
+            $return['success'] = true;
+            $return['message'] = $translator->trans('model.registration.valid');
+        } elseif(strlen($value)==11 && $num[10]!=$rem) {
+            $return['success'] = false;
+            $return['message'] = $translator->trans('model.registration.invalid', ['checksum' => $rem, 'value' => $num[10]]);
+        } elseif(strlen($value)==10) {
+            $return['success'] = false;
+            $return['message'] = $translator->trans('model.registration.checksum', ['checksum' => $rem]);
+        } else {
+            $return['success'] = false;
+            $return['message'] = $translator->trans('model.registration.error');
+
+        }
+        return new JsonResponse($return);
+    }
+
 }

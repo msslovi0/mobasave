@@ -6,24 +6,28 @@
     {% set path_detail = path('mbs_manufacturer_model_detail', {id: model.id, manufacturer: model.manufacturer.id}) %}
     {% set path_digital = path('mbs_manufacturer_model_digital', {id: model.id, manufacturer: model.manufacturer.id}) %}
     {% set path_load = path('mbs_manufacturer_model_load', {id: model.id, manufacturer: model.manufacturer.id}) %}
+    {% set path_document = path('mbs_manufacturer_model_document', {id: model.id, manufacturer: model.manufacturer.id}) %}
 {% elseif 'mbs_dealer' in app.request.attributes.get("_route") %}
     {% set current = 'dealer' %}
     {% set path_model = path('mbs_dealer_model', {id: model.id, dealer: model.dealer.id}) %}
     {% set path_detail = path('mbs_dealer_model_detail', {id: model.id, dealer: model.dealer.id}) %}
     {% set path_digital = path('mbs_dealer_model_digital', {id: model.id, dealer: model.dealer.id}) %}
     {% set path_load = path('mbs_dealer_model_load', {id: model.id, dealer: model.dealer.id}) %}
+    {% set path_document = path('mbs_dealer_model_document', {id: model.id, dealer: model.dealer.id}) %}
 {% elseif 'mbs_company' in app.request.attributes.get("_route") %}
     {% set current = 'company' %}
     {% set path_model = path('mbs_company_model', {id: model.id, company: model.company.id}) %}
     {% set path_detail = path('mbs_company_model_detail', {id: model.id, company: model.company.id}) %}
     {% set path_digital = path('mbs_company_model_digital', {id: model.id, company: model.company.id}) %}
     {% set path_load = path('mbs_company_model_load', {id: model.id, company: model.company.id}) %}
+    {% set path_document = path('mbs_company_model_document', {id: model.id, company: model.company.id}) %}
 {% else %}
     {% set current = 'model' %}
     {% set path_model = path('mbs_model', {id: model.id}) %}
     {% set path_detail = path('mbs_model_detail', {id: model.id}) %}
     {% set path_digital = path('mbs_model_digital', {id: model.id}) %}
     {% set path_load = path('mbs_model_load', {id: model.id}) %}
+    {% set path_document = path('mbs_model_document', {id: model.id}) %}
 {% endif %}
 
 <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-2 md:grid-cols-3 dark:border-white/10">
@@ -37,6 +41,7 @@
                 {% if model.category.id == 2 %}
                     <option data-path="{{ path_load }}" {{ template=='load' ? "selected='selected'" : '' }}>{{ 'global.nav.load'|trans }}</option>
                 {% endif %}
+                <option data-path="{{ path_document }}" {{ template=='document' ? "selected='selected'" : '' }}>{{ 'global.nav.documents'|trans }}</option>
             </select>
             <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end fill-gray-500 dark:fill-gray-400">
                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
@@ -50,10 +55,12 @@
                 {% if model.category.id == 2 %}
                 <a href="{{ path_load }}" class="{{ template=='load' ? active : inactive }}">{{ 'global.nav.load'|trans }}</a>
                 {% endif %}
+                <a href="{{ path_document }}" class="{{ template=='document' ? active : inactive }}">{{ 'global.nav.documents'|trans }}</a>
             </nav>
         </div>
     </div>
-    <div class="col-start-3 flex justify-end">
+    <div class="col-start-3 flex justify-end gap-1">
+        <a href="{{ path('mbs_model_duplicate', {id: model.id}) }}" id="duplicate-model" class="rounded-md bg-lime-400 px-3 py-2 text-sm font-semibold text-green-800 shadow-xs hover:bg-lime-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-400 dark:bg-lime-300 dark:shadow-none dark:focus-visible:outline-lime-300">{{ 'global.duplicate'|trans }}</a>
         <button id="submit-form" class="rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:focus-visible:outline-green-700">{{'global.save'|trans}}</button>
     </div>
 </div>
