@@ -476,6 +476,7 @@ upload:
     success: Der Upload war erfolgreich
 
 welcome:
+    title: MoBaSaVe - die Modellbahn-Sammlungsverwaltung
     logo:
         maerklin: Märklin
         fleischmann: Fleischmann

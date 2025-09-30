@@ -475,6 +475,7 @@ pagination:
     sorting: sorted by {column} {order}
 
 welcome:
+    title: MoBaSaVe - die Modellbahn-Sammlungsverwaltung
     logo:
         maerklin: Märklin
         fleischmann: Fleischmann
