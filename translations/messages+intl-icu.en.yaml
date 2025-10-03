@@ -140,6 +140,9 @@ global:
         profile: Profile
         change-password: Change Password
         add-database: Collection
+        join: Register for free
+        history: Version History
+        welcome: Welcome
     error:
         filetype-invalid: Not a valid filetype
     logo: Logo
@@ -532,6 +535,11 @@ welcome:
                 instagram: https://www.instagram.com/fwrw.co/
                 tiktok: https://www.instagram.com/fwrw.co/
                 youtube: https://www.youtube.com/@fwrw
+    join:
+        title: Jetzt beim MoBaSaVe anmelden
+        join-now: Jetzt beim MoBaSaVe anmelden
+    history:
+        title: Versionshistorie MoBaSaVe
 
 m.purchased: purchase date
 m.name: name

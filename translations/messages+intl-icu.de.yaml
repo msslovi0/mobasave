@@ -141,6 +141,9 @@ global:
         profile: Profil
         change-password: Passwort ändern
         add-database: Sammlung
+        join: Kostenlos anmelden
+        history: Versionshistorie
+        welcome: Willkommen
     error:
         filetype-invalid: Ungültiger Dateityp
     logo: Logo
@@ -543,6 +546,11 @@ welcome:
                 instagram: https://www.instagram.com/fwrw.co/
                 tiktok: https://www.instagram.com/fwrw.co/
                 youtube: https://www.youtube.com/@fwrw
+    join:
+        title: Jetzt beim MoBaSaVe anmelden
+        join-now: Jetzt beim MoBaSaVe anmelden
+    history:
+        title: Versionshistorie MoBaSaVe
 
 m.purchased: Kaufdatum
 m.name: Name
