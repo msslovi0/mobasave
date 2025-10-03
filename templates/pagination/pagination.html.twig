@@ -25,7 +25,7 @@
         {{ 'pagination.sorting'|trans({'column':app.session.get('sortcolumn')|trans, 'order': app.session.get('sortorder')|trans})|raw }}
       </p>
     </div>
-    <div>
+    <div class="flex flex-nowrap">
         {% if(app.request.get('filter')=="") %}
         <div class="isolate inline-flex -space-x-px rounded-md shadow-xs dark:shadow-none mr-5">
         {% for limit in limits %}
