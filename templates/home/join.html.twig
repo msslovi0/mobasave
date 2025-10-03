@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'welcome.join.title'|trans }}{% endblock %}
+
+{% block body %}
+<nav class="border-b border-gray-200 bg-white dark:border-white/10 dark:bg-gray-900">
+    <div class="px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 justify-between">
+        <div class="flex">
+          <div class="flex shrink-0 items-center">
+              <a href="{{ path('mbs_home') }}"><img src="{{ asset('images/mobasave-notext.svg') }}" alt="{{ 'global.name'|trans }}" class="h-15 w-auto" /></a>
+          </div>
+            {% set current = 'join' %}
+            <a href="{{ path('mbs_home') }}" class="inline-flex items-center border-b-2 ml-3 {{ current=='home' ? 'border-green-800 dark:border-green-700 text-gray-900 dark:text-white' : 'text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200 border-transparent' }} px-1 pt-1 text-sm font-medium">{{ 'global.nav.welcome'|trans }}</a>
+            <a href="{{ path('mbs_join') }}" class="inline-flex items-center border-b-2 ml-3 {{ current=='join' ? 'border-green-800 dark:border-green-700 text-gray-900 dark:text-white' : 'text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200 border-transparent' }} px-1 pt-1 text-sm font-medium">{{ 'global.nav.join'|trans }}</a>
+            <a href="{{ path('mbs_history') }}" class="inline-flex items-center border-b-2 ml-3 {{ current=='history' ? 'border-green-800 dark:border-green-700 text-gray-900 dark:text-white' : 'text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200 border-transparent' }} px-1 pt-1 text-sm font-medium">{{ 'global.nav.history'|trans }}</a>
+          </div>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center">
+            <div class="flex flex-1 items-center justify-center px-2 lg:ml-6 lg:justify-end">
+                <div class="w-full">
+                <div class="grid grid-cols-1">
+                    <select id="language" name="language" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus-visible:outline-green-700">
+                        {% for locale in locales %}
+                            {% set is_active = app.locale == locale.code %}
+                            <option {{ is_active ? 'selected="selected"' }} translate="no" data-href="{{ path(app.current_route ?? 'blog_index', app.current_route_parameters|merge({_locale: locale.code})) }}">
+                                    {{ locale.name|capitalize }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                    </svg>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="overflow-hidden bg-white py-32 dark:bg-gray-900">
+  <div class="mx-auto max-w-7xl px-6 lg:flex lg:px-8">
+    <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-12 gap-y-16 lg:mx-0 lg:max-w-none lg:min-w-full lg:flex-none lg:gap-y-8">
+      <div class="lg:col-end-1 lg:w-full lg:max-w-lg lg:pb-8">
+        <h2 class="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl dark:text-white">{{'welcome.join.join-now'|trans}}</h2>
+        <p class="mt-6 text-xl/8 text-gray-700 dark:text-gray-300">Der MoBaSaVe, im Oktober 2025 quasi <a href="https://youtu.be/Ap7UXWXwOKI" class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline" target="_blank" rel="noopener">aus der Not heraus geboren</a>, befindet sich derzeit in der geschlossenen Beta-Phase.</p>
+        <p class="mt-6 text-base/7 text-gray-600 dark:text-gray-400">Interessenten, die an der Beta-Phase teilnehmen möchten, senden einfach eine E-Mail an <a href="mailto:beta@mobasave.de?subject=Anmeldung%20zur%20Closed%20Beta" class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline">beta@mobasave.de</a>. Die Nutzung der Software ist während der kompletten Beta-Phase kostenlos.</p>
+        <div class="mt-10 flex">
+          <a href="mailto:beta@mobasave.de?subject=Anmeldung%20zur%20Closed%20Beta" class="rounded-md bg-green-800 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">
+            Jetzt E-Mail senden
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+        <div class="mt-10 flex">
+          <a href="{{path('mbs_home')}}" class="block rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">
+            <span aria-hidden="true">&larr;</span>
+            Zurück zur Übersicht
+          </a>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-start justify-end gap-6 sm:gap-8 lg:contents">
+        <div class="w-0 flex-auto lg:ml-auto lg:w-auto lg:flex-none lg:self-start">
+          <img src="{{asset('images/mobasave.svg')}}" alt="" class="max-w-100 rounded-2xl object-contain " />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

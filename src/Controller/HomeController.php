@@ -16,6 +16,16 @@ class HomeController extends AbstractController
     public function __construct(private Security $security)
     {
     }
+    #[Route('/history/', name: 'mbs_history', methods: ['GET'])]
+    public function history(): Response
+    {
+        return $this->render('home/history.html.twig', []);
+    }
+    #[Route('/join/', name: 'mbs_join', methods: ['GET'])]
+    public function join(): Response
+    {
+        return $this->render('home/join.html.twig', []);
+    }
     #[Route('/render/', name: 'mbs_render', methods: ['GET'])]
     public function renderDefaults(): Response
     {
