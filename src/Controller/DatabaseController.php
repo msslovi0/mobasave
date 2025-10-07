@@ -1140,7 +1140,7 @@ class DatabaseController extends AbstractController
         ]);
     }
     #[Route('/model/{id}/duplicate/', name: 'mbs_model_duplicate', methods: ['GET'])]
-    public function duplicate(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    public function duplicate(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/image')] string $imageDirectory): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
@@ -1261,7 +1261,20 @@ class DatabaseController extends AbstractController
         $duplicate->setCountry($model->getCountry());
         $duplicate->setCreated(new \DateTime('now'));
         $duplicate->setUpdated(new \DateTime('now'));
-        $duplicate->setImage($model->getImage());
+        $image = $model->getImage();
+        $originalFilename = pathinfo($image, PATHINFO_FILENAME);
+        $originalExtension = pathinfo($image, PATHINFO_EXTENSION);
+        $originalFileParts = explode("-", $originalFilename);
+        $safeFilename = $slugger->slug($originalFileParts[0]);
+        $newFilename = $safeFilename.'-'.uniqid().'.'.$originalExtension;
+        copy($imageDirectory.'/'.$model->getImage(), $imageDirectory.'/'.$newFilename);
+        if($this->getParameter('remote_ssh')!="") {
+            try {
+                exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'image/'.$newFilename);
+            } catch (Exception $e) {
+            }
+        }
+        $duplicate->setImage($newFilename);
         $duplicate->setInstructions($model->isInstructions());
         $duplicate->setParts($model->isParts());
         $duplicate->setDisplaycase($model->isDisplaycase());
