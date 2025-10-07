@@ -1606,6 +1606,8 @@ class DatabaseController extends AbstractController
             break;
             case "dealer":
                 $template = new Dealer();
+                $template->setLogo(0);
+                $template->setVector(0);
                 $repository = $entityManager->getRepository(Dealer::class);
             break;
             case "scale":
