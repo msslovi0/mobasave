@@ -20,6 +20,9 @@ $(function() {
         $('#form_state .country-'+id).show();
     }
     $('#form_country').on('change', function() {
+        var prefix = $(this).find(':selected').data('prefix');
+        $('.phone-prefix').html(prefix);
+
         if($('#form_state').length==0) {
             return;
         }

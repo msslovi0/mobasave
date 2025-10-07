@@ -109,61 +109,149 @@
                         <div class="sm:col-span-3">
                             <label for="form_phone" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.phone'|trans }}</label>
                             <div>
-                                {{ form_widget(dealerform.phone, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                <div class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-green-800 dark:bg-white/5 dark:outline-gray-600 dark:has-[input:focus-within]:outline-green-700">
+                                    <div class="phone-prefix shrink-0 text-base text-gray-500 select-none sm:text-sm/6 dark:text-gray-400">
+                                        {{ dealer.country.prefix is defined ? dealer.country.prefix : '' }}</div>
+                                    {{ form_widget(dealerform.phone, {'attr': {'class': 'block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500'}}) }}
+                                </div>
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_fax" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.fax'|trans }}</label>
                             <div>
-                                {{ form_widget(dealerform.fax, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                <div class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-green-800 dark:bg-white/5 dark:outline-gray-600 dark:has-[input:focus-within]:outline-green-700">
+                                    <div class="phone-prefix shrink-0 text-base text-gray-500 select-none sm:text-sm/6 dark:text-gray-400">
+                                        {{ dealer.country.prefix is defined ? dealer.country.prefix : '' }}</div>
+                                    {{ form_widget(dealerform.fax, {'attr': {'class': 'block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500'}}) }}
+                                </div>
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_email" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.email'|trans }}</label>
-                            <div>
-                                {{ form_widget(dealerform.email, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 {{ dealer.email!="" ? 'col-span-9' : 'col-span-10' }}">
+                                    {{ form_widget(dealerform.email, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                </div>
+                                {% if dealer.email!="" %}
+                                    <a href="{{ dealer.email }}" target="_blank" rel="noopener" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 9v.906a2.25 2.25 0 0 1-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 0 0 1.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 0 0-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V8.844a2.25 2.25 0 0 1 1.183-1.981l7.5-4.039a2.25 2.25 0 0 1 2.134 0l7.5 4.039a2.25 2.25 0 0 1 1.183 1.98V19.5Z" />
+                                        </svg>
+                                        <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_url" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.url'|trans }}</label>
-                            <div>
-                                {{ form_widget(dealerform.url, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 {{ dealer.url!="" ? 'col-span-9' : 'col-span-10' }}">
+                                    {{ form_widget(dealerform.url, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                </div>
+                                {% if dealer.url!="" %}
+                                    <a href="{{ dealer.url }}" target="_blank" rel="noopener" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                                        </svg>
+                                        <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_facebook" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.facebook'|trans }}</label>
-                            <div>
-                                {{ form_widget(dealerform.facebook, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 {{ dealer.facebook!="" ? 'col-span-9' : 'col-span-10' }}">
+                                    {{ form_widget(dealerform.facebook, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                </div>
+                                {% if dealer.facebook!="" %}
+                                    <a href="{{ dealer.facebook }}" target="_blank" rel="noopener" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                                        </svg>
+                                        <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_instagram" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.instagram'|trans }}</label>
-                            <div>
-                                {{ form_widget(dealerform.instagram, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 {{ dealer.instagram!="" ? 'col-span-9' : 'col-span-10' }}">
+                                    {{ form_widget(dealerform.instagram, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                </div>
+                                {% if dealer.instagram!="" %}
+                                    <a href="{{ dealer.instagram }}" target="_blank" rel="noopener" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                                        </svg>
+                                        <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_youtube" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.youtube'|trans }}</label>
-                            <div>
-                                {{ form_widget(dealerform.youtube, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 {{ dealer.youtube!="" ? 'col-span-9' : 'col-span-10' }}">
+                                    {{ form_widget(dealerform.youtube, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                </div>
+                                {% if dealer.youtube!="" %}
+                                    <a href="{{ dealer.youtube }}" target="_blank" rel="noopener" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                                        </svg>
+                                        <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_twitter" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.twitter'|trans }}</label>
-                            <div>
-                                {{ form_widget(dealerform.twitter, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 {{ dealer.twitter!="" ? 'col-span-9' : 'col-span-10' }}">
+                                    {{ form_widget(dealerform.twitter, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                </div>
+                                {% if dealer.twitter!="" %}
+                                    <a href="{{ dealer.twitter }}" target="_blank" rel="noopener" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                                        </svg>
+                                        <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_tiktok" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.tiktok'|trans }}</label>
-                            <div>
-                                {{ form_widget(dealerform.tiktok, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 {{ dealer.tiktok!="" ? 'col-span-9' : 'col-span-10' }}">
+                                    {{ form_widget(dealerform.tiktok, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                </div>
+                                {% if dealer.tiktok!="" %}
+                                    <a href="{{ dealer.tiktok }}" target="_blank" rel="noopener" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                                        </svg>
+                                        <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_linkedin" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'dealer.field.linkedin'|trans }}</label>
-                            <div>
-                                {{ form_widget(dealerform.linkedin, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                            <div class="grid grid-cols-10 gap-2">
+                                <div class="grid grid-cols-1 {{ dealer.linkedin!="" ? 'col-span-9' : 'col-span-10' }}">
+                                    {{ form_widget(dealerform.linkedin, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                </div>
+                                {% if dealer.linkedin!="" %}
+                                <a href="{{ dealer.linkedin }}" target="_blank" rel="noopener" class="flex shrink-0 items-end bg-white text-base text-gray-500 sm:text-sm/6 dark:bg-white/5 dark:text-gray-400 dark:outline-gray-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pointer-events-none col-start-1 row-start-1 w-10 h-10 self-center justify-self-end text-gray-500 sm:size-5 dark:text-gray-400">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                                    </svg>
+                                    <span class="sr-only">{{ 'model.list.edit'|trans }}</span>
+                                </a>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="sm:col-span-3">

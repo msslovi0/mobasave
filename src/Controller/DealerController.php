@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,8 +51,8 @@ class DealerController extends AbstractController
             ->add('url', UrlType::class, ['required' => false])
             ->add('street', TextType::class, ['required' => false])
             ->add('extra', TextType::class, ['required' => false])
-            ->add('phone', TextType::class, ['required' => false])
-            ->add('fax', TextType::class, ['required' => false])
+            ->add('phone', TelType::class, ['required' => false])
+            ->add('fax', TelType::class, ['required' => false])
             ->add('zip', TextType::class, ['required' => false, 'attr' => ['maxlength' => 10]])
             ->add('city', TextType::class, ['required' => false])
             ->add('facebook', UrlType::class, ['required' => false])
@@ -60,7 +61,7 @@ class DealerController extends AbstractController
             ->add('tiktok', UrlType::class, ['required' => false])
             ->add('twitter', UrlType::class, ['required' => false])
             ->add('linkedin', UrlType::class, ['required' => false])
-            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId(), 'data-prefix' => $choice->getPrefix()];}])
             ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
             ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
@@ -137,8 +138,8 @@ class DealerController extends AbstractController
             ->add('url', UrlType::class, ['required' => false])
             ->add('street', TextType::class, ['required' => false])
             ->add('extra', TextType::class, ['required' => false])
-            ->add('phone', TextType::class, ['required' => false])
-            ->add('fax', TextType::class, ['required' => false])
+            ->add('phone', TelType::class, ['required' => false])
+            ->add('fax', TelType::class, ['required' => false])
             ->add('zip', TextType::class, ['required' => false, 'attr' => ['maxlength' => 10]])
             ->add('city', TextType::class, ['required' => false])
             ->add('facebook', UrlType::class, ['required' => false])
@@ -147,7 +148,7 @@ class DealerController extends AbstractController
             ->add('tiktok', UrlType::class, ['required' => false])
             ->add('twitter', UrlType::class, ['required' => false])
             ->add('linkedin', UrlType::class, ['required' => false])
-            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId(), 'data-prefix' => $choice->getPrefix()];}])
             ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
             ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
             ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);

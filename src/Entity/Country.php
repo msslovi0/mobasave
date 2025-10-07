@@ -58,6 +58,9 @@ class Country
     #[ORM\OneToMany(targetEntity: Storage::class, mappedBy: 'country')]
     private Collection $storages;
 
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $prefix = null;
+
     public function __construct()
     {
         $this->states = new ArrayCollection();
@@ -273,6 +276,18 @@ class Country
                 $storage->setCountry(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrefix(): ?string
+    {
+        return $this->prefix;
+    }
+
+    public function setPrefix(?string $prefix): static
+    {
+        $this->prefix = $prefix;
 
         return $this;
     }
