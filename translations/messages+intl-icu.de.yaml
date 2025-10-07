@@ -244,6 +244,8 @@ dealer:
         linkedin: LinkedIn
         abbr2: Abkürzung (2 Zeichen)
         abbr3: Abkürzung (3 Zeichen)
+        phone: Telefon
+        fax: Telefax
     delete:
         delete: Löschen
         cancel: Abbrechen

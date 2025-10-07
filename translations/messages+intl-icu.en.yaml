@@ -243,6 +243,8 @@ dealer:
         linkedin: LinkedIn
         abbr2: Abbreviation (2 chars)
         abbr3: Abbreviation (3 chars)
+        phone: Phone
+        fax: Fax
     delete:
         delete: Delete
         cancel: Cancel
