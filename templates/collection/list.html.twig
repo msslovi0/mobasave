@@ -112,7 +112,7 @@
             {% if models.getTotalItemCount>0 %}
             {{ knp_pagination_render(models) }}
           <div class="mt-8 flow-root">
-              {% if app.session.get('database')!="" %}
+              {% if app.session.get('database')!="" and filters is defined %}
               {%  include 'collection/filter.html.twig' %}
               {% endif %}
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

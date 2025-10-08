@@ -22,7 +22,7 @@
                 <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3 dark:border-white/10">
                     <div>
                         {% if manufacturer.image!="" %}<img src="{{ absolute_url(asset('data/logo/manufacturer/' ~ manufacturer.image))|replace({"localhost:8000": remotehost}) }}" alt="{{ manufacturer.name }}" class="border-gray-300 dark:border-white/10 rounded-md border mx-auto h-auto w-200" />{% endif %}
-                        <div class="col-span-full">
+                        <div class="col-span-full {{ disabled==true ? 'hidden' : '' }}">
                             <label for="form_image" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.logo'|trans }}</label>
                             <div id="drop-zone" class="hover:bg-gray-100 mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 dark:border-white/25">
                                 <div class="text-center">
@@ -46,6 +46,22 @@
                     </div>
 
                     <div class="grid max-w-2xl grid-cols-2 gap-2 sm:grid-cols-6 md:col-span-2">
+                        {% if disabled==true %}
+                        <div class="col-span-full">
+                            <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4 dark:border-yellow-500 dark:bg-yellow-500/10">
+                            <div class="flex">
+                                    <div class="shrink-0">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-yellow-400 dark:text-yellow-500">
+                                            <path d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-yellow-700 dark:text-yellow-300">{{ 'manufacturer.system'|trans }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                         <div class="col-span-full">
                             {% for message in app.flashes('error') %}
                                 <div class="border-l-4 border-red-400 bg-red-50 p-4 dark:border-red-500 dark:bg-red-500/10">
@@ -79,103 +95,103 @@
                         <div class="sm:col-span-full">
                             <label for="form_name" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.name'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.name, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.name, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_street" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.street'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.street, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.street, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_extra" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.extra'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.extra, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.extra, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_zip" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.zip'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.zip, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.zip, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_city" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.city'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.city, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.city, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_email" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.email'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.email, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.email, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_url" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.url'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.url, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.url, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_facebook" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.facebook'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.facebook, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.facebook, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_instagram" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.instagram'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.instagram, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.instagram, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_youtube" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.youtube'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.youtube, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.youtube, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_twitter" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.twitter'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.twitter, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.twitter, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_tiktok" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.tiktok'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.tiktok, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.tiktok, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_linkedin" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.linkedin'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.linkedin, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.linkedin, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_abbr2" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.abbr2'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.abbr2, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.abbr2, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_abbr3" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.abbr3'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.abbr3, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.abbr3, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_gtin_base" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.gtin_base'|trans }}</label>
                             <div>
-                                {{ form_widget(manufacturerform.gtin_base, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.gtin_base, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                             </div>
                         </div>
                         <div class="sm:col-span-3">
                             <label for="form_gtin_mode" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.gtin_mode'|trans }}</label>
                             <div class="grid grid-cols-1 col-span-9">
-                                {{ form_widget(manufacturerform.gtin_mode, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700', 'data-path': path('mbs_api_state')}}) }}
+                                {{ form_widget(manufacturerform.gtin_mode, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5', 'data-path': path('mbs_api_state')}}) }}
                                 <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                     <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                                 </svg>
@@ -184,7 +200,7 @@
                         <div class="sm:col-span-3">
                             <label for="form_country" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.country'|trans }}</label>
                             <div class="grid grid-cols-1 col-span-9">
-                                {{ form_widget(manufacturerform.country, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700', 'data-path': path('mbs_api_state')}}) }}
+                                {{ form_widget(manufacturerform.country, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5', 'data-path': path('mbs_api_state')}}) }}
                                 <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                     <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                                 </svg>
@@ -193,7 +209,7 @@
                         <div class="sm:col-span-3">
                             <label for="form_state" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'manufacturer.field.state'|trans }}</label>
                             <div class="grid grid-cols-1 col-span-9">
-                                {{ form_widget(manufacturerform.state, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700'}}) }}
+                                {{ form_widget(manufacturerform.state, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
                                 <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
                                     <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                                 </svg>
@@ -204,10 +220,10 @@
                                 <div aria-hidden="true" class="w-full mt-3 border-t border-gray-300 dark:border-white/15"></div>
                             </div>
                         </div>
-                        {% if manufacturer.models|length %}
+                        {% if models is defined and models|length %}
                         <div class="col-span-full">
                             <div class="flex items-center">
-                                <a href="{{ path('mbs_manufacturer_models', {id: manufacturer.id}) }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'manufacturer.show-all'|trans({'name': manufacturer.name, 'count': manufacturer.models|length}) }}</a>
+                                <a href="{{ path('mbs_manufacturer_models', {id: manufacturer.id}) }}" type="button" class="block rounded-md bg-green-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:focus-visible:outline-green-700">{{ 'manufacturer.show-all'|trans({'name': manufacturer.name, 'count': models|length}) }}</a>
                             </div>
                         </div>
                         {% endif %}
@@ -217,8 +233,8 @@
                 </div>
 
                 <div class="mt-6 flex items-center justify-end gap-x-2">
-                    {% if manufacturer.id is defined and manufacturer.id != "" %}<button type="button" command="show-modal" commandfor="dialog" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto dark:bg-red-500 dark:shadow-none dark:hover:bg-red-400disabled:bg-gray-400z disabled:bg-gray-400" {{ manufacturer.models|length>0 ? "disabled='true'" : "" }}>{{ 'manufacturer.delete.delete'|trans }}</button>{% endif %}
-                    {{ form_widget(manufacturerform.save, {'attr': {'class': 'rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:focus-visible:outline-green-700'}}) }}
+                    {% if disabled==false and manufacturer.id is defined and manufacturer.id != "" %}<button type="button" command="show-modal" commandfor="dialog" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto dark:bg-red-500 dark:shadow-none dark:hover:bg-red-400 disabled:bg-gray-400" {{ models|length>0 ? "disabled='true'" : "" }}>{{ 'manufacturer.delete.delete'|trans }}</button>{% endif %}
+                    {{ form_widget(manufacturerform.save, {'attr': {'class': 'rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:focus-visible:outline-green-700 disabled:bg-gray-400'}}) }}
                 </div>
                 {{ form_end(manufacturerform) }}
         </main>

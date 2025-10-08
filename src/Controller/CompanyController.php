@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -94,6 +95,7 @@ class CompanyController extends AbstractController
             }
             $company->setLogo(0);
             $company->setVector(0);
+            $company->setUser($user);
             $entityManager->persist($company);
             $entityManager->flush();
             $this->addFlash(
@@ -105,6 +107,7 @@ class CompanyController extends AbstractController
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('company/company.html.twig', [
+            "disabled" => false,
             "databases" => $databases,
             "companyform" => $form->createView(),
             "company" => $company,
@@ -112,11 +115,25 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/company/{id}', name: 'mbs_company', methods: ['GET', 'POST'])]
-    public function company(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/company')] string $imageDirectory): Response
+    public function company(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/company')] string $imageDirectory, AuthorizationCheckerInterface $authChecker): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
         $company = $entityManager->getRepository(Company::class)->findOneBy(["id" => $id]);
+
+        if(!$company) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        if(is_object($user) and is_object($company->getUser()) and $company->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
+        }
+
         if($company->getImage()!="") {
             $currentImage = $company->getImage();
         }
@@ -124,19 +141,25 @@ class CompanyController extends AbstractController
         $country        = $entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
         $state          = $entityManager->getRepository(State::class)->findBy([], ['name' => 'ASC']);
 
+        if(true === $authChecker->isGranted('ROLE_ADMIN') || $company->getUser()==$user) {
+            $disabled = false;
+        } else {
+            $disabled = true;
+        }
+
         $form = $this->createFormBuilder($company)
-            ->add('name', TextType::class)
-            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
-            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
-            ->add('color1', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
-            ->add('color2', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
-            ->add('color3', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
-            ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
-            ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
+            ->add('name', TextType::class, ['disabled' => $disabled])
+            ->add('country', ChoiceType::class, ['required' => false, 'disabled' => $disabled, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('state', ChoiceType::class, ['required' => false, 'disabled' => $disabled, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
+            ->add('color1', ColorType::class, ['required' => false, 'disabled' => $disabled, 'attr' => ['alpha' => true]])
+            ->add('color2', ColorType::class, ['required' => false, 'disabled' => $disabled, 'attr' => ['alpha' => true]])
+            ->add('color3', ColorType::class, ['required' => false, 'disabled' => $disabled, 'attr' => ['alpha' => true]])
+            ->add('image', FileType::class, ['required' => false, 'disabled' => $disabled, 'data_class' => null, 'empty_data' => ''])
+            ->add('save', SubmitType::class, ['disabled' => $disabled, 'label' => $translator->trans('global.save')]);
 
         $form = $form->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $disabled===false) {
             $imageFile = $form->get('image')->getData();
 
             if($imageFile) {
@@ -188,10 +211,13 @@ class CompanyController extends AbstractController
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        $models = $entityManager->getRepository(Model::class)->findBy(["modeldatabase" => $databases, "company" => $company]);
         return $this->render('company/company.html.twig', [
+            "models" => $models,
             "databases" => $databases,
             "companyform" => $form->createView(),
             "company" => $company,
+            "disabled" => $disabled,
         ]);
     }
 
@@ -293,7 +319,7 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/company/delete/{id}', name: 'mbs_company_delete', methods: ['GET'])]
-    public function delete(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
+    public function delete(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
@@ -303,7 +329,6 @@ class CompanyController extends AbstractController
                 'error',
                 $translator->trans('company.has-models', ['count' => count($company->getModels()), 'name' => $company->getName()])
             );
-            $entityManager->flush();
             return $this->redirectToRoute('mbs_company', ['id' => $company->getId()]);
         }
         if(!$company) {

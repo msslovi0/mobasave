@@ -229,6 +229,7 @@ manufacturer:
     deleted: Der Hersteller „{name}“ wurde gelöscht
     models: Modelle von „{name}“
     back: Zurück zu „{name}“
+    system: Dies ist ein vom System zur Verfügung gestellter Hersteller. Die Stammdaten können nicht bearbeitet werden.
     show-all: >-
         {count, plural,
             =1    {Zeige ein Modell von „{name}“}
@@ -276,6 +277,7 @@ dealer:
     deleted: Der Händler „{name}“ wurde gelöscht
     models: Modelle von „{name}“
     back: Zurück zu „{name}“
+    system: Dies ist ein vom System zur Verfügung gestellter Händler. Die Stammdaten können nicht bearbeitet werden.
     show-all: >-
         {count, plural,
             =1    {Zeige ein Modell von „{name}“}
@@ -305,6 +307,7 @@ storage:
         text: Die Aufbewahrung wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
     models: Modelle in „{name}“
     back: Zurück zu „{name}“
+    system: Dies ist eine vom System zur Verfügung gestellte Aufbewahrung. Die Stammdaten können nicht bearbeitet werden.
     show-all: >-
         {count, plural,
             =1    {Zeige ein Modell in „{name}“}
@@ -355,6 +358,7 @@ company:
     deleted: Die Gesellschaft „{name}“ wurde gelöscht
     models: Modelle von „{name}“
     back: Zurück zu „{name}“
+    system: Dies ist eine vom System zur Verfügung gestellte Gesellschaft. Die Stammdaten können nicht bearbeitet werden.
     show-all: >-
         {count, plural,
             =1    {Zeige ein Modell von „{name}“}

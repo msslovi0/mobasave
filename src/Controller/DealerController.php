@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -102,6 +103,7 @@ class DealerController extends AbstractController
             }
             $dealer->setLogo(0);
             $dealer->setVector(0);
+            $dealer->setUser($user);
             $entityManager->persist($dealer);
             $entityManager->flush();
             $this->addFlash(
@@ -113,6 +115,7 @@ class DealerController extends AbstractController
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('dealer/dealer.html.twig', [
+            "disabled" => false,
             "databases" => $databases,
             "dealerform" => $form->createView(),
             "dealer" => $dealer,
@@ -120,42 +123,62 @@ class DealerController extends AbstractController
     }
 
     #[Route('/dealer/{id}', name: 'mbs_dealer', methods: ['GET', 'POST'])]
-    public function dealer(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/dealer')] string $imageDirectory): Response
+    public function dealer(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/dealer')] string $imageDirectory, AuthorizationCheckerInterface $authChecker): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
         $dealer = $entityManager->getRepository(Dealer::class)->findOneBy(["id" => $id]);
+
+        if(!$dealer) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        if(is_object($user) and is_object($dealer->getUser()) and $dealer->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
+        }
+
         if($dealer->getImage()!="") {
             $currentImage = $dealer->getImage();
+        }
+
+        if(true === $authChecker->isGranted('ROLE_ADMIN') || $dealer->getUser()==$user) {
+            $disabled = false;
+        } else {
+            $disabled = true;
         }
 
         $country        = $entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
         $state          = $entityManager->getRepository(State::class)->findBy([], ['name' => 'ASC']);
 
         $form = $this->createFormBuilder($dealer)
-            ->add('name', TextType::class)
-            ->add('email', EmailType::class, ['required' => false])
-            ->add('url', UrlType::class, ['required' => false])
-            ->add('street', TextType::class, ['required' => false])
-            ->add('extra', TextType::class, ['required' => false])
-            ->add('phone', TelType::class, ['required' => false])
-            ->add('fax', TelType::class, ['required' => false])
-            ->add('zip', TextType::class, ['required' => false, 'attr' => ['maxlength' => 10]])
-            ->add('city', TextType::class, ['required' => false])
-            ->add('facebook', UrlType::class, ['required' => false])
-            ->add('instagram', UrlType::class, ['required' => false])
-            ->add('youtube', UrlType::class, ['required' => false])
-            ->add('tiktok', UrlType::class, ['required' => false])
-            ->add('twitter', UrlType::class, ['required' => false])
-            ->add('linkedin', UrlType::class, ['required' => false])
-            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId(), 'data-prefix' => $choice->getPrefix()];}])
-            ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
-            ->add('image', FileType::class, ['required' => false, 'data_class' => null, 'empty_data' => ''])
-            ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
+            ->add('name', TextType::class, ['disabled' => $disabled])
+            ->add('email', EmailType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('url', UrlType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('street', TextType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('extra', TextType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('phone', TelType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('fax', TelType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('zip', TextType::class, ['required' => false, 'disabled' => $disabled, 'attr' => ['maxlength' => 10]])
+            ->add('city', TextType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('facebook', UrlType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('instagram', UrlType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('youtube', UrlType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('tiktok', UrlType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('twitter', UrlType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('linkedin', UrlType::class, ['required' => false, 'disabled' => $disabled])
+            ->add('country', ChoiceType::class, ['required' => false, 'disabled' => $disabled, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId(), 'data-prefix' => $choice->getPrefix()];}])
+            ->add('state', ChoiceType::class, ['required' => false, 'disabled' => $disabled, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
+            ->add('image', FileType::class, ['required' => false, 'disabled' => $disabled, 'data_class' => null, 'empty_data' => ''])
+            ->add('save', SubmitType::class, ['disabled' => $disabled, 'label' => $translator->trans('global.save')]);
 
         $form = $form->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $disabled===false) {
             $imageFile = $form->get('image')->getData();
 
             if($imageFile) {
@@ -200,10 +223,13 @@ class DealerController extends AbstractController
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        $models = $entityManager->getRepository(Model::class)->findBy(["modeldatabase" => $databases, "dealer" => $dealer]);
         return $this->render('dealer/dealer.html.twig', [
+            "models" => $models,
             "databases" => $databases,
             "dealerform" => $form->createView(),
             "dealer" => $dealer,
+            "disabled" => $disabled,
         ]);
     }
 
@@ -314,7 +340,6 @@ class DealerController extends AbstractController
                 'error',
                 $translator->trans('dealer.has-models', ['count' => count($dealer->getModels()), 'name' => $dealer->getName()])
             );
-            $entityManager->flush();
             return $this->redirectToRoute('mbs_dealer', ['id' => $dealer->getId()]);
         }
         if(!$dealer) {

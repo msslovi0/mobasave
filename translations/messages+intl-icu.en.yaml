@@ -228,6 +228,7 @@ manufacturer:
     deleted: The manufacturer “{name}” was deleted
     models: Models by “{name}”
     back: Back to “{name}”
+    system: This is a systemwide manufacturer and therefor cannot be edited.
     show-all: >-
         {count, plural,
             =1    {Show one model from “{name}”}
@@ -275,6 +276,7 @@ dealer:
     deleted: The dealer “{name}” was deleted
     models: Models by “{name}”
     back: Back to “{name}”
+    system: This is a systemwide dealer and therefor cannot be edited.
     show-all: >-
         {count, plural,
             =1    {Show one model from “{name}”}
@@ -304,6 +306,7 @@ storage:
         text: The storage will be deleted. This action can't be undone! Proceed with caution!
     models: Models in “{name}”
     back: Back to “{name}”
+    system: This is a systemwide storage and therefor cannot be edited.
     show-all: >-
         {count, plural,
             =1    {Show one model in “{name}”}
@@ -354,6 +357,7 @@ company:
     deleted: The company “{name}” was deleted
     models: Models by “{name}”
     back: Back to “{name}”
+    system: This is a systemwide company and therefor cannot be edited.
     show-all: >-
         {count, plural,
             =1    {Show one model from “{name}”}

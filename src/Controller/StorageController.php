@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -81,6 +82,7 @@ class StorageController extends AbstractController
         $form = $form->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $storage->setUser($user);
             $entityManager->persist($storage);
             $entityManager->flush();
             $this->addFlash(
@@ -95,28 +97,48 @@ class StorageController extends AbstractController
             "databases" => $databases,
             "storageform" => $form->createView(),
             "storage" => $storage,
+            "disabled" => false
         ]);
     }
 
     #[Route('/storage/{id}', name: 'mbs_storage', methods: ['GET', 'POST'])]
-    public function storage(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    public function storage(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, AuthorizationCheckerInterface $authChecker): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
         $storage = $entityManager->getRepository(Storage::class)->findOneBy(["id" => $id]);
 
+        if(!$storage) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        if(is_object($user) and is_object($storage->getUser()) and $storage->getUser()->getId()!=$user->getId()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
+        }
+
         $country        = $entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
 
+        if(true === $authChecker->isGranted('ROLE_ADMIN') || $storage->getUser()==$user) {
+            $disabled = false;
+        } else {
+            $disabled = true;
+        }
+
         $form = $this->createFormBuilder($storage)
-            ->add('name', TextType::class)
-            ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
-            ->add('fill', RangeType::class, ['required' => false, 'attr' => ["min" => 0, "max" => 100, "step" => 5]])
-            ->add('slot', ChoiceType::class, ['required' => false, 'choices' => [
+            ->add('name', TextType::class, ['disabled' => $disabled])
+            ->add('country', ChoiceType::class, ['required' => false, 'disabled' => $disabled, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('fill', RangeType::class, ['required' => false, 'disabled' => $disabled, 'attr' => ["min" => 0, "max" => 100, "step" => 5]])
+            ->add('slot', ChoiceType::class, ['required' => false, 'disabled' => $disabled, 'choices' => [
                 $translator->trans('default') => 'default',
                 $translator->trans('narrow') => 'narrow',
                 $translator->trans('wide') => 'wide',
             ]])
-            ->add('color', ChoiceType::class, ['required' => false, 'choices' => [
+            ->add('color', ChoiceType::class, ['required' => false, 'disabled' => $disabled, 'choices' => [
                 $translator->trans('red') => 'red',
                 $translator->trans('orange') => 'orange',
                 $translator->trans('amber') => 'amber',
@@ -140,11 +162,11 @@ class StorageController extends AbstractController
                 $translator->trans('neutral') => 'neutral',
                 $translator->trans('stone') => 'stone',
             ]])
-            ->add('save', SubmitType::class, ['label' => $translator->trans('global.save')]);
+            ->add('save', SubmitType::class, ['disabled' => $disabled, 'label' => $translator->trans('global.save')]);
 
         $form = $form->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $disabled===false) {
             $entityManager->persist($storage);
             $entityManager->flush();
             $this->addFlash(
@@ -165,10 +187,13 @@ class StorageController extends AbstractController
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        $models = $entityManager->getRepository(Model::class)->findBy(["modeldatabase" => $databases, "storage" => $storage]);
         return $this->render('storage/storage.html.twig', [
+            "models" => $models,
             "databases" => $databases,
             "storageform" => $form->createView(),
             "storage" => $storage,
+            "disabled" => $disabled,
         ]);
     }
 
