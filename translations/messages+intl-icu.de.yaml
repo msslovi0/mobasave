@@ -32,7 +32,7 @@ collection:
     name: Sammlung „{name}“
     no-collection:
         fact: Keine Sammlung
-        claim: Get started by creating a new collection.
+        claim: Jetzt eine neue Sammlung anlegen, um zu beginnen
     new: Neue Sammlung
     edit: Sammlung „{name}“ bearbeiten
     field:
