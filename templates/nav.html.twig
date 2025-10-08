@@ -39,7 +39,6 @@
             <a href="{{ path('mbs_dealer_list') }}" class="inline-flex items-center border-b-2 {{ current=='dealer' ? 'border-green-800 dark:border-green-700 text-gray-900 dark:text-white' : 'text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200 border-transparent' }} px-1 pt-1 text-sm font-medium">{{ 'global.nav.dealer'|trans }}</a>
             <a href="{{ path('mbs_company_list') }}" class="inline-flex items-center border-b-2 {{ current=='company' ? 'border-green-800 dark:border-green-700 text-gray-900 dark:text-white' : 'text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200 border-transparent' }} px-1 pt-1 text-sm font-medium">{{ 'global.nav.company'|trans }}</a>
             <a href="{{ path('mbs_storage_list') }}" class="inline-flex items-center border-b-2 {{ current=='storage' ? 'border-green-800 dark:border-green-700 text-gray-900 dark:text-white' : 'text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200 border-transparent' }} px-1 pt-1 text-sm font-medium">{{ 'global.nav.storage'|trans }}</a>
-            <a href="{{ path('mbs_logout') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200">{{ 'global.nav.logout'|trans }}</a>
           </div>
         </div>
 
@@ -93,6 +92,7 @@
             <el-menu anchor="bottom end" popover class="w-48 origin-top-right rounded-md bg-white py-1 shadow-lg outline outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
               <a href="{{ path('mbs_profile') }}" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5">{{ 'global.nav.profile'|trans }}</a>
               <a href="{{ path('mbs_change_password') }}" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5">{{ 'global.nav.change-password'|trans }}</a>
+              <a href="{{ path('mbs_logout') }}" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5">{{ 'global.nav.logout'|trans }}</a>
             </el-menu>
           </el-dropdown>
         </div>
