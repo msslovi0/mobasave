@@ -121,6 +121,9 @@ global:
             dealer: Add Dealer
             manufacturer: Add Manufacturer
             company: Add Company
+        login:
+            reset-password: Reset your password
+            password-mail-sent: "Reset your password: email send"
     back: Back
     user-menu: Open user menu
     main-menu: Open main menu
@@ -158,6 +161,24 @@ login:
     sign-in: Sign in
     not-a-member: Not a member?
     trial: Start a 14 day free trial
+    password:
+        old-password: Old Password
+        new-password: New Password
+        repeat-password: Repeat Password
+        change-password: Change Password
+        success: Password successfully updated
+        error:
+            invalid: The current password doesn't match the information provided
+            not-blank: The password must not be blank
+            length: Your password should be at least {limit} characters
+    reset-password:
+        submit: Send password reset email
+        claim: Enter your email address, and we will send you a link to reset your password.
+        mail-sent:
+            claim: If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password. This link will expire in {expire}.
+            spam: If you don't receive an email please check your spam folder or <a href="{link}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline">try again</a>.
+        error:
+            not-blank: Please enter your email address
 
 user:
     field:

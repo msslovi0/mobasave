@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\ChangePasswordFormType;
+use App\Form\NewPasswordFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -110,33 +110,48 @@ class UserController extends AbstractController
     }
 
     #[Route('/change-password', name: 'mbs_change_password')]
-    public function change(Request $request, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator): Response
+    public function change(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
 
         // The token is valid; allow the user to change their password.
-        $form = $this->createForm(ChangePasswordFormType::class);
+        $form = $this->createForm(NewPasswordFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // A password reset token should be used only once, remove it.
-            $this->resetPasswordHelper->removeResetRequest($token);
-
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
+            $oldPassword = $form->get('oldPassword')->getData();
+            if(!$passwordHasher->isPasswordValid($user, $oldPassword)) {
+                $response = new Response();
+                $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+                $this->addFlash(
+                    'error',
+                    $translator->trans('login.password.error.invalid')
+                );
+                return $this->redirectToRoute('mbs_change_password');
+            }
 
+            $this->addFlash(
+                'success',
+                $translator->trans('login.password.success')
+            );
             // Encode(hash) the plain password, and set it.
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
-            $this->entityManager->flush();
+            $entityManager->flush();
 
-            // The session is cleaned up after the password has been changed.
-            $this->cleanSessionAfterReset();
-
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('mbs_profile');
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+            $this->addFlash(
+                'error',
+                $form->getErrors()
+            );
         }
 
-        return $this->render('reset_password/reset.html.twig', [
+        return $this->render('security/password.html.twig', [
             'resetForm' => $form,
             'user' => $user,
         ]);

@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}{{ 'global.title.login.reset-password'|trans }}{% endblock %}
 
 {% block body %}
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
             <img src="{{ asset('images/mobasave-notext.svg') }}" alt="mobasave" class="mx-auto h-auto w-200" />
-            <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">Reset your password</h2>
+            <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">{{ 'global.title.login.reset-password'|trans }}</h2>
         </div>
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
             {% for flash_error in app.flashes('reset_password_error') %}
@@ -28,11 +28,12 @@
             {{ form_start(requestForm, {'attr': {'class': 'space-y-6'}}) }}
                 {{ form_row(requestForm.email, {'attr': {'class': 'form-control block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-green-700'}, 'label_attr': {'class': 'block text-sm/6 font-medium text-gray-900 dark:text-gray-100'}}) }}
                 <p class="text-sm/6">
-                    Enter your email address, and we will send you a link to reset your password.
+                    {{ 'login.reset-password.claim'|trans }}
                 </p>
 
                 <div>
-                    <button type="submit" class="flex w-full justify-center rounded-md bg-green-800 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:hover:bg-green-+00 dark:focus-visible:outline-green-700">Send password reset email</button>
+                    <button type="submit" class="flex w-full justify-center rounded-md bg-green-800 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:hover:bg-green-+00 dark:focus-visible:outline-green-700">
+                        {{ 'login.reset-password.submit'|trans }}</button>
                 </div>
             {{ form_end(requestForm) }}
         </div>

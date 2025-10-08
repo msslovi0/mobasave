@@ -120,7 +120,10 @@ global:
             model: Modell hinzufügen
             dealer: Händler hinzufügen
             manufacturer: Hersteller hinzufügen
-            company: Gesellschaft hinzugüen
+            company: Gesellschaft hinzufügen
+        login:
+            reset-password: Passwort zurücksetzen
+            password-mail-sent: "Passwort zurücksetzen: E-Mail gesendet"
     back: Zurück
     user-menu: Benutzermenü öffnen
     main-menu: Hauptmenü öffnen
@@ -159,6 +162,24 @@ login:
     sign-in: Anmelden
     not-a-member: Noch kein Mitglied?
     trial: Jetzt 14 Tage kostenlos testen!
+    password:
+        old-password: Altes Passwort
+        new-password: Neues Passwort
+        repeat-password: Passwort wiederholen
+        change-password: Passwort ändern
+        success: Das Passwort wurde erfolgreich geändert
+        error:
+            invalid: Das aktuelle Passwort stimmt nicht mit der Eingabe überein
+            not-blank: Das Passwort darf nicht leer sein
+            length: Ihr Passwort sollte mindestens {limit} Zeichen lang sein
+    reset-password:
+        submit: E-Mail senden
+        claim: Geben Sie Ihre E-Mail-Adresse ein. Sie erhalten einen Link, um Ihr Passwort zurückzusetzen.
+        mail-sent:
+            claim: Falls ein Account mit dieser E-Mail-Adresse existiert wurde an diese eine E-Mail mit einem Link zum zurücksetzen des Passworts geschickt. Dieser Link ist {expire} gültig.
+            spam: Sollten Sie die E-Mail nicht erhalten haben prüfen Sie bitte auch Ihren Spam-Ordner oder <a href="{link}" class="text-green-800 hover:text-green-900 dark:text-green-600 dark:hover:text-green-500 underline hover:no-underline">versuchen Sie es erneut</a>.
+        error:
+            not-blank: Bitte geben Sie Ihre E-Mail-Adresse ein
 
 user:
     field:

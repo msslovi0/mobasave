@@ -1,18 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Password Reset Email Sent{% endblock %}
+{% block title %}{{ 'global.title.login.password-mail-sent'|trans }}{% endblock %}
 
 {% block body %}
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
         <img src="{{ asset('images/mobasave-notext.svg') }}" alt="mobasave" class="mx-auto h-auto w-200" />
-        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">Password Reset Email Sent</h2>
+        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">{{ 'global.title.login.password-mail-sent'|trans }}</h2>
     </div>
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <p class="text-sm">
-            If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
-            This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+            {{ 'login.reset-password.mail-sent.claim'|trans({'expire': resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle')}) }}
         </p>
-        <p class="text-sm">If you don't receive an email please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>.</p>
+        <p class="text-sm mt-5">{{ 'login.reset-password.mail-sent.spam'|trans({'link': path('app_forgot_password_request')})|raw }}</p>
 </div>
 {% endblock %}
