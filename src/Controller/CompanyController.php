@@ -48,6 +48,7 @@ class CompanyController extends AbstractController
 
         $form = $this->createFormBuilder($company)
             ->add('name', TextType::class)
+            ->add('abbr', TextType::class, ['disabled' => $disabled])
             ->add('country', ChoiceType::class, ['required' => false, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
             ->add('state', ChoiceType::class, ['required' => false, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
             ->add('color1', ColorType::class, ['required' => false, 'attr' => ['alpha' => true]])
@@ -149,6 +150,7 @@ class CompanyController extends AbstractController
 
         $form = $this->createFormBuilder($company)
             ->add('name', TextType::class, ['disabled' => $disabled])
+            ->add('abbr', TextType::class, ['disabled' => $disabled])
             ->add('country', ChoiceType::class, ['required' => false, 'disabled' => $disabled, 'choices' => $country, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
             ->add('state', ChoiceType::class, ['required' => false, 'disabled' => $disabled, 'choices' => $state, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "state-option country-".$choice->getCountry()->getId()];}])
             ->add('color1', ColorType::class, ['required' => false, 'disabled' => $disabled, 'attr' => ['alpha' => true]])

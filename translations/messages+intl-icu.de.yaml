@@ -328,6 +328,7 @@ company:
         logo: Logo
     field:
         name: Name
+        abbr: Abkürzung
         street: Straße
         zip: PLZ
         city: Ort

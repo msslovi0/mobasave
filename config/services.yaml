@@ -18,7 +18,7 @@ parameters:
     dealer.sortcolumns: [name,street,zip,city,logo,vector]
     dealer.sortcolumn: name
     dealer.sortorder: asc
-    company.sortcolumns: [name,logo,vector]
+    company.sortcolumns: [name,abbr,logo,vector]
     company.sortcolumn: name
     company.sortorder: asc
     storage.sortcolumns: [name,fill,slot,color]

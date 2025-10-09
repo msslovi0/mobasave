@@ -327,6 +327,7 @@ company:
         logo: Logo
     field:
         name: Name
+        abbr: Abbreviation
         street: Street
         zip: Zip
         city: City

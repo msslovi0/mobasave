@@ -61,6 +61,12 @@
                                               <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
                                             </span>
                                         </th>
+                                        <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'company.field.abbr'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'abbr', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'abbr', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
                                         <th scope="col" colspan="2" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
                                             {{ 'company.field.country'|trans }}
                                         </th>
@@ -89,6 +95,11 @@
                                             <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                                                 <div class="md:ml-4">
                                                     <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_company', {id: company.id}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ company.name }}</a></div>
+                                                </div>
+                                            </td>
+                                            <td class="py-5 pr-3 text-sm whitespace-nowrap sm:pl-0">
+                                                <div class="">
+                                                    <div class="font-medium text-gray-900 dark:text-white">{{ company.abbr }}</div>
                                                 </div>
                                             </td>
                                             <td class="py-5 pl-4 text-sm whitespace-nowrap sm:pl-0">

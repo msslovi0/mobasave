@@ -99,6 +99,12 @@
                             </div>
                         </div>
                         <div class="sm:col-span-full">
+                            <label for="form_abbr" class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'company.field.abbr'|trans }}</label>
+                            <div>
+                                {{ form_widget(companyform.abbr, {'attr': {'class': 'col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 dark:disabled:bg-white/10 dark:disabled:text-gray-500 dark:disabled:outline-white/5'}}) }}
+                            </div>
+                        </div>
+                        <div class="sm:col-span-full">
                             <span class="block text-sm/6 font-medium text-gray-900 dark:text-white">{{ 'company.field.colors'|trans }}</span>
                             <div class="grid grid-cols-3 gap-2">
                                 {%  set color1 = company.color1=='' ? 'rgba(255,255,255,0)' : company.color1  %}

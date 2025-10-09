@@ -53,6 +53,9 @@ class Company
     #[ORM\Column(length: 30, nullable: true)]
     private ?string $color3 = null;
 
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $abbr = null;
+
     public function __construct()
     {
         $this->models = new ArrayCollection();
@@ -209,6 +212,18 @@ class Company
     public function setColor3(?string $color3): static
     {
         $this->color3 = $color3;
+
+        return $this;
+    }
+
+    public function getAbbr(): ?string
+    {
+        return $this->abbr;
+    }
+
+    public function setAbbr(?string $abbr): static
+    {
+        $this->abbr = $abbr;
 
         return $this;
     }
