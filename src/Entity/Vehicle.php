@@ -88,7 +88,7 @@ class Vehicle
         return $this->registration;
     }
 
-    public function setRegistration(string $registration): static
+    public function setRegistration(?string $registration): static
     {
         $this->registration = $registration;
 
