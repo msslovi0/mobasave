@@ -233,7 +233,7 @@ manufacturer:
     delete:
         delete: Delete
         cancel: Cancel
-        headline: Delete manufacturer
+        headline: Delete Manufacturer
         text: The manufacturer will be deleted. This action can't be undone! Proceed with caution!
     saved: Your changes to manufacturer “{name}” where saved successfully
     deleted: The manufacturer “{name}” was deleted
@@ -281,7 +281,7 @@ dealer:
     delete:
         delete: Delete
         cancel: Cancel
-        headline: Delete dealer
+        headline: Delete Dealer
         text: The dealer will be deleted. This action can't be undone! Proceed with caution!
     saved: Your changes to dealer “{name}” have been successfully saved
     deleted: The dealer “{name}” was deleted
@@ -313,8 +313,10 @@ storage:
     delete:
         delete: Delete
         cancel: Cancel
-        headline: Delete storage
+        headline: Delete Storage
         text: The storage will be deleted. This action can't be undone! Proceed with caution!
+    saved: Your changes to “{name}” have been successfully saved
+    deleted: The storage “{name}” was deleted
     models: Models in “{name}”
     back: Back to “{name}”
     system: This is a systemwide storage and therefor cannot be edited.
@@ -328,7 +330,6 @@ storage:
             =1    {Can't delete storage “{name}”. There is still one model assigned.}
             other {Can't delete storage “{name}”. There are still # models assigned.}
         }
-    saved: Your changes to “{name}” have been successfully saved
 
 company:
     add: New Company
@@ -363,7 +364,7 @@ company:
     delete:
         delete: Delete
         cancel: Cancel
-        headline: Delete company
+        headline: Delete Company
         text: The company will be deleted. This action can't be undone! Proceed with caution!
     saved: Your changes to company “{name}” have been successfully saved
     deleted: The company “{name}” was deleted
@@ -394,7 +395,7 @@ model:
     delete:
         delete: Delete
         cancel: Cancel
-        headline: Delete model
+        headline: Delete Model
         text: The model will be deleted. This action can't be undone! Proceed with caution!
     field:
         name: Name
@@ -464,7 +465,7 @@ model:
         till-today: today
     document:
         delete:
-            headline: Delete document „{name}“
+            headline: Delete Document „{name}“
             text: The document will be deleted. This action can't be undone! Proceed with caution!
         deleted: Das Dokument „{name}“ wurde gelöscht
     function:
@@ -473,7 +474,7 @@ model:
         trash: Delete function “{function}”
         add: Add
         delete:
-            headline: Delete function “{function}”
+            headline: Delete Function “{function}”
             text: The function will no longer be associated with this model. This action can't be undone! Proceed with caution!
         deleted: The function association “{function}” was deleted
     value:
@@ -481,7 +482,7 @@ model:
             hint: Due to technical restrictions the form will reload once you click “Save”, you will have to select the new value again and resubmit the form in order to save it.
     load:
         delete:
-            headline: Delete load “{load}”
+            headline: Delete Load “{load}”
             text: The load will no longer be associated with this model. The loadentry itself remains untouched. This action can't be undone! Proceed with caution!
         deleted: The load “{load}” was deleted
     saved: Your changes to “{name}” have been successfully saved

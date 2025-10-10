@@ -316,6 +316,8 @@ storage:
         cancel: Abbrechen
         headline: Aufbewahrung löschen
         text: Die Aufbewahrung wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Deine Änderungen für die Aufbewahrung „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Aufbewahrung „{name}“ wurde gelöscht
     models: Modelle in „{name}“
     back: Zurück zu „{name}“
     system: Dies ist eine vom System zur Verfügung gestellte Aufbewahrung. Die Stammdaten können nicht bearbeitet werden.
@@ -329,7 +331,6 @@ storage:
             =1    {Die Aufbewahrung „{name}“ kann nicht gelöscht werden, da noch ein Modell zugewiesen ist.}
             other {Die Aufbewahrung „{name}“ kann nicht gelöscht werden, da ihm noch # Modelle zugewiesen sind.}
         }
-    saved: Deine Änderungen für die Aufbewahrung „{name}“ wurden erfolgreich gespeichert
 
 company:
     add: Neue Gesellschaft
