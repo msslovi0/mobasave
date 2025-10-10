@@ -26,6 +26,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -105,13 +106,14 @@ class ManufacturerController extends AbstractController
             $manufacturer->setLogo(0);
             $manufacturer->setVector(0);
             $manufacturer->setUser($user);
+            $manufacturer->setUuid(Uuid::v4());
             $entityManager->persist($manufacturer);
             $entityManager->flush();
             $this->addFlash(
                 'success',
                 $translator->trans('manufacturer.saved', ['name' => $manufacturer->getName()])
             );
-            return $this->redirectToRoute('mbs_manufacturer', ['id' => $manufacturer->getId()]);
+            return $this->redirectToRoute('mbs_manufacturer', ['id' => str_replace("0x","",$manufacturer->getUuid()->toHex())]);
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
@@ -124,11 +126,17 @@ class ManufacturerController extends AbstractController
     }
 
     #[Route('/manufacturer/{id}', name: 'mbs_manufacturer', methods: ['GET', 'POST'])]
-    public function manufacturer(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/manufacturer')] string $imageDirectory, AuthorizationCheckerInterface $authChecker): Response
+    public function manufacturer(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/manufacturer')] string $imageDirectory, AuthorizationCheckerInterface $authChecker): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $manufacturer = $entityManager->getRepository(Manufacturer::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $manufacturer = $entityManager->getRepository(Manufacturer::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $manufacturer = $entityManager->getRepository(Manufacturer::class)->findOneBy(["id" => $id]);
+        } else {
+            $manufacturer = false;
+        }
 
         if(!$manufacturer) {
             $response = new Response();
@@ -196,7 +204,7 @@ class ManufacturerController extends AbstractController
                         'error',
                         $translator->trans('upload.failed', ['message' => $e->getMessage()])
                     );
-                    return $this->redirectToRoute('mbs_manufacturer', ['id' => $manufacturer->getId()]);
+                    return $this->redirectToRoute('mbs_manufacturer', ['id' => str_replace("0x","",$manufacturer->getUuid()->toHex())]);
                     // ... handle exception if something happens during file upload
                 }
                 if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
@@ -222,7 +230,7 @@ class ManufacturerController extends AbstractController
                 'success',
                 $translator->trans('manufacturer.saved', ['name' => $manufacturer->getName()])
             );
-            return $this->redirectToRoute('mbs_manufacturer', ['id' => $manufacturer->getId()]);
+            return $this->redirectToRoute('mbs_manufacturer', ['id' => str_replace("0x","",$manufacturer->getUuid()->toHex())]);
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
@@ -237,7 +245,7 @@ class ManufacturerController extends AbstractController
     }
 
     #[Route('/manufacturer/{id}/models', name: 'mbs_manufacturer_models', methods: ['GET', 'POST'])]
-    public function models(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
+    public function models(mixed $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
@@ -263,7 +271,13 @@ class ManufacturerController extends AbstractController
             $request->getSession()->set('limit', $limit);
         }
 
-        $manufacturer = $entityManager->getRepository(Manufacturer::class)->find($id);
+        if(strlen($id)==32) {
+            $manufacturer = $entityManager->getRepository(Manufacturer::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $manufacturer = $entityManager->getRepository(Manufacturer::class)->findOneBy(["id" => $id]);
+        } else {
+            $manufacturer = false;
+        }
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         $qb = $entityManager->createQueryBuilder();
         $models = $qb->select('m')->from(Model::class, 'm')
@@ -332,17 +346,25 @@ class ManufacturerController extends AbstractController
     }
 
     #[Route('/manufacturer/delete/{id}', name: 'mbs_manufacturer_delete', methods: ['GET'])]
-    public function delete(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
+    public function delete(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $manufacturer = $entityManager->getRepository(Manufacturer::class)->findOneBy(["id" => $id]);
+
+        if(strlen($id)==32) {
+            $manufacturer = $entityManager->getRepository(Manufacturer::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $manufacturer = $entityManager->getRepository(Manufacturer::class)->findOneBy(["id" => $id]);
+        } else {
+            $manufacturer = false;
+        }
+
         if(count($manufacturer->getModels())>0) {
             $this->addFlash(
                 'error',
                 $translator->trans('manufacturer.has-models', ['count' => count($manufacturer->getModels()), 'name' => $manufacturer->getName()])
             );
-            return $this->redirectToRoute('mbs_manufacturer', ['id' => $manufacturer->getId()]);
+            return $this->redirectToRoute('mbs_manufacturer', ['id' => str_replace("0x","",$manufacturer->getUuid()->toHex())]);
         }
         if(!$manufacturer) {
             $response = new Response();

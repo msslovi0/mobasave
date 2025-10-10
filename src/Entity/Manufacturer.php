@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ManufacturerRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_ABBR2', fields: ['abbr2'])]
@@ -93,6 +94,9 @@ class Manufacturer
 
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $gtin_mode = null;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
 
     public function __construct()
     {
@@ -406,6 +410,18 @@ class Manufacturer
     public function setGtinMode(?string $gtin_mode): static
     {
         $this->gtin_mode = $gtin_mode;
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

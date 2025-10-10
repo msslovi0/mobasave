@@ -16,7 +16,7 @@
         <main>
             <div class="mx-auto max-w-10xl px-4 py-8 sm:px-6 lg:px-8">
                 <div class="px-4 sm:px-6 lg:px-8">
-                    <div class="col-span-full mt-5">
+                    <div class="col-span-full my-5">
                         {% for message in app.flashes('error') %}
                             <div class="border-l-4 border-red-400 bg-red-50 p-4 dark:border-red-500 dark:bg-red-500/10">
                                 <div class="flex">
@@ -94,7 +94,7 @@
                                             </td>
                                             <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
                                                 <div class="md:ml-4">
-                                                    <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_company', {id: company.id}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ company.name }}</a></div>
+                                                    <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_company', {id: uuid(company.uuid.tohex)}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ company.name }}</a></div>
                                                 </div>
                                             </td>
                                             <td class="py-5 pr-3 text-sm whitespace-nowrap sm:pl-0">
@@ -129,7 +129,7 @@
                                                 </span>
                                             </td>
                                             <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
-                                                <a href="{{ path('mbs_company', {id: company.id}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ company.name }}</span></a>
+                                                <a href="{{ path('mbs_company', {id: uuid(company.uuid.tohex)}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ company.name }}</span></a>
                                             </td>
 
                                         </tr>

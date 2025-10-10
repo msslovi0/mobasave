@@ -25,6 +25,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -83,13 +84,14 @@ class StorageController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $storage->setUser($user);
+            $storage->setUuid(Uuid::v4());
             $entityManager->persist($storage);
             $entityManager->flush();
             $this->addFlash(
                 'success',
                 $translator->trans('storage.saved', ['name' => $storage->getName()])
             );
-            return $this->redirectToRoute('mbs_storage', ['id' => $storage->getId()]);
+            return $this->redirectToRoute('mbs_storage', ['id' => str_replace("0x","",$storage->getUuid()->toHex())]);
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
@@ -102,11 +104,17 @@ class StorageController extends AbstractController
     }
 
     #[Route('/storage/{id}', name: 'mbs_storage', methods: ['GET', 'POST'])]
-    public function storage(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, AuthorizationCheckerInterface $authChecker): Response
+    public function storage(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, AuthorizationCheckerInterface $authChecker): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $storage = $entityManager->getRepository(Storage::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $storage = $entityManager->getRepository(Storage::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $storage = $entityManager->getRepository(Storage::class)->findOneBy(["id" => $id]);
+        } else {
+            $storage = false;
+        }
 
         if(!$storage) {
             $response = new Response();
@@ -173,7 +181,7 @@ class StorageController extends AbstractController
                 'success',
                 $translator->trans('storage.saved', ['name' => $storage->getName()])
             );
-            return $this->redirectToRoute('mbs_storage', ['id' => $storage->getId()]);
+            return $this->redirectToRoute('mbs_storage', ['id' => str_replace("0x","",$storage->getUuid()->toHex())]);
         } elseif ($form->isSubmitted() && !$form->isValid()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -240,7 +248,7 @@ class StorageController extends AbstractController
     }
 
     #[Route('/storage/{id}/models', name: 'mbs_storage_models', methods: ['GET', 'POST'])]
-    public function models(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
+    public function models(mixed $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
@@ -269,18 +277,26 @@ class StorageController extends AbstractController
     }
 
     #[Route('/storage/delete/{id}', name: 'mbs_storage_delete', methods: ['GET'])]
-    public function delete(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
+    public function delete(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $storage = $entityManager->getRepository(Storage::class)->findOneBy(["id" => $id]);
+
+        if(strlen($id)==32) {
+            $storage = $entityManager->getRepository(Storage::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $storage = $entityManager->getRepository(Storage::class)->findOneBy(["id" => $id]);
+        } else {
+            $storage = false;
+        }
+
         if(count($storage->getModels())>0) {
             $this->addFlash(
                 'error',
                 $translator->trans('storage.has-models', ['count' => count($storage->getModels()), 'name' => $storage->getName()])
             );
             $entityManager->flush();
-            return $this->redirectToRoute('mbs_storage', ['id' => $storage->getId()]);
+            return $this->redirectToRoute('mbs_storage', ['id' => str_replace("0x","",$storage->getUuid()->toHex())]);
         }
         if(!$storage) {
             $response = new Response();

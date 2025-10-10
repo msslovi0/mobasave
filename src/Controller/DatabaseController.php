@@ -69,6 +69,7 @@ use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Component\Validator\Constraints\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
+use Symfony\Component\Uid\Uuid;
 
 class DatabaseController extends AbstractController
 {
@@ -110,7 +111,7 @@ class DatabaseController extends AbstractController
                         'error',
                         $translator->trans('upload.failed', ['message' => $e->getMessage()])
                     );
-                    return $this->redirectToRoute('mbs_database_create', ['id' => $database->getId()]);
+                    return $this->redirectToRoute('mbs_database_create', ['id' => str_replace("0x","",$database->getUuid()->toHex())]);
                 }
                 if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
                     unlink($imageDirectory."/".$currentImage);
@@ -127,13 +128,14 @@ class DatabaseController extends AbstractController
                 $database->setImage($currentImage);
             }
             $database->setUser($user);
+            $database->setUuid(Uuid::v4());
             $entityManager->persist($database);
             $entityManager->flush();
             $this->addFlash(
                 'success',
                 $translator->trans('collection.saved', ['name' => $database->getName()])
             );
-            return $this->redirectToRoute('mbs_database_edit', ['id' => $database->getId()]);
+            return $this->redirectToRoute('mbs_database_edit', ['id' => str_replace("0x","",$database->getUuid()->toHex())]);
         } elseif ($form->isSubmitted() && !$form->isValid()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -154,12 +156,18 @@ class DatabaseController extends AbstractController
         ], response: $response);
     }
     #[Route('/collection/edit/{id}', name: 'mbs_database_edit', methods: ['GET','POST'])]
-    public function edit(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/collection')] string $imageDirectory): Response
+    public function edit(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/collection')] string $imageDirectory): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
 
-        $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $database = $entityManager->getRepository(Database::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+        } else {
+            $database = false;
+        }
         if($database->getImage()!="") {
             $currentImage = $database->getImage();
         }
@@ -191,7 +199,7 @@ class DatabaseController extends AbstractController
                         'error',
                         $translator->trans('upload.failed', ['message' => $e->getMessage()])
                     );
-                    return $this->redirectToRoute('mbs_database_edit', ['id' => $database->getId()]);
+                    return $this->redirectToRoute('mbs_database_edit', ['id' => str_replace("0x","",$database->getUuid()->toHex())]);
                 }
                 if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
                     unlink($imageDirectory."/".$currentImage);
@@ -217,7 +225,7 @@ class DatabaseController extends AbstractController
                 'success',
                 $translator->trans('collection.saved', ['name' => $database->getName()])
             );
-            return $this->redirectToRoute('mbs_database_edit', ['id' => $database->getId()]);
+            return $this->redirectToRoute('mbs_database_edit', ['id' => str_replace("0x","",$database->getUuid()->toHex())]);
         } elseif ($form->isSubmitted() && !$form->isValid()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -425,7 +433,7 @@ class DatabaseController extends AbstractController
         ]);
     }
     #[Route('/collection/{id}', name: 'mbs_database', methods: ['GET'])]
-    public function index(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
+    public function index(mixed $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
@@ -451,7 +459,14 @@ class DatabaseController extends AbstractController
             $request->getSession()->set('limit', $limit);
         }
 
-        $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $database = $entityManager->getRepository(Database::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+        } else {
+            $database = false;
+        }
+
         if(!is_object($database)) {
             return $this->redirectToRoute('mbs_home');
         }
@@ -487,7 +502,7 @@ class DatabaseController extends AbstractController
             ->leftJoin('m.storage','s')
             ->leftJoin('m.manufacturer','manu')
             ->where('m.modeldatabase = :database')
-            ->setParameters(new ArrayCollection([new Parameter('database',  $id)]))
+            ->setParameters(new ArrayCollection([new Parameter('database',  $database->getId())]))
             ->addOrderBy($request->getSession()->get('sortcolumn'), $request->getSession()->get('sortorder'))
             ->getQuery()
             ->getResult();
@@ -538,7 +553,7 @@ class DatabaseController extends AbstractController
             $translator->trans('model.load.deleted', ['load' => $loaditem->getName()])
         );
         $entityManager->flush();
-        return $this->redirectToRoute('mbs_model_load', ['id' => $model->getId()]);
+        return $this->redirectToRoute('mbs_model_load', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
 
     }
     #[Route('/model/function/delete/{id}', name: 'mbs_model_function_delete', methods: ['GET'])]
@@ -570,16 +585,24 @@ class DatabaseController extends AbstractController
             $translator->trans('model.function.deleted', ['function' => $digitalfunction->getFunctionkey()->getName()." ".$digitalfunction->getDecoderfunction()->getName()])
         );
         $entityManager->flush();
-        return $this->redirectToRoute('mbs_model_digital', ['id' => $model->getId()]);
+        return $this->redirectToRoute('mbs_model_digital', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
 
     }
     #[Route('/model/delete/{id}', name: 'mbs_model_delete', methods: ['GET'])]
-    public function delete(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
+    public function delete(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
         $database = $request->getSession()->get('database');
-        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+
+        if(strlen($id)==32) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        } else {
+            $model = false;
+        }
+
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
@@ -627,7 +650,7 @@ class DatabaseController extends AbstractController
             $translator->trans('model.deleted', ['name' => $model->getName()])
         );
         $entityManager->flush();
-        return $this->redirectToRoute('mbs_database', ['id' => $database]);
+        return $this->redirectToRoute('mbs_database', ['id' => str_replace("0x","",$database->getUuid()->toHex())]);
 
 
     }
@@ -734,7 +757,7 @@ class DatabaseController extends AbstractController
                         'error',
                         $translator->trans('upload.failed', ['message' => $e->getMessage()])
                     );
-                    return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
+                    return $this->redirectToRoute('mbs_model', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
                     // ... handle exception if something happens during file upload
                 }
                 $model->setImage($newFilename);
@@ -783,13 +806,14 @@ class DatabaseController extends AbstractController
             $model->setCreated(new \DateTime('now'));
             $model->setUpdated(new \DateTime('now'));
             $model->setModeldatabase($database);
+            $model->setUuid(Uuid::v4());
             $entityManager->persist($model);
             $entityManager->flush();
             $this->addFlash(
                 'success',
                 $translator->trans('model.created', ['name' => $model->getName()])
             );
-            return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
+            return $this->redirectToRoute('mbs_model', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
         } elseif ($form->isSubmitted() && !$form->isValid()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -814,15 +838,18 @@ class DatabaseController extends AbstractController
     #[Route('/manufacturer/{manufacturer}/model/{id}', name: 'mbs_manufacturer_model', methods: ['GET','POST'])]
     #[Route('/company/{company}/model/{id}', name: 'mbs_company_model', methods: ['GET','POST'])]
     #[Route('/storage/{storage}/model/{id}', name: 'mbs_storage_model', methods: ['GET','POST'])]
-    public function model(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/image')] string $imageDirectory): Response
+    public function model(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/image')] string $imageDirectory): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-
-        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
-        if($model->getImage()!="") {
-            $currentImage = $model->getImage();
+        if(strlen($id)==32) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        } else {
+            $model = false;
         }
+
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
@@ -835,7 +862,10 @@ class DatabaseController extends AbstractController
             $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
             return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         } else {
-            $request->getSession()->set('database', $model->getModeldatabase()->getId());
+            $request->getSession()->set('database', str_replace("0x", "", $model->getModeldatabase()->getUuid()->toHex()));
+        }
+        if($model->getImage()!="") {
+            $currentImage = $model->getImage();
         }
 
         $status         = $entityManager->getRepository(Status::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
@@ -918,7 +948,7 @@ class DatabaseController extends AbstractController
                         'error',
                         $translator->trans('upload.failed', ['message' => $e->getMessage()])
                     );
-                    return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
+                    return $this->redirectToRoute('mbs_model', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
                 }
                 if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
                     unlink($imageDirectory."/".$currentImage);
@@ -941,7 +971,7 @@ class DatabaseController extends AbstractController
                 'success',
                 $translator->trans('model.saved', ['name' => $model->getName()])
             );
-            return $this->redirectToRoute('mbs_model', ['id' => $model->getId()]);
+            return $this->redirectToRoute('mbs_model', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
         } elseif ($form->isSubmitted() && !$form->isValid()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -965,12 +995,20 @@ class DatabaseController extends AbstractController
     #[Route('/dealer/{dealer}/model/{id}/details/', name: 'mbs_dealer_model_detail', methods: ['GET','POST'])]
     #[Route('/manufacturer/{manufacturer}/model/{id}/details/', name: 'mbs_manufacturer_model_detail', methods: ['GET','POST'])]
     #[Route('/company/{company}/model/{id}/details/', name: 'mbs_company_model_detail', methods: ['GET','POST'])]
-    public function detail(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    public function detail(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
 
-        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        } else {
+            echo $id;
+            $model = false;
+        }
+
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
@@ -1087,7 +1125,7 @@ class DatabaseController extends AbstractController
                     'success',
                     $translator->trans('model.saved', ['name' => $model->getName()])
                 );
-                return $this->redirectToRoute('mbs_model_detail', ['id' => $model->getId()]);
+                return $this->redirectToRoute('mbs_model_detail', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
             }
             $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
             return $this->render($template, [
@@ -1109,12 +1147,19 @@ class DatabaseController extends AbstractController
     #[Route('/dealer/{dealer}/model/{id}/digital/', name: 'mbs_dealer_model_digital', methods: ['GET','POST'])]
     #[Route('/manufacturer/{manufacturer}/model/{id}/digital/', name: 'mbs_manufacturer_model_digital', methods: ['GET','POST'])]
     #[Route('/company/{company}/model/{id}/digital/', name: 'mbs_company_model_digital', methods: ['GET','POST'])]
-    public function digital(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    public function digital(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
 
-        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        } else {
+            $model = false;
+        }
+
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
@@ -1154,7 +1199,7 @@ class DatabaseController extends AbstractController
                 'success',
                 $translator->trans('model.saved', ['name' => $model->getName()])
             );
-            return $this->redirectToRoute('mbs_model_digital', ['id' => $model->getId()]);
+            return $this->redirectToRoute('mbs_model_digital', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
         }
         $functions = [];
         $qb = $entityManager->createQueryBuilder();
@@ -1176,12 +1221,19 @@ class DatabaseController extends AbstractController
         ]);
     }
     #[Route('/model/{id}/duplicate/', name: 'mbs_model_duplicate', methods: ['GET'])]
-    public function duplicate(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/image')] string $imageDirectory): Response
+    public function duplicate(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/image')] string $imageDirectory): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
 
-        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        } else {
+            $model = false;
+        }
+
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
@@ -1303,14 +1355,16 @@ class DatabaseController extends AbstractController
         $originalFileParts = explode("-", $originalFilename);
         $safeFilename = $slugger->slug($originalFileParts[0]);
         $newFilename = $safeFilename.'-'.uniqid().'.'.$originalExtension;
-        copy($imageDirectory.'/'.$model->getImage(), $imageDirectory.'/'.$newFilename);
-        if($this->getParameter('remote_ssh')!="") {
-            try {
-                exec('/usr/bin/scp '.$imageDirectory.'/'.$newFilename.' '.$this->getParameter('remote_ssh').'image/'.$newFilename);
-            } catch (Exception $e) {
+        if($model->getImage()!="") {
+            copy($imageDirectory . '/' . $model->getImage(), $imageDirectory . '/' . $newFilename);
+            if ($this->getParameter('remote_ssh') != "") {
+                try {
+                    exec('/usr/bin/scp ' . $imageDirectory . '/' . $newFilename . ' ' . $this->getParameter('remote_ssh') . 'image/' . $newFilename);
+                } catch (Exception $e) {
+                }
             }
+            $duplicate->setImage($newFilename);
         }
-        $duplicate->setImage($newFilename);
         $duplicate->setInstructions($model->isInstructions());
         $duplicate->setParts($model->isParts());
         $duplicate->setDisplaycase($model->isDisplaycase());
@@ -1324,25 +1378,33 @@ class DatabaseController extends AbstractController
         $duplicate->setAvailable($model->isAvailable());
         $duplicate->setPower($model->getPower());
         $duplicate->setEdition($model->getEdition());
+        $duplicate->setUuid(Uuid::v4());
         $entityManager->persist($duplicate);
         $entityManager->flush();
         $this->addFlash(
             'success',
             $translator->trans('model.duplicated', ['name' => $duplicate->getName()])
         );
-        return $this->redirectToRoute('mbs_model', ['id' => $duplicate->getId()]);
+        return $this->redirectToRoute('mbs_model', ['id' => str_replace("0x","",$duplicate->getUuid()->toHex())]);
 
     }
     #[Route('/model/{id}/load/', name: 'mbs_model_load', methods: ['GET','POST'])]
     #[Route('/dealer/{dealer}/model/{id}/load/', name: 'mbs_dealer_model_load', methods: ['GET','POST'])]
     #[Route('/manufacturer/{manufacturer}/model/{id}/load/', name: 'mbs_manufacturer_model_load', methods: ['GET','POST'])]
     #[Route('/company/{company}/model/{id}/load/', name: 'mbs_company_model_load', methods: ['GET','POST'])]
-    public function load(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
+    public function load(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
 
-        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        } else {
+            $model = false;
+        }
+
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
@@ -1450,12 +1512,19 @@ class DatabaseController extends AbstractController
     #[Route('/dealer/{dealer}/model/{id}/document/', name: 'mbs_dealer_model_document', methods: ['GET','POST'])]
     #[Route('/manufacturer/{manufacturer}/model/{id}/document/', name: 'mbs_manufacturer_model_document', methods: ['GET','POST'])]
     #[Route('/company/{company}/model/{id}/document/', name: 'mbs_company_model_document', methods: ['GET','POST'])]
-    public function document(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/document')] string $documentDirectory): Response
+    public function document(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/document')] string $documentDirectory): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
 
-        $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $model = $entityManager->getRepository(Model::class)->findOneBy(["id" => $id]);
+        } else {
+            $model = false;
+        }
+
         if(!$model) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
@@ -1497,7 +1566,7 @@ class DatabaseController extends AbstractController
                         'error',
                         $translator->trans('upload.failed', ['message' => $e->getMessage()])
                     );
-                    return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+                    return $this->redirectToRoute('mbs_model_document', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
                 }
                 $document->setFile($newFilename);
 
@@ -1513,7 +1582,7 @@ class DatabaseController extends AbstractController
                     'error',
                     $translator->trans('upload.failed', ['message' => 'ABC'])
                 );
-                return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+                return $this->redirectToRoute('mbs_model_document', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
             }
             $document->setModel($model);
             $entityManager->persist($document);
@@ -1522,7 +1591,7 @@ class DatabaseController extends AbstractController
                 'success',
                 $translator->trans('upload.success')
             );
-            return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+            return $this->redirectToRoute('mbs_model_document', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
         } elseif ($form->isSubmitted() && !$form->isValid()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -1579,7 +1648,7 @@ class DatabaseController extends AbstractController
             $translator->trans('model.document.deleted', ['name' => $document->getName()])
         );
         $entityManager->flush();
-        return $this->redirectToRoute('mbs_model_document', ['id' => $model->getId()]);
+        return $this->redirectToRoute('mbs_model_document', ['id' => str_replace("0x","",$model->getUuid()->toHex())]);
 
     }
 

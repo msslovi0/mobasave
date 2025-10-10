@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ModelRepository::class)]
 #[ORM\Table(name: 'mbs_model')]
@@ -172,6 +173,9 @@ class Model
      */
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'model')]
     private Collection $documents;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
 
     public function __construct()
     {
@@ -816,6 +820,18 @@ class Model
                 $document->setModel(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(?Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

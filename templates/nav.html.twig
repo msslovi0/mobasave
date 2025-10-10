@@ -27,7 +27,7 @@
                   <div class="py-1">
                       {% if databases is defined %}
                       {% for database in databases %}
-                      <a href="{{ path('mbs_database', {id: database.id}) }}" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5 dark:focus:text-white border-l-7" style="border-left-color: {{ database.color }}">
+                      <a href="{{ path('mbs_database', {id: uuid(database.uuid.tohex)}) }}" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5 dark:focus:text-white border-l-7" style="border-left-color: {{ database.color }}">
                           {{ database.name }}
                       </a>
                       {% endfor %}

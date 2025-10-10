@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: DealerRepository::class)]
 #[ORM\Table(name: 'mbs_dealer')]
@@ -85,6 +86,9 @@ class Dealer
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $fax = null;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
 
     public function __construct()
     {
@@ -374,6 +378,18 @@ class Dealer
     public function setFax(?string $fax): static
     {
         $this->fax = $fax;
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

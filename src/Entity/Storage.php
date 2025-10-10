@@ -6,6 +6,7 @@ use App\Repository\StorageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: StorageRepository::class)]
 #[ORM\Table(name: 'mbs_storage')]
@@ -39,6 +40,9 @@ class Storage
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slot = null;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
 
     public function __construct()
     {
@@ -148,6 +152,18 @@ class Storage
     public function setSlot(?string $slot): static
     {
         $this->slot = $slot;
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

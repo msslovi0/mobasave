@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 {% if 'mbs_manufacturer' in app.request.attributes.get("_route") %}
     {% set current = 'manufacturer' %}
-    {% set path_history = path('mbs_manufacturer', {id: models[0].manufacturer.id}) %}
+    {% set path_history = path('mbs_manufacturer', {id: uuid(models[0].manufacturer.uuid.tohex)}) %}
     {% set text_history = 'manufacturer.back'|trans({name: models[0].manufacturer.name}) %}
 {% elseif 'mbs_dealer' in app.request.attributes.get("_route") %}
     {% set current = 'dealer' %}
-    {% set path_history = path('mbs_dealer', {id: models[0].dealer.id}) %}
+    {% set path_history = path('mbs_dealer', {id: uuid(models[0].dealer.uuid.tohex)}) %}
     {% set text_history = 'dealer.back'|trans({name: models[0].dealer.name}) %}
 {% elseif 'mbs_company' in app.request.attributes.get("_route") %}
     {% set current = 'company' %}
-    {% set path_history = path('mbs_company', {id: models[0].company.id}) %}
+    {% set path_history = path('mbs_company', {id: uuid(models[0].company.uuid.tohex)}) %}
     {% set text_history = 'company.back'|trans({name: models[0].company.name}) %}
 {% elseif 'mbs_storage' in app.request.attributes.get("_route") %}
     {% set current = 'storage' %}
-    {% set path_history = path('mbs_storage', {id: models[0].storage.id}) %}
+    {% set path_history = path('mbs_storage', {id: uuid(models[0].storage.uuid.tohex)}) %}
     {% set text_history = 'storage.back'|trans({name: models[0].storage.name}) %}
 {% elseif(models|length>0) %}
     {% set current = 'model' %}
-    {% set path_history = path('mbs_database', {id: models[0].modeldatabase.id}) %}
+    {% set path_history = path('mbs_database', {id: uuid(models[0].modeldatabase.uuid.tohex)}) %}
     {% set text_history = 'global.back'|trans %}
 {% else %}
     {% set current = '' %}
@@ -79,7 +79,7 @@
     </header>
     <main>
       <div class="mx-auto max-w-10xl px-4 py-8 sm:px-6 lg:px-8">
-            <div class="col-span-full mt-5">
+            <div class="col-span-full my-5">
                 {% for message in app.flashes('error') %}
                     <div class="border-l-4 border-red-400 bg-red-50 p-4 dark:border-red-500 dark:bg-red-500/10">
                         <div class="flex">
@@ -181,15 +181,15 @@
                   <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
                   {% for model in models %}
                       {% if current == 'manufacturer' %}
-                          {% set path = path('mbs_manufacturer_model', {id: model.id, manufacturer: model.manufacturer.id}) %}
+                          {% set path = path('mbs_manufacturer_model', {id: uuid(model.uuid.tohex), manufacturer: uuid(model.manufacturer.uuid.tohex)}) %}
                       {% elseif current == 'company' %}
-                          {% set path = path('mbs_company_model', {id: model.id, company: model.company.id}) %}
+                          {% set path = path('mbs_company_model', {id: uuid(model.uuid.tohex), company: uuid(model.company.uuid.tohex)}) %}
                       {% elseif current == 'storage' %}
-                          {% set path = path('mbs_storage_model', {id: model.id, storage: model.storage.id}) %}
+                          {% set path = path('mbs_storage_model', {id: uuid(model.uuid.tohex), storage: uuid(model.storage.uuid.tohex)}) %}
                       {% elseif current == 'dealer' %}
-                          {% set path = path('mbs_dealer_model', {id: model.id, dealer: model.dealer.id}) %}
+                          {% set path = path('mbs_dealer_model', {id: uuid(model.uuid.tohex), dealer: uuid(model.dealer.uuid.tohex)}) %}
                       {% else %}
-                        {% set path = path('mbs_model', {id: model.id}) %}
+                        {% set path = path('mbs_model', {id: uuid(model.uuid.tohex)}) %}
                       {% endif %}
 
                       <tr class="even:bg-gray-50 dark:even:bg-gray-800/50">

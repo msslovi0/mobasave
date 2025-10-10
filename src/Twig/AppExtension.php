@@ -18,4 +18,10 @@ class AppExtension
         $record = $this->entityManager->getRepository('App\\Entity\\'.$database)->findOneBy(["id" => $id]);
         return $record->getName();
     }
+
+    #[AsTwigFunction('uuid')]
+    public function getUuid(string $uuid): string
+    {
+        return str_replace("0x","", $uuid);
+    }
 }

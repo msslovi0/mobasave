@@ -2,32 +2,32 @@
 {%  set inactive="rounded-md hover:bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" %}
 {% if 'mbs_manufacturer' in app.request.attributes.get("_route") %}
     {% set current = 'manufacturer' %}
-    {% set path_model = path('mbs_manufacturer_model', {id: model.id, manufacturer: model.manufacturer.id}) %}
-    {% set path_detail = path('mbs_manufacturer_model_detail', {id: model.id, manufacturer: model.manufacturer.id}) %}
-    {% set path_digital = path('mbs_manufacturer_model_digital', {id: model.id, manufacturer: model.manufacturer.id}) %}
-    {% set path_load = path('mbs_manufacturer_model_load', {id: model.id, manufacturer: model.manufacturer.id}) %}
-    {% set path_document = path('mbs_manufacturer_model_document', {id: model.id, manufacturer: model.manufacturer.id}) %}
+    {% set path_model = path('mbs_manufacturer_model', {id: uuid(model.uuid.tohex), manufacturer: uuid(model.manufacturer.uuid.tohex)}) %}
+    {% set path_detail = path('mbs_manufacturer_model_detail', {id: uuid(model.uuid.tohex), manufacturer: uuid(model.manufacturer.uuid.tohex)}) %}
+    {% set path_digital = path('mbs_manufacturer_model_digital', {id: uuid(model.uuid.tohex), manufacturer: uuid(model.manufacturer.uuid.tohex)}) %}
+    {% set path_load = path('mbs_manufacturer_model_load', {id: uuid(model.uuid.tohex), manufacturer: uuid(model.manufacturer.uuid.tohex)}) %}
+    {% set path_document = path('mbs_manufacturer_model_document', {id: uuid(model.uuid.tohex), manufacturer: uuid(model.manufacturer.uuid.tohex)}) %}
 {% elseif 'mbs_dealer' in app.request.attributes.get("_route") %}
     {% set current = 'dealer' %}
-    {% set path_model = path('mbs_dealer_model', {id: model.id, dealer: model.dealer.id}) %}
-    {% set path_detail = path('mbs_dealer_model_detail', {id: model.id, dealer: model.dealer.id}) %}
-    {% set path_digital = path('mbs_dealer_model_digital', {id: model.id, dealer: model.dealer.id}) %}
-    {% set path_load = path('mbs_dealer_model_load', {id: model.id, dealer: model.dealer.id}) %}
-    {% set path_document = path('mbs_dealer_model_document', {id: model.id, dealer: model.dealer.id}) %}
+    {% set path_model = path('mbs_dealer_model', {id: uuid(model.uuid.tohex), dealer: uuid(model.dealer.uuid.tohex)}) %}
+    {% set path_detail = path('mbs_dealer_model_detail', {id: uuid(model.uuid.tohex), dealer: uuid(model.dealer.uuid.tohex)}) %}
+    {% set path_digital = path('mbs_dealer_model_digital', {id: uuid(model.uuid.tohex), dealer: uuid(model.dealer.uuid.tohex)}) %}
+    {% set path_load = path('mbs_dealer_model_load', {id: uuid(model.uuid.tohex), dealer: uuid(model.dealer.uuid.tohex)}) %}
+    {% set path_document = path('mbs_dealer_model_document', {id: uuid(model.uuid.tohex), dealer: uuid(model.dealer.uuid.tohex)}) %}
 {% elseif 'mbs_company' in app.request.attributes.get("_route") %}
     {% set current = 'company' %}
-    {% set path_model = path('mbs_company_model', {id: model.id, company: model.company.id}) %}
-    {% set path_detail = path('mbs_company_model_detail', {id: model.id, company: model.company.id}) %}
-    {% set path_digital = path('mbs_company_model_digital', {id: model.id, company: model.company.id}) %}
-    {% set path_load = path('mbs_company_model_load', {id: model.id, company: model.company.id}) %}
-    {% set path_document = path('mbs_company_model_document', {id: model.id, company: model.company.id}) %}
+    {% set path_model = path('mbs_company_model', {id: uuid(model.uuid.tohex), company: uuid(model.company.uuid.tohex)}) %}
+    {% set path_detail = path('mbs_company_model_detail', {id: uuid(model.uuid.tohex), company: uuid(model.company.uuid.tohex)}) %}
+    {% set path_digital = path('mbs_company_model_digital', {id: uuid(model.uuid.tohex), company: uuid(model.company.uuid.tohex)}) %}
+    {% set path_load = path('mbs_company_model_load', {id: uuid(model.uuid.tohex), company: uuid(model.company.uuid.tohex)}) %}
+    {% set path_document = path('mbs_company_model_document', {id: uuid(model.uuid.tohex), company: uuid(model.company.uuid.tohex)}) %}
 {% else %}
     {% set current = 'model' %}
-    {% set path_model = path('mbs_model', {id: model.id}) %}
-    {% set path_detail = path('mbs_model_detail', {id: model.id}) %}
-    {% set path_digital = path('mbs_model_digital', {id: model.id}) %}
-    {% set path_load = path('mbs_model_load', {id: model.id}) %}
-    {% set path_document = path('mbs_model_document', {id: model.id}) %}
+    {% set path_model = path('mbs_model', {id: uuid(model.uuid.tohex)}) %}
+    {% set path_detail = path('mbs_model_detail', {id: uuid(model.uuid.tohex)}) %}
+    {% set path_digital = path('mbs_model_digital', {id: uuid(model.uuid.tohex)}) %}
+    {% set path_load = path('mbs_model_load', {id: uuid(model.uuid.tohex)}) %}
+    {% set path_document = path('mbs_model_document', {id: uuid(model.uuid.tohex)}) %}
 {% endif %}
 
 <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-2 md:grid-cols-3 dark:border-white/10">
@@ -60,7 +60,7 @@
         </div>
     </div>
     <div class="col-start-3 flex justify-end gap-1">
-        <a href="{{ path('mbs_model_duplicate', {id: model.id}) }}" id="duplicate-model" class="rounded-md bg-lime-400 px-3 py-2 text-sm font-semibold text-green-800 shadow-xs hover:bg-lime-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-400 dark:bg-lime-300 dark:shadow-none dark:focus-visible:outline-lime-300">{{ 'global.duplicate'|trans }}</a>
+        <a href="{{ path('mbs_model_duplicate', {id: uuid(model.uuid.tohex)}) }}" id="duplicate-model" class="rounded-md bg-lime-400 px-3 py-2 text-sm font-semibold text-green-800 shadow-xs hover:bg-lime-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-400 dark:bg-lime-300 dark:shadow-none dark:focus-visible:outline-lime-300">{{ 'global.duplicate'|trans }}</a>
         <button id="submit-form" class="rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800 dark:bg-green-700 dark:shadow-none dark:focus-visible:outline-green-700">{{'global.save'|trans}}</button>
     </div>
 </div>

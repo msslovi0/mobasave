@@ -26,6 +26,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -84,7 +85,7 @@ class DealerController extends AbstractController
                         'error',
                         $translator->trans('upload.failed', ['message' => $e->getMessage()])
                     );
-                    return $this->redirectToRoute('mbs_dealer', ['id' => $dealer->getId()]);
+                    return $this->redirectToRoute('mbs_dealer', ['id' => str_replace("0x","",$dealer->getUuid()->toHex())]);
                     // ... handle exception if something happens during file upload
                 }
                 $dealer->setImage($newFilename);
@@ -104,13 +105,14 @@ class DealerController extends AbstractController
             $dealer->setLogo(0);
             $dealer->setVector(0);
             $dealer->setUser($user);
+            $dealer->setUuid(Uuid::v4());
             $entityManager->persist($dealer);
             $entityManager->flush();
             $this->addFlash(
                 'success',
                 $translator->trans('dealer.saved', ['name' => $dealer->getName()])
             );
-            return $this->redirectToRoute('mbs_dealer', ['id' => $dealer->getId()]);
+            return $this->redirectToRoute('mbs_dealer', ['id' => str_replace("0x","",$dealer->getUuid()->toHex())]);
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
@@ -123,11 +125,17 @@ class DealerController extends AbstractController
     }
 
     #[Route('/dealer/{id}', name: 'mbs_dealer', methods: ['GET', 'POST'])]
-    public function dealer(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/dealer')] string $imageDirectory, AuthorizationCheckerInterface $authChecker): Response
+    public function dealer(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/dealer')] string $imageDirectory, AuthorizationCheckerInterface $authChecker): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $dealer = $entityManager->getRepository(Dealer::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $dealer = $entityManager->getRepository(Dealer::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $dealer = $entityManager->getRepository(Dealer::class)->findOneBy(["id" => $id]);
+        } else {
+            $dealer = false;
+        }
 
         if(!$dealer) {
             $response = new Response();
@@ -193,7 +201,7 @@ class DealerController extends AbstractController
                         'error',
                         $translator->trans('upload.failed', ['message' => $e->getMessage()])
                     );
-                    return $this->redirectToRoute('mbs_dealer', ['id' => $dealer->getId()]);
+                    return $this->redirectToRoute('mbs_dealer', ['id' => str_replace("0x","",$dealer->getUuid()->toHex())]);
                     // ... handle exception if something happens during file upload
                 }
                 if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
@@ -219,7 +227,7 @@ class DealerController extends AbstractController
                 'success',
                 $translator->trans('dealer.saved', ['name' => $dealer->getName()])
             );
-            return $this->redirectToRoute('mbs_dealer', ['id' => $dealer->getId()]);
+            return $this->redirectToRoute('mbs_dealer', ['id' => str_replace("0x","",$dealer->getUuid()->toHex())]);
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
@@ -234,7 +242,7 @@ class DealerController extends AbstractController
     }
 
     #[Route('/dealer/{id}/models', name: 'mbs_dealer_models', methods: ['GET', 'POST'])]
-    public function models(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
+    public function models(mixed $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
@@ -260,7 +268,13 @@ class DealerController extends AbstractController
             $request->getSession()->set('limit', $limit);
         }
 
-        $dealer = $entityManager->getRepository(Dealer::class)->find($id);
+        if(strlen($id)==32) {
+            $dealer = $entityManager->getRepository(Dealer::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $dealer = $entityManager->getRepository(Dealer::class)->findOneBy(["id" => $id]);
+        } else {
+            $dealer = false;
+        }
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         $qb = $entityManager->createQueryBuilder();
         $models = $qb->select('m')->from(Model::class, 'm')
@@ -330,17 +344,23 @@ class DealerController extends AbstractController
     }
 
     #[Route('/dealer/delete/{id}', name: 'mbs_dealer_delete', methods: ['GET'])]
-    public function delete(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
+    public function delete(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $dealer = $entityManager->getRepository(Dealer::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $dealer = $entityManager->getRepository(Dealer::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $dealer = $entityManager->getRepository(Dealer::class)->findOneBy(["id" => $id]);
+        } else {
+            $dealer = false;
+        }
         if(count($dealer->getModels())>0) {
             $this->addFlash(
                 'error',
                 $translator->trans('dealer.has-models', ['count' => count($dealer->getModels()), 'name' => $dealer->getName()])
             );
-            return $this->redirectToRoute('mbs_dealer', ['id' => $dealer->getId()]);
+            return $this->redirectToRoute('mbs_dealer', ['id' => str_replace("0x","",$dealer->getUuid()->toHex())]);
         }
         if(!$dealer) {
             $response = new Response();

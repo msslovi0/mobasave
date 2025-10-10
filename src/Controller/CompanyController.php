@@ -26,6 +26,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -74,7 +75,7 @@ class CompanyController extends AbstractController
                         'error',
                         $translator->trans('upload.failed', ['message' => $e->getMessage()])
                     );
-                    return $this->redirectToRoute('mbs_company', ['id' => $company->getId()]);
+                    return $this->redirectToRoute('mbs_company', ['id' => str_replace("0x","",$company->getUuid()->toHex())]);
                     // ... handle exception if something happens during file upload
                 }
                 if(isset($currentImage) && file_exists($imageDirectory."/".$currentImage)) {
@@ -97,13 +98,14 @@ class CompanyController extends AbstractController
             $company->setLogo(0);
             $company->setVector(0);
             $company->setUser($user);
+            $company->setUuid(Uuid::v4());
             $entityManager->persist($company);
             $entityManager->flush();
             $this->addFlash(
                 'success',
                 $translator->trans('company.saved', ['name' => $company->getName()])
             );
-            return $this->redirectToRoute('mbs_company', ['id' => $company->getId()]);
+            return $this->redirectToRoute('mbs_company', ['id' => str_replace("0x","",$company->getUuid()->toHex())]);
         }
 
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
@@ -116,11 +118,18 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/company/{id}', name: 'mbs_company', methods: ['GET', 'POST'])]
-    public function company(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/company')] string $imageDirectory, AuthorizationCheckerInterface $authChecker): Response
+    public function company(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, request $request, SluggerInterface $slugger, #[Autowire('%kernel.project_dir%/public/data/logo/company')] string $imageDirectory, AuthorizationCheckerInterface $authChecker): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $company = $entityManager->getRepository(Company::class)->findOneBy(["id" => $id]);
+
+        if(strlen($id)==32) {
+            $company = $entityManager->getRepository(Company::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $company = $entityManager->getRepository(Company::class)->findOneBy(["id" => $id]);
+        } else {
+            $company = false;
+        }
 
         if(!$company) {
             $response = new Response();
@@ -176,7 +185,7 @@ class CompanyController extends AbstractController
                         'error',
                         $translator->trans('upload.failed', ['message' => $e->getMessage()])
                     );
-                    return $this->redirectToRoute('mbs_company', ['id' => $company->getId()]);
+                    return $this->redirectToRoute('mbs_company', ['id' => str_replace("0x","",$company->getUuid()->toHex())]);
                     // ... handle exception if something happens during file upload
                 }
                 $company->setImage($newFilename);
@@ -199,7 +208,7 @@ class CompanyController extends AbstractController
                 'success',
                 $translator->trans('company.saved', ['name' => $company->getName()])
             );
-            return $this->redirectToRoute('mbs_company', ['id' => $company->getId()]);
+            return $this->redirectToRoute('mbs_company', ['id' => str_replace("0x","",$company->getUuid()->toHex())]);
         } elseif ($form->isSubmitted() && !$form->isValid()) {
             $response = new Response();
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -266,7 +275,7 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/company/{id}/models', name: 'mbs_company_models', methods: ['GET', 'POST'])]
-    public function models(int $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
+    public function models(mixed $id, EntityManagerInterface $entityManager, PaginatorInterface $paginator, request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
@@ -292,8 +301,13 @@ class CompanyController extends AbstractController
             $request->getSession()->set('limit', $limit);
         }
 
-        $company = $entityManager->getRepository(Company::class)->find($id);
-        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+        if(strlen($id)==32) {
+            $company = $entityManager->getRepository(Company::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $company = $entityManager->getRepository(Company::class)->findOneBy(["id" => $id]);
+        } else {
+            $company = false;
+        }
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         $qb = $entityManager->createQueryBuilder();
         $models = $qb->select('m')->from(Model::class, 'm')
@@ -321,17 +335,25 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/company/delete/{id}', name: 'mbs_company_delete', methods: ['GET'])]
-    public function delete(int $id, EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    public function delete(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
-        $company = $entityManager->getRepository(Company::class)->findOneBy(["id" => $id]);
+
+        if(strlen($id)==32) {
+            $company = $entityManager->getRepository(Company::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $company = $entityManager->getRepository(Company::class)->findOneBy(["id" => $id]);
+        } else {
+            $company = false;
+        }
+
         if(count($company->getModels())>0) {
             $this->addFlash(
                 'error',
                 $translator->trans('company.has-models', ['count' => count($company->getModels()), 'name' => $company->getName()])
             );
-            return $this->redirectToRoute('mbs_company', ['id' => $company->getId()]);
+            return $this->redirectToRoute('mbs_company', ['id' => str_replace("0x","",$company->getUuid()->toHex())]);
         }
         if(!$company) {
             $response = new Response();
