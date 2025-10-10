@@ -237,6 +237,41 @@ class DatabaseController extends AbstractController
             "database" => $database,
         ], response: $response);
     }
+
+    #[Route('/database/delete/{id}', name: 'mbs_database_delete', methods: ['GET'])]
+    public function deleteDatabase(mixed $id, EntityManagerInterface $entityManager, TranslatorInterface $translator, Request $request)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->security->getUser();
+        if(strlen($id)==32) {
+            $database = $entityManager->getRepository(Database::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+        } else {
+            $database = false;
+        }
+        if(count($database->getModels())>0) {
+            $this->addFlash(
+                'error',
+                $translator->trans('database.has-models', ['count' => count($database->getModels()), 'name' => $database->getName()])
+            );
+            return $this->redirectToRoute('mbs_database', ['id' => str_replace("0x","",$database->getUuid()->toHex())]);
+        }
+        if(!$database) {
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
+            return $this->render('status/notfound.html.twig', ["databases" => $databases], response: $response);
+        }
+        $entityManager->remove($database);
+        $this->addFlash(
+            'success',
+            $translator->trans('database.deleted', ['name' => $database->getName()])
+        );
+        $entityManager->flush();
+        return $this->redirectToRoute('mbs_home');
+    }
+
     #[Route('/collection/search/', defaults: ['_format' => 'html'], name: 'mbs_database_search', methods: ['GET'])]
     #[Route('/collection/{id}/filter/', defaults: ['_format' => 'html'], name: 'mbs_database_filter', methods: ['GET'])]
     #[Route('/collection/autocomplete/', defaults: ['_format' => 'json'], name: 'mbs_database_autocomplete', methods: ['GET'])]

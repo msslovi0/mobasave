@@ -41,6 +41,11 @@ collection:
         color: Color
     saved: Collection “{name}” has been successfully saved
     resubmit: Please re-select your newly created values and re-submit the form in order to save it.
+    delete:
+        delete: Delete
+        cancel: Cancel
+        headline: Delete Collection
+        text: The collection will be deleted. This action can't be undone! Proceed with caution!
     count: >-
         {count, plural,
             =0    {No collections}
@@ -53,6 +58,12 @@ collection:
             =1    {One model}
             other {# models}
         }
+    has-models: >-
+        {count, plural,
+            =1    {Can't delete collection “{name}”. There is still one model assigned.}
+            other {Can't delete collection “{name}”. There are still # models assigned.}
+        }
+
 global:
     filter:
         filter: Filters

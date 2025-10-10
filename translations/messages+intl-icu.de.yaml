@@ -41,6 +41,11 @@ collection:
         color: Farbe
     saved: Die Sammlung „{name}“ wurde erfolgreich gespeichert
     resubmit: Bitte die neuen Werte erneut auswählen und das Formular noch einmal absenden.
+    delete:
+        delete: Löschen
+        cancel: Abbrechen
+        headline: Sammlung löschen
+        text: Die Sammlung wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
     count: >-
         {count, plural,
             =0    {Keine Sammlungen}
@@ -53,6 +58,12 @@ collection:
             =1    {Ein Modell}
             other {# Modelle}
         }
+    has-models: >-
+        {count, plural,
+            =1    {Die Sammlung „{name}“ kann nicht gelöscht werden, da noch ein Modell zugewiesen ist.}
+            other {Die Sammlung „{name}“ kann nicht gelöscht werden, da ihr noch # Modelle zugewiesen sind.}
+        }
+
 global:
     filter:
         filter: Filter
