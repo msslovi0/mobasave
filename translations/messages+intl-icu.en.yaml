@@ -41,6 +41,7 @@ collection:
         color: Color
     saved: Collection “{name}” has been successfully saved
     resubmit: Please re-select your newly created values and re-submit the form in order to save it.
+    deleted: The collection “{name}” was deleted
     delete:
         delete: Delete
         cancel: Cancel
@@ -465,9 +466,9 @@ model:
         till-today: today
     document:
         delete:
-            headline: Delete Document „{name}“
+            headline: Delete Document “{name}”
             text: The document will be deleted. This action can't be undone! Proceed with caution!
-        deleted: Das Dokument „{name}“ wurde gelöscht
+        deleted: The document “{name}” was deleted
     function:
         sound: Sound function
         light: Light function

@@ -274,7 +274,7 @@ class DatabaseController extends AbstractController
         $entityManager->remove($database);
         $this->addFlash(
             'success',
-            $translator->trans('database.deleted', ['name' => $database->getName()])
+            $translator->trans('collection.deleted', ['name' => $database->getName()])
         );
         $entityManager->flush();
         return $this->redirectToRoute('mbs_home');

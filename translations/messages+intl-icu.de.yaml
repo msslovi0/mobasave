@@ -41,6 +41,7 @@ collection:
         color: Farbe
     saved: Die Sammlung „{name}“ wurde erfolgreich gespeichert
     resubmit: Bitte die neuen Werte erneut auswählen und das Formular noch einmal absenden.
+    deleted: Die Sammlung „{name}“ wurde gelöscht
     delete:
         delete: Löschen
         cancel: Abbrechen
