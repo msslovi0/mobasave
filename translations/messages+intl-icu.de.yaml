@@ -203,7 +203,7 @@ user:
         pagination: Einträge pro Seite
         language: Standardsprache
     resubmit: Bitte das Formular erneut absenden, um es zu speichern.
-    saved: Deine Profiländerungen wurden erfolgreich gespeichert.
+    saved: Die Profiländerungen wurden erfolgreich gespeichert.
 
 manufacturer:
     add: Neuer Hersteller
@@ -237,7 +237,7 @@ manufacturer:
         cancel: Abbrechen
         headline: Hersteller löschen
         text: Der Hersteller wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
-    saved: Deine Änderungen für den Hersteller „{name}“ wurden erfolgreich gespeichert
+    saved: Die Änderungen für den Hersteller „{name}“ wurden erfolgreich gespeichert
     deleted: Der Hersteller „{name}“ wurde gelöscht
     models: Modelle von „{name}“
     back: Zurück zu „{name}“
@@ -285,7 +285,7 @@ dealer:
         cancel: Abbrechen
         headline: Händler löschen
         text: Der Händler wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
-    saved: Deine Änderungen für den Händler „{name}“ wurden erfolgreich gespeichert
+    saved: Die Änderungen für den Händler „{name}“ wurden erfolgreich gespeichert
     deleted: Der Händler „{name}“ wurde gelöscht
     models: Modelle von „{name}“
     back: Zurück zu „{name}“
@@ -317,7 +317,7 @@ storage:
         cancel: Abbrechen
         headline: Aufbewahrung löschen
         text: Die Aufbewahrung wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
-    saved: Deine Änderungen für die Aufbewahrung „{name}“ wurden erfolgreich gespeichert
+    saved: Die Änderungen für die Aufbewahrung „{name}“ wurden erfolgreich gespeichert
     deleted: Die Aufbewahrung „{name}“ wurde gelöscht
     models: Modelle in „{name}“
     back: Zurück zu „{name}“
@@ -368,7 +368,7 @@ company:
         cancel: Abbrechen
         headline: Gesellschaft löschen
         text: Die Gesellschaft wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
-    saved: Deine Änderungen für die Gesellschaft „{name}“ wurden erfolgreich gespeichert
+    saved: Die Änderungen für die Gesellschaft „{name}“ wurden erfolgreich gespeichert
     deleted: Die Gesellschaft „{name}“ wurde gelöscht
     models: Modelle von „{name}“
     back: Zurück zu „{name}“
@@ -487,11 +487,11 @@ model:
             headline: Beladung „{load}“ löschen
             text: Die Ladung wird nicht länger mit diesem Modell verknüpft sein. Der Hauptdatensatz der Beladung wird nicht verändert. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
         deleted: Die Beladung „{load}“ wurde gelöscht
-    saved: Deine Änderungen an „{name}“ wurden erfolgreich gespeichert
+    saved: Die Änderungen an „{name}“ wurden erfolgreich gespeichert
     duplicated: Das Modell „{name}” wurde erfolgreich dupliziert
     nodetails: Diese Kategorie hat keine Detailinformationen
-    created: Dein Modell „{name}“ wurde erfolgreich angelegt
-    deleted: Dein Modell „{name}“ wurde gelöscht
+    created: Das Modell „{name}“ wurde erfolgreich angelegt
+    deleted: Das Modell „{name}“ wurde gelöscht
     assign-load: Beladung hinzufügen
     resubmit: Bitte den neu erstellten Eintrag erneut auswählen und das Formular erneut absenden.
     registration:

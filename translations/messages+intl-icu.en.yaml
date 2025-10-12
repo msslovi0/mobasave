@@ -202,7 +202,7 @@ user:
         pagination: Entries per page
         language: Default language
     resubmit: Please re-submit the form in order to save it.
-    saved: Your changes to your profile where saved successfully
+    saved: The changes to your profile where saved successfully
 
 manufacturer:
     add: New Manufacturer
@@ -236,7 +236,7 @@ manufacturer:
         cancel: Cancel
         headline: Delete Manufacturer
         text: The manufacturer will be deleted. This action can't be undone! Proceed with caution!
-    saved: Your changes to manufacturer “{name}” where saved successfully
+    saved: The changes to manufacturer “{name}” where saved successfully
     deleted: The manufacturer “{name}” was deleted
     models: Models by “{name}”
     back: Back to “{name}”
@@ -284,7 +284,7 @@ dealer:
         cancel: Cancel
         headline: Delete Dealer
         text: The dealer will be deleted. This action can't be undone! Proceed with caution!
-    saved: Your changes to dealer “{name}” have been successfully saved
+    saved: The changes to dealer “{name}” have been successfully saved
     deleted: The dealer “{name}” was deleted
     models: Models by “{name}”
     back: Back to “{name}”
@@ -316,7 +316,7 @@ storage:
         cancel: Cancel
         headline: Delete Storage
         text: The storage will be deleted. This action can't be undone! Proceed with caution!
-    saved: Your changes to “{name}” have been successfully saved
+    saved: The changes to “{name}” have been successfully saved
     deleted: The storage “{name}” was deleted
     models: Models in “{name}”
     back: Back to “{name}”
@@ -367,7 +367,7 @@ company:
         cancel: Cancel
         headline: Delete Company
         text: The company will be deleted. This action can't be undone! Proceed with caution!
-    saved: Your changes to company “{name}” have been successfully saved
+    saved: The changes to company “{name}” have been successfully saved
     deleted: The company “{name}” was deleted
     models: Models by “{name}”
     back: Back to “{name}”
@@ -486,11 +486,11 @@ model:
             headline: Delete Load “{load}”
             text: The load will no longer be associated with this model. The loadentry itself remains untouched. This action can't be undone! Proceed with caution!
         deleted: The load “{load}” was deleted
-    saved: Your changes to “{name}” have been successfully saved
+    saved: The changes to “{name}” have been successfully saved
     duplicated: Model “{name}” successfully duplicated
     nodetails: This category has no detail information
-    created: Your model “{name}” was created successfully
-    deleted: Your model “{name}” was deleted
+    created: The model “{name}” was created successfully
+    deleted: The model “{name}” was deleted
     assign-load: Assign load
     resubmit: Please re-select your newly created values and re-submit the form in order to save it.
     registration:
