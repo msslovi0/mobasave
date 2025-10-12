@@ -662,7 +662,13 @@ class DatabaseController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->security->getUser();
         $id = $request->getSession()->get('database');
-        $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+        if(strlen($id)==32) {
+            $database = $entityManager->getRepository(Database::class)->findOneBy(["uuid" => hex2bin($id)]);
+        } elseif(is_numeric($id)) {
+            $database = $entityManager->getRepository(Database::class)->findOneBy(["id" => $id]);
+        } else {
+            $database = false;
+        }
 
         if(!is_object($database)) {
             return $this->redirectToRoute('mbs_home');
