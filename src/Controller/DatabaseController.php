@@ -650,7 +650,7 @@ class DatabaseController extends AbstractController
             $translator->trans('model.deleted', ['name' => $model->getName()])
         );
         $entityManager->flush();
-        return $this->redirectToRoute('mbs_database', ['id' => str_replace("0x","",$database->getUuid()->toHex())]);
+        return $this->redirectToRoute('mbs_database', ['id' => $database]);
 
 
     }
