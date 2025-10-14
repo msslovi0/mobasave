@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
+use App\Entity\Database;
 use App\Form\NewPasswordFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -103,7 +103,9 @@ class UserController extends AbstractController
             $response = new Response();
             $response->setStatusCode(Response::HTTP_OK);
         }
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('user/profile.html.twig', [
+            "databases" => $databases,
             'user' => $user,
             'userform' => $form,
         ]);
@@ -151,7 +153,9 @@ class UserController extends AbstractController
             );
         }
 
+        $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         return $this->render('security/password.html.twig', [
+            "databases" => $databases,
             'resetForm' => $form,
             'user' => $user,
         ]);
