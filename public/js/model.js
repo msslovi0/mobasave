@@ -316,7 +316,7 @@ $(function() {
         var position = ($('#position_'+name).find(':selected').val());
         $.post(path, {name: name, defaultvalue: defaultvalue, position: position, ajax: 1}, function (response, textstatus, xhr) {
             if(xhr.status==200) {
-                $('#live-panel').append(throwNotification(name, path))
+                $('#live-panel').append(throwNotification(response.headline, response.text))
                 $('.hide-notification').on('click', function() {
                     console.log($(this).parent().parent().parent().fadeOut());
                 });

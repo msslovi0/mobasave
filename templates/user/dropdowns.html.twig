@@ -96,6 +96,7 @@
                                             <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap max-w-3xs sm:pl-0">
                                                 <div class="md:ml-4">
                                                     <div class="font-medium text-gray-900 dark:text-white">
+                                                        {% if(route_exists('mbs_' ~ key ~ '_list')) %}
                                                         <div class="grid grid-cols-1 max-w-3xs">
                                                             <select name="positon_{{ key }}" id="position_{{ key }}" data-name="{{ key }}" data-path="{{ path('mbs_dropdown_default') }}" class="dropdown-default col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700">
                                                                 <option value="">{{ 'global.no-selection'|trans }}</option>
@@ -107,6 +108,7 @@
                                                                 <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
                                                             </svg>
                                                         </div>
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                             </td>

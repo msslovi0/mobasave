@@ -289,7 +289,18 @@ class UserController extends AbstractController
         $entityManager->persist($userDropdown);
         $entityManager->flush();
 
-        return new Response('{"success": true}');
+        if($defaultvalue!="") {
+            $record = $entityManager->getRepository('App\\Entity\\'.$name)->findOneBy(["id" => $defaultvalue]);
+
+        }
+
+        $headline = $translator->trans('global.notifications.defaults', ['name' => $translator->trans('model.field.'.$name)]);
+        $text[] = $translator->trans('global.notifications.new-value', ['value' => $defaultvalue=='' ? $translator->trans('global.no-selection') : $record->getName()]);
+        $text[] = $translator->trans('global.notifications.new-position', ['value' => $position=='' ? $translator->trans('global.no-selection') : $position]);
+
+        $text = implode("<br/>", $text);
+
+        return new Response('{"success": true, "headline": "'.$headline.'", "text": "'.$text.'"}');
     }
 
 }

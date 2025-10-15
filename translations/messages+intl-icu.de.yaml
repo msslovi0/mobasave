@@ -147,6 +147,9 @@ global:
     main-menu: Hauptmenü öffnen
     notifications:
         view: Benachrichtigungen anzeigen
+        defaults: Standards für „{name}“ aktualisiert
+        new-value: "Neuer Wert: {value}"
+        new-position: "Neue Position: {value}"
     nav:
         model: Modell
         details: Details
