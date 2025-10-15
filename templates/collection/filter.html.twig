@@ -18,6 +18,7 @@
                     </div>
 
                     <!-- Filters -->
+                    {% if filters is defined %}
                     <form id="mobile-filterform" class="mt-4" action="{{ path('mbs_database_filter', {id: app.session.get('database')}) }}" method="get">
                         <input type="hidden" name="search" value="{{ app.request.get('search') }}"/>
                         {% for key in filters|keys %}
@@ -70,6 +71,7 @@
 
                         </div>
                     </form>
+                    {% endif %}
                 </el-dialog-panel>
             </div>
         </dialog>
@@ -87,6 +89,7 @@
 
                 <span></span>
 
+                {% if filters is defined %}
                 <div class="hidden sm:block">
                     <div class="flow-root">
                         <el-popover-group class="-mx-4 flex items-center divide-x divide-gray-200">
@@ -140,6 +143,7 @@
                         </el-popover-group>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </form>
 
