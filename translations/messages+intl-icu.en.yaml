@@ -544,7 +544,7 @@ status:
         headline: Forbidden
         subline: You are not allowed to access this page.
         button: Go back home
-condition:
+condition: &condition_template
     <<: *dropdown_template
     add: New Condition
     list:
