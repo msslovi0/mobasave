@@ -82,6 +82,8 @@ global:
         instagram: Instagram
         youtube: YouTube
         tiktok: TikTok
+    notification:
+        file-added: File added
     yes: Yes
     no: No
     auto: Auto

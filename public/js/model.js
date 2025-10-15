@@ -463,6 +463,19 @@ $(function() {
         }
     }
 
+    $('#form_image').on('change', function() {
+        $('#live-panel').append(throwNotification($('#live-panel').data('file-added'), $('#form_image').val().replace(/C:\\fakepath\\/,'')))
+        $('.hide-notification').on('click', function() {
+            console.log($(this).parent().parent().parent().fadeOut());
+        });
+    })
+    $('#form_file').on('change', function() {
+        $('#live-panel').append(throwNotification($('#live-panel').data('file-added'), $('#form_image').val().replace(/C:\\fakepath\\/,'')))
+        $('.hide-notification').on('click', function() {
+            console.log($(this).parent().parent().parent().fadeOut());
+        });
+    })
+
     const dropZone = document.getElementById("drop-zone");
     $('#drop-zone').on('drop', function(event) {
         dropHandler(event, $('#drop-zone').data('type'));
@@ -539,7 +552,10 @@ $(function() {
                         document.getElementById('form_file').files = event.originalEvent.dataTransfer.files;
                         $('#icon-holder').html(file.name)
                     }
-                    console.log(document.getElementById('form_file').value);
+                    $('#live-panel').append(throwNotification($('#live-panel').data('file-added'), file.name))
+                    $('.hide-notification').on('click', function() {
+                        console.log($(this).parent().parent().parent().fadeOut());
+                    });
 
                 } else {
                     document.getElementById(('filetype-error')).classList.remove('hidden');
