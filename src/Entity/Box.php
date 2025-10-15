@@ -6,6 +6,7 @@ use App\Repository\BoxRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: BoxRepository::class)]
 #[ORM\Table(name: 'mbs_box')]
@@ -27,6 +28,9 @@ class Box
      */
     #[ORM\OneToMany(targetEntity: Model::class, mappedBy: 'box')]
     private Collection $models;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
 
     public function __construct()
     {
@@ -88,6 +92,18 @@ class Box
                 $model->setBox(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

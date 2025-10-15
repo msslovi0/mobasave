@@ -6,6 +6,7 @@ use App\Repository\ProtocolRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ProtocolRepository::class)]
 #[ORM\Table(name: 'mbs_protocol')]
@@ -27,6 +28,9 @@ class Protocol
      */
     #[ORM\OneToMany(targetEntity: Digital::class, mappedBy: 'protocol')]
     private Collection $digitals;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
 
     public function __construct()
     {
@@ -88,6 +92,18 @@ class Protocol
                 $digital->setProtocol(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

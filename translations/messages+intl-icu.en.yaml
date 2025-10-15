@@ -86,6 +86,7 @@ global:
     no: No
     auto: Auto
     edit: Edit
+    editvalues: Edit values
     gtin:
         ignore: No automated EAN calculation
         use: Use model for EAN as is (already contains checksum)
@@ -137,6 +138,7 @@ global:
             reset-password: Reset your password
             password-mail-sent: "Reset your password: email send"
     back: Back
+    backto: Back to “{name}”
     user-menu: Open user menu
     main-menu: Open main menu
     notifications:
@@ -153,15 +155,36 @@ global:
         dealer: Dealer
         company: Companies
         profile: Profile
+        dropdowns: Dropdown Values
         change-password: Change Password
         add-database: Collection
         join: Register for free
         history: Version History
         welcome: Welcome
+        box: Boxes
+        axle: Axles
+        containertype: Containertypes
+        coupler: Couplers
+        decoder: Decoders
+        edition: Editions
+        pininterface: Pininterfaces
+        power: Power
+        protocol: Protocols
+        project: Projects
+        status: Status
+        condition: Conditions
+        modelset: Sets
+        subcategory: Subcategories
+        scale: Scales
+        scaletrack: Tracks
+        epoch: Epochs
+        subepoch: Subepochs
+        maker: Makers
     error:
         filetype-invalid: Not a valid filetype
     logo: Logo
     vector: Vector
+    no-selection: No selection
 
 login:
     title: Tickets please!
@@ -332,6 +355,267 @@ storage:
             other {Can't delete storage “{name}”. There are still # models assigned.}
         }
 
+dropdown: &dropdown_template
+    add: New Dropdown
+    list:
+        name: Name
+        defaultvalue: Default value for new records
+        position: Position in Navigation
+        add: Add Dropdown
+        edit: Edit
+    field:
+        name: Name
+        color: Color
+        category: Categorie
+        scale: Scale
+        epoch: Epoch
+    delete:
+        headline: Delete Dropdown
+        text: The dropdown will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to dropdown “{name}” have been successfully saved
+    deleted: The dropdown “{name}” was deleted
+    all: All Dropdowns
+    system: This is a systemwide dropdown and therefor cannot be edited.
+    models: Models mit „{name}“
+    back: Back to „{name}“
+    show-all: >-
+        {count, plural,
+            =1    {Show one model for “{name}”}
+            other {Show all # models for “{name}”}
+        }
+    has-models: >-
+        {count, plural,
+            =1    {Can't delete “{name}”. There is still one model assigned.}
+            other {Can't delete “{name}”. There are still # models assigned.}
+        }
+box:
+    <<: *dropdown_template
+    add: New Box
+    list:
+        add: Add Box
+    delete:
+        headline: Delete Box
+        text: The box will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to box “{name}” have been successfully saved
+    deleted: The box “{name}” was deleted
+    all: All Boxes
+    system: This is a systemwide box and therefor cannot be edited.
+scale:
+    <<: *dropdown_template
+    add: New Scale
+    list:
+        add: Add Scale
+    delete:
+        headline: Delete Scale
+        text: The scale will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to scale “{name}” have been successfully saved
+    deleted: The scale “{name}” was deleted
+    all: All Scales
+    system: This is a systemwide scale and therefor cannot be edited.
+axle:
+    <<: *dropdown_template
+    add: New Axle Configuration
+    list:
+        add: Add Axle Configuration
+    delete:
+        headline: Delete Axle Configuration
+        text: The axle configuration will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to axle configuration “{name}” have been successfully saved
+    deleted: The axle configuration “{name}” was deleted
+    all: All Axle Configurations
+    system: This is a systemwide axle configuration and therefor cannot be edited.
+containertype:
+    <<: *dropdown_template
+    add: New Containertype
+    list:
+        add: Add Containertype
+    delete:
+        headline: Delete Containertype
+        text: The containertype will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to containertype “{name}” have been successfully saved
+    deleted: The containertype “{name}” was deleted
+    all: All Containertypes
+    system: This is a systemwide containertype and therefor cannot be edited.
+coupler:
+    <<: *dropdown_template
+    add: New Coupler
+    list:
+        add: Add Coupler
+    delete:
+        headline: Delete Coupler
+        text: The coupler will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to coupler “{name}” have been successfully saved
+    deleted: The coupler “{name}” was deleted
+    all: All Couplers
+    system: This is a systemwide coupler and therefor cannot be edited.
+decoder:
+    <<: *dropdown_template
+    add: New Decoder
+    list:
+        add: Add Decoder
+    delete:
+        headline: Delete Decoder
+        text: The decoder will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to decoder “{name}” have been successfully saved
+    deleted: The decoder “{name}” was deleted
+    all: All Decoders
+    system: This is a systemwide decoder and therefor cannot be edited.
+edition:
+    <<: *dropdown_template
+    add: New Edition
+    list:
+        add: Add Edition
+    delete:
+        headline: Delete Edition
+        text: The edition will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to edition “{name}” have been successfully saved
+    deleted: The edition “{name}” was deleted
+    all: All Editions
+    system: This is a systemwide edition and therefor cannot be edited.
+pininterface:
+    <<: *dropdown_template
+    add: New Interface
+    list:
+        add: Add Interface
+    delete:
+        headline: Delete Interface
+        text: The interface will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to interface “{name}” have been successfully saved
+    deleted: The interface “{name}” was deleted
+    all: All Interfaces
+    system: This is a systemwide interface and therefor cannot be edited.
+power:
+    <<: *dropdown_template
+    add: New Power
+    list:
+        add: Add Power
+    delete:
+        headline: Delete Power
+        text: The power will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to power “{name}” have been successfully saved
+    deleted: The power “{name}” was deleted
+    all: All Powers
+    system: This is a systemwide power and therefor cannot be edited.
+protocol:
+    <<: *dropdown_template
+    add: New Protocol
+    list:
+        add: Add Protocol
+    delete:
+        headline: Delete Protocol
+        text: The protocol will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to protocol “{name}” have been successfully saved
+    deleted: The protocol “{name}” was deleted
+    all: All Protocols
+    system: This is a systemwide protocol and therefor cannot be edited.
+project:
+    <<: *dropdown_template
+    add: New Project
+    list:
+        add: Add Project
+    delete:
+        headline: Delete Project
+        text: The project will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to project “{name}” have been successfully saved
+    deleted: The project “{name}” was deleted
+    all: All Projects
+    system: This is a systemwide project and therefor cannot be edited.
+status:
+    <<: *dropdown_template
+    add: New Status
+    list:
+        add: Add Status
+    delete:
+        headline: Delete Status
+        text: The status will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to status “{name}” have been successfully saved
+    deleted: The status “{name}” was deleted
+    all: All Status
+    system: This is a systemwide status and therefor cannot be edited.
+    notfound:
+        code: 404
+        headline: Page not found
+        subline: Sorry, we couldn’t find the page you’re looking for.
+        button: Go back home
+    forbidden:
+        code: 403
+        headline: Forbidden
+        subline: You are not allowed to access this page.
+        button: Go back home
+condition:
+    <<: *dropdown_template
+    add: New Condition
+    list:
+        add: Add Condition
+    delete:
+        headline: Delete Condition
+        text: The condition will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to condition “{name}” have been successfully saved
+    deleted: The condition “{name}” was deleted
+    all: All Conditions
+    system: This is a systemwide condition and therefor cannot be edited.
+modelset:
+    <<: *dropdown_template
+    add: New Set
+    list:
+        add: Add Set
+    delete:
+        headline: Delete Set
+        text: The set will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to set “{name}” have been successfully saved
+    deleted: The set “{name}” was deleted
+    all: All Sets
+    system: This is a systemwide set and therefor cannot be edited.
+subcategory:
+    <<: *dropdown_template
+    add: New Subcategory
+    list:
+        add: Add Subcategory
+    delete:
+        headline: Delete Subcategory
+        text: The subcategory will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to subcategory “{name}” have been successfully saved
+    deleted: The subcategory “{name}” was deleted
+    all: All Subcategories
+    system: This is a systemwide subcategory and therefor cannot be edited.
+scaletrack:
+    <<: *dropdown_template
+    add: New Track
+    list:
+        add: Add Track
+    delete:
+        headline: Delete Track
+        text: The track will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to track “{name}” have been successfully saved
+    deleted: The track “{name}” was deleted
+    all: All Tracks
+    system: This is a systemwide track and therefor cannot be edited.
+epoch:
+    <<: *dropdown_template
+    add: New Epoch
+    list:
+        add: Add Epoch
+    delete:
+        headline: Delete Epoch
+        text: The epoch will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to epoch “{name}” have been successfully saved
+    deleted: The epoch “{name}” was deleted
+    all: All Epochs
+    system: This is a systemwide epoch and therefor cannot be edited.
+subepoch:
+    <<: *dropdown_template
+    add: New Subepoch
+    list:
+        add: Add Subepoch
+    delete:
+        headline: Delete Subepoch
+        text: The subepoch will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to subepoch “{name}” have been successfully saved
+    deleted: The subepoch “{name}” was deleted
+    all: All Subepochs
+    system: This is a systemwide subepoch and therefor cannot be edited.
+modelcondition: *condition_template
+
 company:
     add: New Company
     list:
@@ -381,6 +665,56 @@ company:
         {count, plural,
             =1    {Can't delete company “{name}”. There is still one model assigned.}
             other {Can't delete company “{name}”. There are still # models assigned.}
+        }
+maker:
+    add: New Maker
+    list:
+        add: Add Maker
+        edit: Edit
+        logo: Logo
+    field:
+        name: Name
+        abbr: Abbreviation
+        street: Street
+        zip: Zip
+        city: City
+        country: Country
+        state: State
+        logo: Logo
+        extra: Additional address information
+        email: Email address
+        url: Website URL
+        facebook: Facebook
+        instagram: Instagram
+        youtube: YouTube
+        twitter: Twitter
+        tiktok: TikTok
+        linkedin: LinkedIn
+        abbr2: Abbreviation (2 chars)
+        abbr3: Abbreviation (3 chars)
+        colors: Default colors
+        color1: Color 1
+        color2: Color 2
+        color3: Color 3
+    delete:
+        delete: Delete
+        cancel: Cancel
+        headline: Delete Maker
+        text: The maker will be deleted. This action can't be undone! Proceed with caution!
+    saved: The changes to maker “{name}” have been successfully saved
+    deleted: The maker “{name}” was deleted
+    models: Models by “{name}”
+    back: Back to “{name}”
+    system: This is a systemwide maker and therefor cannot be edited.
+    show-all: >-
+        {count, plural,
+            =1    {Show one model from “{name}”}
+            other {Show all # models from “{name}”}
+        }
+    has-models: >-
+        {count, plural,
+            =1    {Can't delete maker “{name}”. There is still one model assigned.}
+            other {Can't delete maker “{name}”. There are still # models assigned.}
         }
 model:
     list:
@@ -462,6 +796,7 @@ model:
         parent: "Parent is:"
         file: File
         documenttype: Document type
+        edition: Edition
     epoch:
         till-today: today
     document:
@@ -503,17 +838,6 @@ upload:
     failed: Upload failed. Please try again.
     success: Upload successful
 
-status:
-    notfound:
-        code: 404
-        headline: Page not found
-        subline: Sorry, we couldn’t find the page you’re looking for.
-        button: Go back home
-    forbidden:
-        code: 403
-        headline: Forbidden
-        subline: You are not allowed to access this page.
-        button: Go back home
 pagination:
     results: Showing <span class="font-medium">{ start }</span> to <span class="font-medium">{ end }</span> of <span class="font-medium">{ total }</span> results
     sorting: sorted by {column} {order}
@@ -529,7 +853,7 @@ welcome:
         piko: PIKO
     screenshot: Screenshot
     whats-new: Neue Funktionen
-    latest-version: "Aktuelle Version: 1.1.0 beta"
+    latest-version: "Aktuelle Version: 1.2.0 beta"
     headline: Eine Modellbahn&shy;sammlung verwalten war noch nie so einfach
     claim: Von Modellbahnern für Modellbahner. MoBaSaVe ist genau auf die Bedürfnisse der Modellbahner zugeschnitten. Die perfekte Sammlungsverwaltung für jeden Modelleisenbahner!
     get-started: Jetzt kostenlos testen

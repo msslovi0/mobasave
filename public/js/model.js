@@ -309,9 +309,51 @@ $(function() {
        }
     });
 
-    $('#form_containertype').on('click', function() {
+    $('.dropdown-default').on('change', function() {
+        var name = $(this).data('name');
+        var path = $(this).data('path');
+        var defaultvalue = ($('#defaultvalue_'+name).find(':selected').val());
+        var position = ($('#position_'+name).find(':selected').val());
+        $.post(path, {name: name, defaultvalue: defaultvalue, position: position, ajax: 1}, function (response, textstatus, xhr) {
+            if(xhr.status==200) {
+                $('#live-panel').append(throwNotification(name, path))
+                $('.hide-notification').on('click', function() {
+                    console.log($(this).parent().parent().parent().fadeOut());
+                });
+            }
+        });
+    });
+
+
+    function throwNotification(headline, text) {
+        return "<div class=\"pointer-events-auto w-full max-w-sm translate-y-0 transform rounded-lg bg-white opacity-100 shadow-lg outline-1 outline-black/5 transition duration-300 ease-out sm:translate-x-0 dark:bg-gray-800 dark:-outline-offset-1 dark:outline-white/10 starting:translate-y-2 starting:opacity-0 starting:sm:translate-x-2 starting:sm:translate-y-0\">\n" +
+            "                <div class=\"p-4\">\n" +
+            "                    <div class=\"flex items-start\">\n" +
+            "                        <div class=\"shrink-0\">\n" +
+            "                            <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" data-slot=\"icon\" aria-hidden=\"true\" class=\"size-6 text-green-400\">\n" +
+            "                                <path d=\"M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path>\n" +
+            "                            </svg>\n" +
+            "                        </div>\n" +
+            "                        <div class=\"ml-3 w-0 flex-1 pt-0.5\">\n" +
+            "                            <p class=\"text-sm font-medium text-gray-900 dark:text-white\">"+headline+"</p>\n" +
+            "                            <p class=\"mt-1 text-sm text-gray-500 dark:text-gray-400\">"+text+"</p>\n" +
+            "                        </div>\n" +
+            "                        <div class=\"ml-4 flex shrink-0\">\n" +
+            "                            <button type=\"button\" class=\"inline-flex hide-notification rounded-md text-gray-400 hover:text-gray-500 focus:outline-2 focus:outline-offset-2 focus:outline-green-800 dark:hover:text-white dark:focus:outline-grren-700\">\n" +
+            "                                <span class=\"sr-only\">Close</span>\n" +
+            "                                <svg viewBox=\"0 0 20 20\" fill=\"currentColor\" data-slot=\"icon\" aria-hidden=\"true\" class=\"size-5\">\n" +
+            "                                    <path d=\"M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z\"></path>\n" +
+            "                                </svg>\n" +
+            "                            </button>\n" +
+            "                        </div>\n" +
+            "                    </div>\n" +
+            "                </div>\n" +
+            "            </div>";
+    }
+
+    $('#form_containertype').on('click', function () {
         var type = $('#form_containertype').find(':selected').text();
-        switch(type) {
+        switch (type) {
             case "22G1":
             case "22U1":
             case "2MT5":
@@ -332,55 +374,55 @@ $(function() {
             case "EMT6":
             case "COIL":
                 var length = "70.07"
-            break;
+                break;
             case "45G1":
             case "45R1":
             case "4FG1":
             case "4EG1":
             case "42G1":
                 var length = "140.1"
-            break;
+                break;
             case "C 715":
                 var length = "81.6"
-            break;
+                break;
             case "L5G1":
             case "LEG1":
                 var length = "157.7"
-            break;
+                break;
             case "MFRG":
             case "MPR1":
             case "MFR1":
             case "MFR3":
                 var length = "162.9"
-            break;
+                break;
             case "MFGB":
             case "MEG1":
             case "MFG1":
                 var length = "168.2"
-            break;
+                break;
             case "3MB0":
             case "3DB0":
                 var length = "105.1"
-            break;
+                break;
         }
-        if(length!="") {
+        if (length != "") {
             $('#form_length').val(length);
         }
     });
-    if($('#form_containertype').length) {
-        if($('#form_registration').val()!="") {
+    if ($('#form_containertype').length) {
+        if ($('#form_registration').val() != "") {
             validateChecksum($('#form_registration').val());
         }
-        $('#form_registration').on('keyup', function() {
+        $('#form_registration').on('keyup', function () {
             validateChecksum($('#form_registration').val());
         })
     }
 
     function validateChecksum(value) {
-        if(value.length==0) {
+        if (value.length == 0) {
             $('#registration-message').html('');
             $('#registration-icon').html('');
-        } else if(value.length<10 || value.length>11) {
+        } else if (value.length < 10 || value.length > 11) {
             $('#registration-message').html($('#registration-message').data('error-length'));
             $('#registration-icon').html('<path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" fill-rule="evenodd"></path>');
             $('#registration-icon').addClass('text-red-600 dark:text-red-400');

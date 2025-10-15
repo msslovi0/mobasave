@@ -211,6 +211,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: DocumentType::class, mappedBy: 'user')]
     private Collection $documentTypes;
 
+    /**
+     * @var Collection<int, UserDropdown>
+     */
+    #[ORM\OneToMany(targetEntity: UserDropdown::class, mappedBy: 'user')]
+    private Collection $userDropdowns;
+
     public function __construct()
     {
         $this->userdatabases = new ArrayCollection();
@@ -239,6 +245,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->modelsets = new ArrayCollection();
         $this->editions = new ArrayCollection();
         $this->documentTypes = new ArrayCollection();
+        $this->userDropdowns = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1168,6 +1175,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($documentType->getUser() === $this) {
                 $documentType->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserDropdown>
+     */
+    public function getUserDropdowns(): Collection
+    {
+        return $this->userDropdowns;
+    }
+
+    public function addUserDropdown(UserDropdown $userDropdown): static
+    {
+        if (!$this->userDropdowns->contains($userDropdown)) {
+            $this->userDropdowns->add($userDropdown);
+            $userDropdown->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserDropdown(UserDropdown $userDropdown): static
+    {
+        if ($this->userDropdowns->removeElement($userDropdown)) {
+            // set the owning side to null (unless already changed)
+            if ($userDropdown->getUser() === $this) {
+                $userDropdown->setUser(null);
             }
         }
 

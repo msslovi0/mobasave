@@ -86,6 +86,7 @@ global:
     no: Nein
     auto: Automatisch
     edit: Bearbeiten
+    editvalues: Werte bearbeiten
     gtin:
         ignore: EAN-Codes nicht automatisch erzeugen
         use: Artikelnummer an EAN anhängen (enthält bereits Checksumme)
@@ -98,6 +99,8 @@ global:
         }
     collections: Sammlungen
     save: Speichern
+    delete: Löschen
+    cancel: Abbrechen
     duplicate: Duplizieren
     upload:
         file: Datei auswählen
@@ -137,6 +140,7 @@ global:
             reset-password: Passwort zurücksetzen
             password-mail-sent: "Passwort zurücksetzen: E-Mail gesendet"
     back: Zurück
+    backto: Zurück zu „{name}“
     user-menu: Benutzermenü öffnen
     main-menu: Hauptmenü öffnen
     notifications:
@@ -147,22 +151,43 @@ global:
         digital: Digital
         load: Beladung
         documents: Dokumente
-        storage: Aufbewahrung
+        storage: Aufbewahrungen
         logout: Logout
         collections: Sammlungen
         manufacturer: Hersteller
         dealer: Händler
         company: Gesellschaften
         profile: Profil
+        dropdowns: Auswahlfelder
         change-password: Passwort ändern
         add-database: Sammlung
         join: Kostenlos anmelden
         history: Versionshistorie
         welcome: Willkommen
+        box: Verpackungen
+        axle: Achsfolgen
+        containertype: Containertypen
+        coupler: Kupplungen
+        decoder: Decoder
+        edition: Serien
+        pininterface: Schnittstellen
+        power: Strom
+        protocol: Protokolle
+        project: Projekte
+        status: Status
+        condition: Zustände
+        modelset: Sets
+        subcategory: Unterkategorien
+        scale: Maßstäbe
+        scaletrack: Spurweiten
+        epoch: Epochen
+        subepoch: Perioden
+        maker: Fahrzeughersteller
     error:
         filetype-invalid: Ungültiger Dateityp
     logo: Logo
     vector: Vector
+    no-selection: Keine Auswahl
 
 login:
     title: Die Fahrkarten bitte!
@@ -333,6 +358,267 @@ storage:
             other {Die Aufbewahrung „{name}“ kann nicht gelöscht werden, da ihm noch # Modelle zugewiesen sind.}
         }
 
+dropdown: &dropdown_template
+    add: Neues Dropdown
+    list:
+        name: Name
+        defaultvalue: Standardwert bei Neuanlage
+        position: Position in der Navigation
+        add: Dropdown hinzufügen
+        edit: Bearbeiten
+    field:
+        name: Name
+        color: Farbe
+        category: Kategorie
+        scale: Maßstab
+        epoch: Epoche
+    delete:
+        headline: Dropdown löschen
+        text: Das Dropdown wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für das Dropdown „{name}“ wurden erfolgreich gespeichert
+    deleted: Das Dropdown „{name}“ wurde gelöscht
+    all: Alle Dropdowns
+    system: Dies ist ein vom System zur Verfügung gestelltes Dropdown. Die Stammdaten können nicht bearbeitet werden.
+    models: Modelle mit „{name}“
+    back: Zurück zu „{name}“
+    show-all: >-
+        {count, plural,
+            =1    {Zeige ein Modell für „{name}“}
+            other {Zeige # Modelle für „{name}“}
+        }
+    has-models: >-
+        {count, plural,
+            =1    {Kann nicht gelöscht werden, da noch ein Modell zugewiesen ist.}
+            other {Kann nicht gelöscht werden, da noch # Modelle zugewiesen sind.}
+        }
+box:
+    <<: *dropdown_template
+    add: Neue Verpackung
+    list:
+        add: Verpackung hinzufügen
+    delete:
+        headline: Verpackung löschen
+        text: Die Verpackung wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für die Verpackung „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Verpackung „{name}“ wurde gelöscht
+    all: Alle Verpackungen
+    system: Dies ist eine vom System zur Verfügung gestellte Verpackung. Die Stammdaten können nicht bearbeitet werden.
+scale:
+    <<: *dropdown_template
+    add: Neuer Maßstab
+    list:
+        add: Maßstab hinzufügen
+    delete:
+        headline: Maßstab löschen
+        text: Der Maßstab wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für den Maßstab „{name}“ wurden erfolgreich gespeichert
+    deleted: Der Maßstab „{name}“ wurde gelöscht
+    all: Alle Maßstäbe
+    system: Dies ist ein vom System zur Verfügung gestellter Maßstab. Die Stammdaten können nicht bearbeitet werden.
+axle:
+    <<: *dropdown_template
+    add: Neue Achsfolge
+    list:
+        add: Achsfolge hinzufügen
+    delete:
+        headline: Achsfolge löschen
+        text: Die Achsfolge wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für die Achsfolge „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Achsfolge „{name}“ wurde gelöscht
+    all: Alle Achsfolgen
+    system: Dies ist eine vom System zur Verfügung gestellte Achsfolge. Die Stammdaten können nicht bearbeitet werden.
+containertype:
+    <<: *dropdown_template
+    add: Neuer Containertypcode
+    list:
+        add: Containertypcode hinzufügen
+    delete:
+        headline: Containertypcode löschen
+        text: Der Containertypcode wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für den Containertypcode „{name}“ wurden erfolgreich gespeichert
+    deleted: Der Containertypcode „{name}“ wurde gelöscht
+    all: Alle Containertypcodes
+    system: Dies ist ein vom System zur Verfügung gestellter Containertypcode. Die Stammdaten können nicht bearbeitet werden.
+coupler:
+    <<: *dropdown_template
+    add: Neue Kupplung
+    list:
+        add: Kupplung hinzufügen
+    delete:
+        headline: Kupplung löschen
+        text: Die Kupplung wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für die Kupplung „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Kupplung „{name}“ wurde gelöscht
+    all: Alle Kupplungen
+    system: Dies ist eine vom System zur Verfügung gestellte Kupplung. Die Stammdaten können nicht bearbeitet werden.
+decoder:
+    <<: *dropdown_template
+    add: Neuer Decoder
+    list:
+        add: Decoder hinzufügen
+    delete:
+        headline: Decoder löschen
+        text: Der Decoder wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für den Decoder „{name}“ wurden erfolgreich gespeichert
+    deleted: Der Decoder „{name}“ wurde gelöscht
+    all: Alle Decoder
+    system: Dies ist ein vom System zur Verfügung gestellter Decoder. Die Stammdaten können nicht bearbeitet werden.
+edition:
+    <<: *dropdown_template
+    add: Neue Serie
+    list:
+        add: Serie hinzufügen
+    delete:
+        headline: Serie löschen
+        text: Die Serie wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für die Serie „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Serie „{name}“ wurde gelöscht
+    all: Alle Serien
+    system: Dies ist eine vom System zur Verfügung gestellte Serie. Die Stammdaten können nicht bearbeitet werden.
+pininterface:
+    <<: *dropdown_template
+    add: Neue Schnittstelle
+    list:
+        add: Schnittstelle hinzufügen
+    delete:
+        headline: Schnittstelle löschen
+        text: Die Schnittstelle wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für die Schnittstelle „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Schnittstelle „{name}“ wurde gelöscht
+    all: Alle Schnittstellen
+    system: Dies ist eine vom System zur Verfügung gestellte Schnittstelle. Die Stammdaten können nicht bearbeitet werden.
+power:
+    <<: *dropdown_template
+    add: Neue Stromversorgung
+    list:
+        add: Stromversorgung hinzufügen
+    delete:
+        headline: Stromversorgung löschen
+        text: Die Stromversorgung wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für die Stromversorgung „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Stromversorgung „{name}“ wurde gelöscht
+    all: Alle Stromversorgungen
+    system: Dies ist eine vom System zur Verfügung gestellte Stromversorgung. Die Stammdaten können nicht bearbeitet werden.
+protocol:
+    <<: *dropdown_template
+    add: Neues Protokoll
+    list:
+        add: Protokoll hinzufügen
+    delete:
+        headline: Protokoll löschen
+        text: Das Protokoll wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für das Protokoll „{name}“ wurden erfolgreich gespeichert
+    deleted: Das Protokoll „{name}“ wurde gelöscht
+    all: Alle Protokolle
+    system: Dies ist ein vom System zur Verfügung gestelltes Protokoll. Die Stammdaten können nicht bearbeitet werden.
+project:
+    <<: *dropdown_template
+    add: Neues Projekt
+    list:
+        add: Projekt hinzufügen
+    delete:
+        headline: MaProjekt löschen
+        text: Das Projekt wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für das Projekt „{name}“ wurden erfolgreich gespeichert
+    deleted: Das Projekt „{name}“ wurde gelöscht
+    all: Alle Projekte
+    system: Dies ist ein vom System zur Verfügung gestelltes Projekt. Die Stammdaten können nicht bearbeitet werden.
+status:
+    <<: *dropdown_template
+    add: Neuer Status
+    list:
+        add: Status hinzufügen
+    delete:
+        headline: Status löschen
+        text: Der Status wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für den Status „{name}“ wurden erfolgreich gespeichert
+    deleted: Der Status „{name}“ wurde gelöscht
+    all: Alle Status
+    system: Dies ist ein vom System zur Verfügung gestellter Status. Die Stammdaten können nicht bearbeitet werden.
+    notfound:
+        code: 404
+        headline: Seite nicht gefunden
+        subline: Leider konnten wir die gewünschte Seite nicht finden.
+        button: Zurück zur Startseite
+    forbidden:
+        code: 403
+        headline: Nicht autorisiert
+        subline: Du hast keine Berechtigung diese Seite anzuzeigen.
+        button: Zurück zur Startseite
+condition: &condition_template
+    <<: *dropdown_template
+    add: Neuer Zustand
+    list:
+        add: Zustand hinzufügen
+    delete:
+        headline: Zustand löschen
+        text: Der Zustand wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für den Zustand „{name}“ wurden erfolgreich gespeichert
+    deleted: Der Zustand „{name}“ wurde gelöscht
+    all: Alle Zustände
+    system: Dies ist ein vom System zur Verfügung gestellter Zustand. Die Stammdaten können nicht bearbeitet werden.
+modelset:
+    <<: *dropdown_template
+    add: Neues Set
+    list:
+        add: Set hinzufügen
+    delete:
+        headline: Set löschen
+        text: Das Set wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für das Set „{name}“ wurden erfolgreich gespeichert
+    deleted: Das Set „{name}“ wurde gelöscht
+    all: Alle Sets
+    system: Dies ist ein vom System zur Verfügung gestelltes Set. Die Stammdaten können nicht bearbeitet werden.
+subcategory:
+    <<: *dropdown_template
+    add: Neue Unterkategorie
+    list:
+        add: Unterkategorie hinzufügen
+    delete:
+        headline: Unterkategorie löschen
+        text: Die Unterkategorie wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für die Unterkategorie „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Unterkategorie „{name}“ wurde gelöscht
+    all: Alle Unterkategorien
+    system: Dies ist eine vom System zur Verfügung gestellte Unterkategorie. Die Stammdaten können nicht bearbeitet werden.
+scaletrack:
+    <<: *dropdown_template
+    add: Neue Spurweite
+    list:
+        add: Spurweite hinzufügen
+    delete:
+        headline: Spurweite löschen
+        text: Die Spurweite wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für die Spurweite „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Spurweite „{name}“ wurde gelöscht
+    all: Alle Spurweiten
+    system: Dies ist eine vom System zur Verfügung gestellte Spurweite. Die Stammdaten können nicht bearbeitet werden.
+epoch:
+    <<: *dropdown_template
+    add: Neue Epoche
+    list:
+        add: Epoche hinzufügen
+    delete:
+        headline: Epoche löschen
+        text: Die Epoche wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für die Epoche „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Epoche „{name}“ wurde gelöscht
+    all: Alle Epochen
+    system: Dies ist eine vom System zur Verfügung gestellte Epoche. Die Stammdaten können nicht bearbeitet werden.
+subepoch:
+    <<: *dropdown_template
+    add: Neue Periode
+    list:
+        add: Periode hinzufügen
+    delete:
+        headline: Periode löschen
+        text: Die Periode wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für die Periode „{name}“ wurden erfolgreich gespeichert
+    deleted: Die Periode „{name}“ wurde gelöscht
+    all: Alle Perioden
+    system: Dies ist eine vom System zur Verfügung gestellte Periode. Die Stammdaten können nicht bearbeitet werden.
+modelcondition: *condition_template
+
 company:
     add: Neue Gesellschaft
     list:
@@ -380,8 +666,59 @@ company:
         }
     has-models: >-
         {count, plural,
-            =1    {Der Händler „{name}“ kann nicht gelöscht werden, da noch ein Modell zugewiesen ist.}
-            other {Der Händler „{name}“ kann nicht gelöscht werden, da ihm noch # Modelle zugewiesen sind.}
+            =1    {Die Gesellschaft „{name}“ kann nicht gelöscht werden, da noch ein Modell zugewiesen ist.}
+            other {Die Gesellschaft „{name}“ kann nicht gelöscht werden, da ihm noch # Modelle zugewiesen sind.}
+        }
+maker:
+    add: Neue Fahrzeughersteller
+    list:
+        add: Fahrzeughersteller hinzufügen
+        edit: Bearbeiten
+        logo: Logo
+    field:
+        name: Name
+        abbr: Abkürzung
+        street: Straße
+        zip: PLZ
+        city: Ort
+        country: Land
+        state: Staat
+        logo: Logo
+        extra: Adresszusatz
+        email: E-Mail-Adresse
+        url: Homepage
+        facebook: Facebook
+        instagram: Instagram
+        youtube: YouTube
+        twitter: Twitter
+        tiktok: TikTok
+        linkedin: LinkedIn
+        abbr2: Abkürzung (2 Zeichen)
+        abbr3: Abkürzung (3 Zeichen)
+        colors: Standardfarben
+        color1: Farbe 1
+        color2: Farbe 2
+        color3: Farbe 3
+        category: Kategorie
+    delete:
+        delete: Löschen
+        cancel: Abbrechen
+        headline: Fahrzeughersteller löschen
+        text: Der Fahrzeughersteller wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bist du sicher?
+    saved: Die Änderungen für den Fahrzeughersteller „{name}“ wurden erfolgreich gespeichert
+    deleted: Der Fahrzeughersteller „{name}“ wurde gelöscht
+    models: Modelle von „{name}“
+    back: Zurück zu „{name}“
+    system: Dies ist ein vom System zur Verfügung gestellter Fahrzeughersteller. Die Stammdaten können nicht bearbeitet werden.
+    show-all: >-
+        {count, plural,
+            =1    {Zeige ein Modell von „{name}“}
+            other {Zeige # Modelle von „{name}“}
+        }
+    has-models: >-
+        {count, plural,
+            =1    {Der Fahrzeughersteller „{name}“ kann nicht gelöscht werden, da noch ein Modell zugewiesen ist.}
+            other {Der Fahrzeughersteller „{name}“ kann nicht gelöscht werden, da ihm noch # Modelle zugewiesen sind.}
         }
 model:
     list:
@@ -443,7 +780,7 @@ model:
         axle: Achsfolge
         power: Strom
         coupler: Kupplung
-        maker: Produzent
+        maker: Fahrzeughersteller
         digital: Digital
         sound: Sound
         smoke: Rauch
@@ -463,6 +800,7 @@ model:
         parent: "Elternelement ist:"
         file: Datei
         documenttype: Dokumententyp
+        edition: Serie
     epoch:
         till-today: heute
     document:
@@ -500,17 +838,6 @@ model:
         valid: Prüfziffer korrekt
         checksum: Prüfziffer ist <b>{checksum}</b>
 
-status:
-    notfound:
-        code: 404
-        headline: Seite nicht gefunden
-        subline: Leider konnten wir die gewünschte Seite nicht finden.
-        button: Zurück zur Startseite
-    forbidden:
-        code: 403
-        headline: Nicht autorisiert
-        subline: Du hast keine Berechtigung diese Seite anzuzeigen.
-        button: Zurück zur Startseite
 pagination:
     results: Zeige <span class="font-medium">{ start }</span> bis <span class="font-medium">{ end }</span> von <span class="font-medium">{ total }</span> Ergebnissen
     sorting: sortiert nach {column} {order}
@@ -530,7 +857,7 @@ welcome:
         piko: PIKO
     screenshot: Screenshot
     whats-new: Neue Funktionen
-    latest-version: "Aktuelle Version: 1.1.0 beta"
+    latest-version: "Aktuelle Version: 1.2.0 beta"
     headline: Eine Modellbahn&shy;sammlung verwalten war noch nie so einfach
     claim: Von Modellbahnern für Modellbahner. MoBaSaVe ist genau auf die Bedürfnisse der Modellbahner zugeschnitten. Die perfekte Sammlungsverwaltung für jeden Modelleisenbahner!
     get-started: Jetzt kostenlos testen

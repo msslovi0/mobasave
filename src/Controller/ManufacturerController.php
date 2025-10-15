@@ -236,6 +236,7 @@ class ManufacturerController extends AbstractController
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         $models = $entityManager->getRepository(Model::class)->findBy(["modeldatabase" => $databases, "manufacturer" => $manufacturer]);
         return $this->render('manufacturer/manufacturer.html.twig', [
+            "current" => $manufacturer,
             "models" => $models,
             "databases" => $databases,
             "manufacturerform" => $form->createView(),

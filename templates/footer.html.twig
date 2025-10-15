@@ -34,6 +34,12 @@
     </div>
     </div>
 </footer>
+<!-- Global notification live region, render this permanently at the end of the document -->
+<div aria-live="assertive" class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6">
+    <div id="live-panel" class="flex w-full flex-col items-center space-y-4 sm:items-end">
+        <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
+    </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 <script src="{{ asset('js/jquery-3.7.1.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/model.js') }}" type="text/javascript"></script>

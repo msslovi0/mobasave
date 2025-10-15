@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ ('global.nav.'~current)|trans }}
+{% endblock %}
+{% block body %}
+    <div class="py-10">
+        <header>
+            <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ ('global.nav.'~current)|trans }}</h1>
+                <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                    <a href="{{ path('mbs_' ~ current ~ '_add') }}" type="button" class="rounded-md bg-lime-400 px-3 py-2 text-sm font-semibold text-green-800 shadow-xs hover:bg-lime-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-400 dark:bg-lime-300 dark:shadow-none dark:focus-visible:outline-lime-300 whitespace-nowrap flex"><svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="mr-1.5 -ml-0.5 size-5"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" /></svg>{{ (current~'.list.add')|trans }}</a>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="mx-auto max-w-10xl px-4 py-8 sm:px-6 lg:px-8">
+                <div class="px-4 sm:px-6 lg:px-8">
+                    <div class="col-span-full my-5">
+                        {% for message in app.flashes('error') %}
+                            <div class="border-l-4 border-red-400 bg-red-50 p-4 dark:border-red-500 dark:bg-red-500/10">
+                                <div class="flex">
+                                    <div class="shrink-0">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-red-400">
+                                            <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-red-700 dark:text-red-300">{{ message }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('success') %}
+                            <div class="border-l-4 border-green-400 bg-green-50 p-4 dark:border-green-500 dark:bg-green-500/10">
+                                <div class="flex">
+                                    <div class="shrink-0">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-green-400">
+                                            <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-green-700 dark:text-green-300">{{ message }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if values.getTotalItemCount>0 %}
+                    {{ knp_pagination_render(values) }}
+                    <div class="mt-8 flow-root">
+                        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="inline-block min-w-full my-5 py-2 align-middle sm:px-6 lg:px-8">
+                                <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'dropdown.field.name'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route', {"database": "box"}), {'sortcolumn': 'name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route', {"database": "box"}), {'sortcolumn': 'name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
+                                        {% if current == 'status' %}
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'dropdown.field.color'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'color', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'color', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
+                                        {% endif %}
+                                        {% if current == 'subcategory' %}
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'dropdown.field.category'|trans }}
+                                        </th>
+                                        {% endif %}
+                                        {% if current == 'scaletrack' %}
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'dropdown.field.scale'|trans }}
+                                        </th>
+                                        {% endif %}
+                                        {% if current == 'subepoch' %}
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'dropdown.field.epoch'|trans }}
+                                        </th>
+                                        {% endif %}
+                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ (current~'.list.edit')|trans }}</span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
+                                    {% for value in values %}
+                                        <tr class="even:bg-gray-50 dark:even:bg-gray-800/50">
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                <div class="md:ml-4">
+                                                    <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_'~current, {id: uuid(value.uuid is defined ? value.uuid.tohex : value.id)}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ value.name }}</a></div>
+                                                </div>
+                                            </td>
+                                            {% if value.color is defined and value.color!="" %}
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                {% if value.color!="" %}
+                                                    <span class="inline-flex items-center rounded-md bg-{{value.color}}-50 px-2 py-1 text-xs font-medium text-{{value.color}}-600 inset-ring inset-ring-{{value.color}}-500/10 dark:bg-{{value.color}}-400/10 dark:text-{{value.color}}-400 dark:inset-ring-{{value.color}}-400/20">{{ value.color|trans }}</span>
+                                                {% endif %}
+                                            </td>
+                                            {% endif %}
+                                            {% if value.category is defined %}
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                {% if value.category!="" %}
+                                                    <div class="md:ml-4">
+                                                        <div class="font-medium text-gray-900 dark:text-white">
+                                                            {{ value.category.name }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+                                            {% endif %}
+                                            {% if value.epoch is defined %}
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                {% if value.epoch!="" %}
+                                                    <div class="md:ml-4">
+                                                        <div class="font-medium text-gray-900 dark:text-white">
+                                                            {{ value.epoch.name }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+                                            {% endif %}
+                                            {% if value.scale is defined %}
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                {% if value.scale!="" %}
+                                                    <div class="md:ml-4">
+                                                        <div class="font-medium text-gray-900 dark:text-white">
+                                                            {{ value.scale.name }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {{ knp_pagination_render(values) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}

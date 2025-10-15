@@ -91,6 +91,7 @@
 
             <el-menu anchor="bottom end" popover class="w-48 origin-top-right rounded-md bg-white py-1 shadow-lg outline outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
               <a href="{{ path('mbs_profile') }}" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5">{{ 'global.nav.profile'|trans }}</a>
+              <a href="{{ path('mbs_dropdowns') }}" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5">{{ 'global.nav.dropdowns'|trans }}</a>
               <a href="{{ path('mbs_change_password') }}" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5">{{ 'global.nav.change-password'|trans }}</a>
               <a href="{{ path('mbs_logout') }}" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5">{{ 'global.nav.logout'|trans }}</a>
             </el-menu>
@@ -157,6 +158,7 @@
         </div>
         <div class="mt-3 space-y-1">
           <a href="{{ path('mbs_profile') }}" class="{{ current=='profile' ? 'block border-l-4 border-green-800 bg-green-70 py-2 pr-4 pl-3 text-base font-medium text-green-900 dark:border-green-700 dark:bg-green-800/10 dark:text-green-500' : 'block border-l-4 border-transparent py-2 pr-4 pl-3 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-400 dark:hover:border-gray-500 dark:hover:bg-white/5 dark:hover:text-gray-200' }}">{{ 'global.nav.profile'|trans }}</a>
+          <a href="{{ path('mbs_dropdowns') }}" class="{{ current=='dropdowns' ? 'block border-l-4 border-green-800 bg-green-70 py-2 pr-4 pl-3 text-base font-medium text-green-900 dark:border-green-700 dark:bg-green-800/10 dark:text-green-500' : 'block border-l-4 border-transparent py-2 pr-4 pl-3 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-400 dark:hover:border-gray-500 dark:hover:bg-white/5 dark:hover:text-gray-200' }}">{{ 'global.nav.dropdowns'|trans }}</a>
           <a href="{{ path('mbs_change_password') }}" class="{{ current=='change-password' ? 'block border-l-4 border-green-800 bg-green-70 py-2 pr-4 pl-3 text-base font-medium text-green-900 dark:border-green-700 dark:bg-green-800/10 dark:text-green-500' : 'block border-l-4 border-transparent py-2 pr-4 pl-3 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-400 dark:hover:border-gray-500 dark:hover:bg-white/5 dark:hover:text-gray-200' }}">{{ 'global.nav.change-password'|trans }}</a>
         </div>
       </div>

@@ -30,6 +30,7 @@ use App\Entity\Coupler;
 use App\Entity\Locomotive;
 use App\Entity\Car;
 use App\Entity\Container;
+use App\Entity\UserDropdown;
 use App\Entity\Vehicle;
 use App\Entity\Tram;
 use App\Entity\Decoder;
@@ -698,30 +699,39 @@ class DatabaseController extends AbstractController
         $country        = $entityManager->getRepository(Country::class)->findBy([], ["name" => "ASC"]);
         $modelset       = $entityManager->getRepository(Modelset::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
 
+        $userDropdowns  =  $entityManager->getRepository(UserDropdown::class)->findBy(array("user" => $user->getId()), ["name" => "ASC"]);
+        foreach($userDropdowns as $dropdown) {
+            if($dropdown->getDefaultvalue()!="") {
+                $defaults[$dropdown->getName()] = $entityManager->getRepository('App\\Entity\\'.$dropdown->getName())->findOneBy(array("id" => $dropdown->getDefaultvalue(), "user" => [null, $user->getId()]));
+            } else {
+                $defaults[$dropdown->getName()] = null;
+            }
+        }
+
         $model = new Model();
 
         $form = $this->createFormBuilder($model)
             ->add('name', TextType::class)
-            ->add('status', ChoiceType::class, ['choices' => $status, 'choice_label' => 'name'])
-            ->add('category', ChoiceType::class, ['choices' => $category, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
-            ->add('subcategory', ChoiceType::class, ['choices' => $subcategory, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "subcategory-option category-".$choice->getCategory()->getId()];}, 'required' => false])
-            ->add('manufacturer', ChoiceType::class, ['choices' => $manufacturer, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-gtin-base' => $choice->getGtinBase(), 'data-gtin-mode' => $choice->getGtinMode(), 'data-image' => $choice->getImage()];}])
-            ->add('company', ChoiceType::class, ['choices' => $company, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-image' => $choice->getImage(), 'data-color1' => $choice->getColor1(), 'data-color2' => $choice->getColor2(), 'data-color3' => $choice->getColor3(), 'data-country' => is_object($choice->getCountry()) ? $choice->getCountry()->getIso2() : null];}])
-            ->add('scale', ChoiceType::class, ['choices' => $scale, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
-            ->add('track', ChoiceType::class, ['choices' => $track, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "track-option scale-".$choice->getScale()->getId()];}, 'required' => false])
-            ->add('epoch', ChoiceType::class, ['choices' => $epoch, 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
+            ->add('status', ChoiceType::class, ['choices' => $status, 'choice_label' => 'name', 'data' => $defaults['status']])
+            ->add('category', ChoiceType::class, ['choices' => $category, 'data' => $defaults['category'], 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('subcategory', ChoiceType::class, ['choices' => $subcategory, 'data' => $defaults['subcategory'], 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "subcategory-option category-".$choice->getCategory()->getId()];}, 'required' => false])
+            ->add('manufacturer', ChoiceType::class, ['choices' => $manufacturer, 'data' => $defaults['manufacturer'], 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-gtin-base' => $choice->getGtinBase(), 'data-gtin-mode' => $choice->getGtinMode(), 'data-image' => $choice->getImage()];}])
+            ->add('company', ChoiceType::class, ['choices' => $company, 'data' => $defaults['company'], 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-image' => $choice->getImage(), 'data-color1' => $choice->getColor1(), 'data-color2' => $choice->getColor2(), 'data-color3' => $choice->getColor3(), 'data-country' => is_object($choice->getCountry()) ? $choice->getCountry()->getIso2() : null];}])
+            ->add('scale', ChoiceType::class, ['choices' => $scale, 'data' => $defaults['scale'], 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('track', ChoiceType::class, ['choices' => $track, 'data' => $defaults['track'], 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['class' => "track-option scale-".$choice->getScale()->getId()];}, 'required' => false])
+            ->add('epoch', ChoiceType::class, ['choices' => $epoch, 'data' => $defaults['epoch'], 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
                 return $choice->getName()." (".$choice->getStart()."-".($choice->getEnd()!="" ? $choice->getEnd():"∞").")";
             }, 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}, 'required' => false])
-            ->add('subepoch', ChoiceType::class, ['choices' => $subepoch, 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
+            ->add('subepoch', ChoiceType::class, ['choices' => $subepoch, 'data' => $defaults['subepoch'], 'choice_label' => function ($choice, string $key, mixed $value): TranslatableMessage|string {
                 return $choice->getName()." (".$choice->getStart()."-".($choice->getEnd()!="" ? $choice->getEnd():"∞").")";
             }, 'choice_attr' => function ($choice) {return ['class' => "subepoch-option epoch-".$choice->getEpoch()->getId()];}, 'required' => false])
-            ->add('storage', ChoiceType::class, ['choices' => $storage, 'choice_label' => 'name', 'required' => false])
-            ->add('project', ChoiceType::class, ['choices' => $project, 'choice_label' => 'name', 'required' => false])
-            ->add('dealer', ChoiceType::class, ['choices' => $dealer, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-image' => $choice->getImage()];}])
-            ->add('box', ChoiceType::class, ['choices' => $box, 'choice_label' => 'name', 'required' => false])
-            ->add('modelcondition', ChoiceType::class, ['choices' => $condition, 'choice_label' => 'name', 'required' => false])
+            ->add('storage', ChoiceType::class, ['choices' => $storage, 'data' => $defaults['storage'], 'choice_label' => 'name', 'required' => false])
+            ->add('project', ChoiceType::class, ['choices' => $project, 'data' => $defaults['project'], 'choice_label' => 'name', 'required' => false])
+            ->add('dealer', ChoiceType::class, ['choices' => $dealer, 'data' => $defaults['dealer'], 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-image' => $choice->getImage()];}])
+            ->add('box', ChoiceType::class, ['choices' => $box, 'data' => $defaults['box'], 'choice_label' => 'name', 'required' => false])
+            ->add('modelcondition', ChoiceType::class, ['choices' => $condition, 'data' => $defaults['condition'], 'choice_label' => 'name', 'required' => false])
             ->add('country', ChoiceType::class, ['choices' => $country, 'choice_label' => 'name', 'required' => false, 'choice_attr' => function ($choice) {return ['data-image' => $choice->getIso2().".svg", 'data-iso' => $choice->getIso2()];}])
-            ->add('modelset', ChoiceType::class, ['choices' => $modelset, 'choice_label' => 'name', 'required' => false])
+            ->add('modelset', ChoiceType::class, ['choices' => $modelset, 'data' => $defaults['modelset'], 'choice_label' => 'name', 'required' => false])
             ->add('instructions', CheckboxType::class, ['required' => false])
             ->add('parts', CheckboxType::class, ['required' => false])
             ->add('displaycase', CheckboxType::class, ['required' => false])

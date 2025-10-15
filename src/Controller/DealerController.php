@@ -233,6 +233,7 @@ class DealerController extends AbstractController
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         $models = $entityManager->getRepository(Model::class)->findBy(["modeldatabase" => $databases, "dealer" => $dealer]);
         return $this->render('dealer/dealer.html.twig', [
+            "current" => $dealer,
             "models" => $models,
             "databases" => $databases,
             "dealerform" => $form->createView(),

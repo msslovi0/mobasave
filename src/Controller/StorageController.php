@@ -197,6 +197,7 @@ class StorageController extends AbstractController
         $databases = $entityManager->getRepository(Database::class)->findBy(["user" => $user]);
         $models = $entityManager->getRepository(Model::class)->findBy(["modeldatabase" => $databases, "storage" => $storage]);
         return $this->render('storage/storage.html.twig', [
+            "current" => $storage,
             "models" => $models,
             "databases" => $databases,
             "storageform" => $form->createView(),

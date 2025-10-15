@@ -6,6 +6,7 @@ use App\Repository\DecoderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: DecoderRepository::class)]
 #[ORM\Table(name: 'mbs_decoder')]
@@ -27,6 +28,9 @@ class Decoder
      */
     #[ORM\OneToMany(targetEntity: Digital::class, mappedBy: 'decoder')]
     private Collection $digitals;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
 
     public function __construct()
     {
@@ -88,6 +92,18 @@ class Decoder
                 $digital->setDecoder(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

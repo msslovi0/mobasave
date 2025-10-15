@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'global.nav.maker'|trans }}
+{% endblock %}
+{% block body %}
+    <div class="py-10">
+        <header>
+            <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ 'global.nav.maker'|trans }}</h1>
+                <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                    <a href="{{ path('mbs_maker_add') }}" type="button" class="rounded-md bg-lime-400 px-3 py-2 text-sm font-semibold text-green-800 shadow-xs hover:bg-lime-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-400 dark:bg-lime-300 dark:shadow-none dark:focus-visible:outline-lime-300 whitespace-nowrap flex"><svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="mr-1.5 -ml-0.5 size-5"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" /></svg>{{ 'maker.list.add'|trans }}</a>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="mx-auto max-w-10xl px-4 py-8 sm:px-6 lg:px-8">
+                <div class="px-4 sm:px-6 lg:px-8">
+                    <div class="col-span-full my-5">
+                        {% for message in app.flashes('error') %}
+                            <div class="border-l-4 border-red-400 bg-red-50 p-4 dark:border-red-500 dark:bg-red-500/10">
+                                <div class="flex">
+                                    <div class="shrink-0">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-red-400">
+                                            <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-red-700 dark:text-red-300">{{ message }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('success') %}
+                            <div class="border-l-4 border-green-400 bg-green-50 p-4 dark:border-green-500 dark:bg-green-500/10">
+                                <div class="flex">
+                                    <div class="shrink-0">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-green-400">
+                                            <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-green-700 dark:text-green-300">{{ message }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if makers.getTotalItemCount>0 %}
+                    {{ knp_pagination_render(makers) }}
+                    <div class="mt-8 flow-root">
+                        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'maker.list.logo'|trans }}</span></th>
+                                        <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ 'maker.field.name'|trans }}
+                                            <span class="sorter">
+                                              <a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'name', 'sortorder': 'asc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▲</a><a class="text-green-800 hover:text-green-600 dark:text-green-600 dark:hover:text-green-500" href="{{ path(app.request.attributes.get('_route'), {'sortcolumn': 'name', 'sortorder': 'desc', 'id': app.request.get('id'), 'page': app.request.get('page')}) }}">▼</a>
+                                            </span>
+                                        </th>
+                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'maker.list.edit'|trans }}</span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
+                                    {% for maker in makers %}
+                                        <tr class="even:bg-gray-50 dark:even:bg-gray-800/50">
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                <div class="flex items-center">
+                                                    <div class="size-11 shrink-0">
+                                                        <img src="{% if maker.image!="" %}{{ absolute_url(asset('data/logo/maker/' ~ maker.image))|replace({"localhost:8000": remotehost})|replace({"127.0.0.1:8000": remotehost}) }}{% else %}{{ asset('images/blank.svg') }}{% endif %}" alt="{{ maker.name }}" class="rounded-md outline-1 dark:outline-white/10 outline-gray-300" />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                <div class="md:ml-4">
+                                                    <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_maker', {id: uuid(maker.uuid.tohex)}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ maker.name }}</a></div>
+                                                </div>
+                                            </td>
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                <div class="md:ml-4">
+                                                    <div class="font-medium text-gray-900 dark:text-white">
+                                                        {% for category in maker.category  %}
+                                                            {{ category.name }}
+                                                        {% endfor %}
+
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
+                                                <a href="{{ path('mbs_maker', {id: uuid(maker.uuid.tohex)}) }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ 'global.edit'|trans }}<span class="sr-only">{{ maker.name }}</span></a>
+                                            </td>
+
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {{ knp_pagination_render(makers) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}

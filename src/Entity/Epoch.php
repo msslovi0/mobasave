@@ -6,6 +6,7 @@ use App\Repository\EpochRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: EpochRepository::class)]
 #[ORM\Table(name: 'mbs_epoch')]
@@ -39,6 +40,9 @@ class Epoch
 
     #[ORM\ManyToOne(inversedBy: 'epochs')]
     private ?User $user = null;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
 
     public function __construct()
     {
@@ -155,6 +159,18 @@ class Epoch
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

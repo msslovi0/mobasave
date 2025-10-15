@@ -24,6 +24,63 @@ parameters:
     storage.sortcolumns: [name,fill,slot,color]
     storage.sortcolumn: name
     storage.sortorder: asc
+    box.sortcolumns: [name]
+    box.sortcolumn: name
+    box.sortorder: asc
+    coupler.sortcolumns: [name]
+    coupler.sortcolumn: name
+    coupler.sortorder: asc
+    decoder.sortcolumns: [name]
+    decoder.sortcolumn: name
+    decoder.sortorder: asc
+    edition.sortcolumns: [name]
+    edition.sortcolumn: name
+    edition.sortorder: asc
+    pininterface.sortcolumns: [name]
+    pininterface.sortcolumn: name
+    pininterface.sortorder: asc
+    power.sortcolumns: [name]
+    power.sortcolumn: name
+    power.sortorder: asc
+    protocol.sortcolumns: [name]
+    protocol.sortcolumn: name
+    protocol.sortorder: asc
+    project.sortcolumns: [name]
+    project.sortcolumn: name
+    project.sortorder: asc
+    status.sortcolumns: [name,color]
+    status.sortcolumn: name
+    status.sortorder: asc
+    condition.sortcolumns: [name]
+    condition.sortcolumn: name
+    condition.sortorder: asc
+    modelset.sortcolumns: [name]
+    modelset.sortcolumn: name
+    modelset.sortorder: asc
+    axle.sortcolumns: [name]
+    axle.sortcolumn: name
+    axle.sortorder: asc
+    containertype.sortcolumns: [name]
+    containertype.sortcolumn: name
+    containertype.sortorder: asc
+    subcategory.sortcolumns: [name]
+    subcategory.sortcolumn: name
+    subcategory.sortorder: asc
+    scale.sortcolumns: [name]
+    scale.sortcolumn: name
+    scale.sortorder: asc
+    scaletrack.sortcolumns: [name]
+    scaletrack.sortcolumn: name
+    scaletrack.sortorder: asc
+    epoch.sortcolumns: [name]
+    epoch.sortcolumn: name
+    epoch.sortorder: asc
+    subepoch.sortcolumns: [name]
+    subepoch.sortcolumn: name
+    subepoch.sortorder: asc
+    maker.sortcolumns: [name]
+    maker.sortcolumn: name
+    maker.sortorder: asc
     locales:
         de:
             code: de

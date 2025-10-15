@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% set current = 'dropdowns' %}
+
+{% block title %}{{ 'global.nav.dropdowns'|trans }} {{ user.firstname }} {{ user.lastname }}{% endblock %}
+{% block body %}
+    <div class="py-10">
+        <header>
+            <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ 'global.nav.dropdowns'|trans }}</h1>
+            </div>
+        </header>
+        <main>
+            <div class="mx-auto max-w-10xl px-4 py-8 sm:px-6 lg:px-8">
+                <div class="px-4 sm:px-6 lg:px-8">
+                    <div class="col-span-full my-5">
+                        {% for message in app.flashes('error') %}
+                            <div class="border-l-4 border-red-400 bg-red-50 p-4 dark:border-red-500 dark:bg-red-500/10">
+                                <div class="flex">
+                                    <div class="shrink-0">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-red-400">
+                                            <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-red-700 dark:text-red-300">{{ message }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('success') %}
+                            <div class="border-l-4 border-green-400 bg-green-50 p-4 dark:border-green-500 dark:bg-green-500/10">
+                                <div class="flex">
+                                    <div class="shrink-0">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-green-400">
+                                            <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-green-700 dark:text-green-300">{{ message }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-8 flow-root">
+                        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'dropdown.list.name'|trans }}</th>
+                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'dropdown.list.defaultvalue'|trans }}</th>
+                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ 'dropdown.list.position'|trans }}</th>
+                                        <th scope="col" class="py-3.5 pr-4 pl-3 sm:pr-0"><span class="sr-only">{{ 'dropdown.list.edit'|trans }}</span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
+                                    {% for key, dropdown in dropdowns %}
+                                        <tr class="even:bg-gray-50 dark:even:bg-gray-800/50">
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-0">
+                                                <div class="md:ml-4">
+                                                    {% if(route_exists('mbs_' ~ key ~ '_list')) %}
+                                                    <div class="font-medium text-gray-900 dark:text-white"><a href="{{ path('mbs_' ~ key ~ '_list') }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ dropdown.name }}</a></div>
+                                                    {% else %}
+                                                        {{ dropdown.name }}
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap max-w-3xs sm:pl-0">
+                                                <div class="md:ml-4">
+                                                    <div class="font-medium text-gray-900 dark:text-white">
+                                                        <label for="form_{{ key }}" class="sr-only block text-sm/6 font-medium text-gray-900 dark:text-white">{{ ('model.field.' ~ key)|trans }}</label>
+                                                        <div class="grid grid-cols-1 max-w-3xs">
+                                                            <select name="defaultvalue_{{ key }}" id="defaultvalue_{{ key }}" data-name="{{ key }}" data-path="{{ path('mbs_dropdown_default') }}" class="dropdown-default col-start-1 row-start-1 appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700">
+                                                                <option value="">{{ 'global.no-selection'|trans }}</option>
+                                                                {% for option in dropdown.values %}
+                                                                    <option value="{{ option.id }}" {{ dropdown.defaultvalue==option.id ?" selected='selected'" : "" }}>{{ option.name }}
+                                                                    {% if(key=='subepoch') %}
+                                                                         [{{ 'model.field.epoch'|trans }} {{ option.epoch.name }}]
+                                                                    {% elseif(key=='track') %}
+                                                                        [{{ 'model.field.scale'|trans }} {{ option.scale.name }}]
+                                                                    {% elseif(key=='subcategory') %}
+                                                                        [{{ 'model.field.category'|trans }} {{ option.category.name }}]
+                                                                    {% endif %}
+                                                                    </option>
+                                                                {% endfor %}
+                                                            </select>
+                                                            <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                                                                <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-5 pr-3 pl-4 text-sm whitespace-nowrap max-w-3xs sm:pl-0">
+                                                <div class="md:ml-4">
+                                                    <div class="font-medium text-gray-900 dark:text-white">
+                                                        <div class="grid grid-cols-1 max-w-3xs">
+                                                            <select name="positon_{{ key }}" id="position_{{ key }}" data-name="{{ key }}" data-path="{{ path('mbs_dropdown_default') }}" class="dropdown-default col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-800 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-green-700">
+                                                                <option value="">{{ 'global.no-selection'|trans }}</option>
+                                                                {% for cnt in 1..dropdowns|length %}
+                                                                    <option value="{{ cnt }}" {{ dropdown.position==cnt?" selected='selected'" : "" }}>{{ cnt }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                            <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400">
+                                                                <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-5 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
+                                                {% if(route_exists('mbs_' ~ key ~ '_list')) %}
+                                                <a href="{{ path('mbs_' ~ key ~ '_list') }}" class="text-green-800 hover:text-green-600 hover:underline dark:text-green-600 dark:hover:text-green-500">{{ 'global.editvalues'|trans }}<span class="sr-only">{{ dropdown.name }}</span></a>
+                                                {% endif %}
+                                            </td>
+
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

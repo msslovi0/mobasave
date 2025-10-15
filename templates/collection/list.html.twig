@@ -1,75 +1,97 @@
 {% extends 'base.html.twig' %}
-{% if 'mbs_manufacturer' in app.request.attributes.get("_route") %}
-    {% set current = 'manufacturer' %}
-    {% set path_history = path('mbs_manufacturer', {id: uuid(models[0].manufacturer.uuid.tohex)}) %}
-    {% set text_history = 'manufacturer.back'|trans({name: models[0].manufacturer.name}) %}
-{% elseif 'mbs_dealer' in app.request.attributes.get("_route") %}
-    {% set current = 'dealer' %}
-    {% set path_history = path('mbs_dealer', {id: uuid(models[0].dealer.uuid.tohex)}) %}
-    {% set text_history = 'dealer.back'|trans({name: models[0].dealer.name}) %}
-{% elseif 'mbs_company' in app.request.attributes.get("_route") %}
-    {% set current = 'company' %}
-    {% set path_history = path('mbs_company', {id: uuid(models[0].company.uuid.tohex)}) %}
-    {% set text_history = 'company.back'|trans({name: models[0].company.name}) %}
-{% elseif 'mbs_storage' in app.request.attributes.get("_route") %}
-    {% set current = 'storage' %}
-    {% set path_history = path('mbs_storage', {id: uuid(models[0].storage.uuid.tohex)}) %}
-    {% set text_history = 'storage.back'|trans({name: models[0].storage.name}) %}
-{% elseif(models|length>0) %}
-    {% set current = 'model' %}
-    {% set path_history = path('mbs_database', {id: uuid(models[0].modeldatabase.uuid.tohex)}) %}
-    {% set text_history = 'global.back'|trans %}
+{% if(current is not defined) %}
+    {% if 'mbs_manufacturer' in app.request.attributes.get("_route") %}
+        {% set current = 'manufacturer' %}
+        {% set path_history = path('mbs_manufacturer', {id: uuid(models[0].manufacturer.uuid.tohex)}) %}
+        {% set text_history = 'manufacturer.back'|trans({name: models[0].manufacturer.name}) %}
+    {% elseif 'mbs_dealer' in app.request.attributes.get("_route") %}
+        {% set current = 'dealer' %}
+        {% set path_history = path('mbs_dealer', {id: uuid(models[0].dealer.uuid.tohex)}) %}
+        {% set text_history = 'dealer.back'|trans({name: models[0].dealer.name}) %}
+    {% elseif 'mbs_company' in app.request.attributes.get("_route") %}
+        {% set current = 'company' %}
+        {% set path_history = path('mbs_company', {id: uuid(models[0].company.uuid.tohex)}) %}
+        {% set text_history = 'company.back'|trans({name: models[0].company.name}) %}
+    {% elseif 'mbs_storage' in app.request.attributes.get("_route") %}
+        {% set current = 'storage' %}
+        {% set path_history = path('mbs_storage', {id: uuid(models[0].storage.uuid.tohex)}) %}
+        {% set text_history = 'storage.back'|trans({name: models[0].storage.name}) %}
+    {% elseif(models|length>0) %}
+        {% set current = 'model' %}
+        {% set path_history = path('mbs_database', {id: uuid(models[0].modeldatabase.uuid.tohex)}) %}
+        {% set text_history = 'global.back'|trans %}
+    {% else %}
+        {% set current = '' %}
+        {% set path_history = path('mbs_database', {id: app.session.get('database')}) %}
+        {% set text_history = 'global.back'|trans %}
+    {% endif %}
+{% elseif(attribute(models[0], current) is defined and attribute(models[0], current) is not null) %}
+    {% set value = attribute(models[0], current) %}
+    {% set path_history = path('mbs_'~current, {id: uuid(value.uuid.tohex)}) %}
+    {% set text_history = (current~'.back')|trans({name: value.name}) %}
 {% else %}
-    {% set current = '' %}
-    {% set path_history = path('mbs_database', {id: app.session.get('database')}) %}
-    {% set text_history = 'global.back'|trans %}
+    {% set title = databasevalue(current, app.request.attributes.get('_route_params').id) %}
+    {% set path_history = app.request.requesturi|replace({'/models': ''}) %}
+    {% set text_history = 'global.backto'|trans({'name': title}) %}
 {% endif %}
 
 {% block title %}
-  {% if app.request.get('search') is defined and app.request.get('search') != "" and app.request.get('filter') is defined and app.request.get('filter') != "" %}
-      {{ 'global.title.search'|trans({'query': app.request.get('search')}) }} {{ 'global.title.filtercount'|trans({'count': app.request.get('filter')|length}) }}
-  {% elseif app.request.get('search') is defined and app.request.get('search') != "" %}
-    {{ 'global.title.search'|trans({'query': app.request.get('search')}) }}
-  {% elseif app.request.get('filter') is defined and app.request.get('filter') != "" %}
-      {{ 'global.title.filter'|trans({'count': app.request.get('filter')|length}) }}
-  {% elseif current == "manufacturer"  %}
-      {{ 'manufacturer.models'|trans({'name': models[0].manufacturer.name}) }}
-  {% elseif current == "dealer"  %}
-      {{ 'dealer.models'|trans({'name': models[0].dealer.name}) }}
-  {% elseif current == "company"  %}
-      {{ 'company.models'|trans({'name': models[0].company.name}) }}
-  {% elseif current == "storage"  %}
-      {{ 'storage.models'|trans({'name': models[0].storage.name}) }}
-  {% elseif database.name is defined %}
-    {{ 'collection.name'|trans({'name': database.name}) }}
-  {% else %}
-    {{ 'collection.all'|trans }}
-  {% endif %}
+    {% if(value is not defined) %}
+        {% if app.request.get('search') is defined and app.request.get('search') != "" and app.request.get('filter') is defined and app.request.get('filter') != "" %}
+          {{ 'global.title.search'|trans({'query': app.request.get('search')}) }} {{ 'global.title.filtercount'|trans({'count': app.request.get('filter')|length}) }}
+        {% elseif app.request.get('search') is defined and app.request.get('search') != "" %}
+        {{ 'global.title.search'|trans({'query': app.request.get('search')}) }}
+        {% elseif app.request.get('filter') is defined and app.request.get('filter') != "" %}
+          {{ 'global.title.filter'|trans({'count': app.request.get('filter')|length}) }}
+        {% elseif current == "manufacturer"  %}
+          {{ 'manufacturer.models'|trans({'name': models[0].manufacturer.name}) }}
+        {% elseif current == "dealer"  %}
+          {{ 'dealer.models'|trans({'name': models[0].dealer.name}) }}
+        {% elseif current == "company"  %}
+          {{ 'company.models'|trans({'name': models[0].company.name}) }}
+        {% elseif current == "storage"  %}
+          {{ 'storage.models'|trans({'name': models[0].storage.name}) }}
+        {% elseif database.name is defined %}
+        {{ 'collection.name'|trans({'name': database.name}) }}
+        {% elseif title is defined %}
+            {{ (current~'.models')|trans({'name': title}) }}
+        {% else %}
+            {{ 'collection.all'|trans }}
+        {% endif %}
+    {% else %}
+        {{ (current~'.models')|trans({'name': value.name}) }}
+    {% endif %}
 {% endblock %}
 {% block body %}
   <div class="py-10">
     <header>
         <div class="flex justify-between mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
           <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-          {% if app.request.get('search') is defined and app.request.get('search') != "" and app.request.get('filter') is defined and app.request.get('filter') != "" %}
-              {{ 'global.title.searchresult'|trans({'query': app.request.get('search'), 'count': total}) }} {{ 'global.title.filtercount'|trans({'count': app.request.get('filter')|length}) }}
-          {% elseif app.request.get('search') is defined and app.request.get('search') != "" %}
-              {{ 'global.title.searchresult'|trans({'query': app.request.get('search'), 'count': total}) }}
-          {% elseif app.request.get('filter') is defined and app.request.get('filter') != "" %}
-              {{ 'global.title.filter'|trans({'count': total}) }} {{ 'global.title.filtercount'|trans({'count': app.request.get('filter')|length}) }}
-          {% elseif current == "manufacturer"  %}
-              {{ 'manufacturer.models'|trans({'name': models[0].manufacturer.name}) }}
-          {% elseif current == "dealer"  %}
-              {{ 'dealer.models'|trans({'name': models[0].dealer.name}) }}
-          {% elseif current == "company"  %}
-              {{ 'company.models'|trans({'name': models[0].company.name}) }}
-          {% elseif current == "storage"  %}
-              {{ 'storage.models'|trans({'name': models[0].storage.name}) }}
-          {% elseif database.name is defined %}
-              {{ 'collection.name'|trans({'name': database.name}) }}
-          {% else %}
-              {{ 'collection.all'|trans }}
-          {% endif %}
+              {% if(value is not defined) %}
+                  {% if app.request.get('search') is defined and app.request.get('search') != "" and app.request.get('filter') is defined and app.request.get('filter') != "" %}
+                      {{ 'global.title.searchresult'|trans({'query': app.request.get('search'), 'count': total}) }} {{ 'global.title.filtercount'|trans({'count': app.request.get('filter')|length}) }}
+                  {% elseif app.request.get('search') is defined and app.request.get('search') != "" %}
+                      {{ 'global.title.searchresult'|trans({'query': app.request.get('search'), 'count': total}) }}
+                  {% elseif app.request.get('filter') is defined and app.request.get('filter') != "" %}
+                      {{ 'global.title.filter'|trans({'count': total}) }} {{ 'global.title.filtercount'|trans({'count': app.request.get('filter')|length}) }}
+                  {% elseif current == "manufacturer"  %}
+                      {{ 'manufacturer.models'|trans({'name': models[0].manufacturer.name}) }}
+                  {% elseif current == "dealer"  %}
+                      {{ 'dealer.models'|trans({'name': models[0].dealer.name}) }}
+                  {% elseif current == "company"  %}
+                      {{ 'company.models'|trans({'name': models[0].company.name}) }}
+                  {% elseif current == "storage"  %}
+                      {{ 'storage.models'|trans({'name': models[0].storage.name}) }}
+                  {% elseif database.name is defined %}
+                      {{ 'collection.name'|trans({'name': database.name}) }}
+                  {% elseif title is defined %}
+                      {{ (current~'.models')|trans({'name': title}) }}
+                  {% else %}
+                      {{ 'collection.all'|trans }}
+                  {% endif %}
+              {% else %}
+                  {{ (current~'.models')|trans({'name': value.name}) }}
+              {% endif %}
           </h1>
           <div class="md:flex gap-1">
               <a href="{{ path('mbs_model_add') }}" type="button" class="rounded-md bg-lime-400 px-3 py-2 text-sm font-semibold text-green-800 shadow-xs hover:bg-lime-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-400 dark:bg-lime-300 dark:shadow-none dark:focus-visible:outline-lime-300 whitespace-nowrap flex"><svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="mr-1.5 -ml-0.5 size-5"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" /></svg>{{ 'model.list.add'|trans }}</a>
