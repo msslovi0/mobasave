@@ -5,6 +5,7 @@ twig:
       remotehost: "%remote_url%"
       locales: "%locales%"
       limits: "%limits%"
+      nav: "@App\\Service\\NavigationService"
 
 when@test:
     twig:

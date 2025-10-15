@@ -19,7 +19,7 @@
         {% endblock %}
     </head>
     <body class="{{ app.request.attributes.get("_route") }} lg:mx-2 sm:mx-50">
-        {%  include 'nav.html.twig' %}
+        {{ nav.mainNav()|raw }}
         {% block body %}{% endblock %}
         {%  include 'footer.html.twig' %}
     </body>
