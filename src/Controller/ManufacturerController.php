@@ -331,7 +331,7 @@ class ManufacturerController extends AbstractController
         } else {
             $request->getSession()->set('limit', $limit);
         }
-        $manufacturers = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]), [$request->getSession()->get('sortcolumn') => $request->getSession()->get('sortorder'), $this->getParameter('company.sortcolumn') => $this->getParameter('company.sortorder')]);
+        $manufacturers = $entityManager->getRepository(Manufacturer::class)->findBy(array("user" => [null, $user->getId()]), [$request->getSession()->get('sortcolumn') => $request->getSession()->get('sortorder')]);
 
         $pagination = $paginator->paginate(
             $manufacturers,

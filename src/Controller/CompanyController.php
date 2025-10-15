@@ -260,7 +260,7 @@ class CompanyController extends AbstractController
             $request->getSession()->set('limit', $limit);
         }
 
-        $companies = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), [$request->getSession()->get('sortcolumn') => $request->getSession()->get('sortorder'), $this->getParameter('company.sortcolumn') => $this->getParameter('company.sortorder')]);
+        $companies = $entityManager->getRepository(Company::class)->findBy(array("user" => [null, $user->getId()]), [$request->getSession()->get('sortcolumn') => $request->getSession()->get('sortorder')]);
 
         $pagination = $paginator->paginate(
             $companies,
