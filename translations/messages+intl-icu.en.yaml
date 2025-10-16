@@ -371,7 +371,7 @@ dropdown: &dropdown_template
     field:
         name: Name
         color: Color
-        category: Categorie
+        category: Category
         scale: Scale
         epoch: Epoch
     delete:
