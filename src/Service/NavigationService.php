@@ -24,7 +24,9 @@ class NavigationService
         $navigation = $qb->select('ud')
             ->from(UserDropdown::class, 'ud')
             ->where($qb->expr()->isNotNull("ud.position"))
+            ->andWhere('ud.user = :user')
             ->addOrderBy('ud.position', 'ASC')
+            ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
         foreach($navigation as $nav) {
