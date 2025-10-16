@@ -156,7 +156,7 @@ class MakerController extends AbstractController
 
         $form = $this->createFormBuilder($maker)
             ->add('name', TextType::class, ['disabled' => $disabled])
-            ->add('category', ChoiceType::class, ['required' => false, 'expanded' => true, 'data' => $defaults, 'mapped' => false, 'multiple' => true, 'choices' => $allCategories, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
+            ->add('category', ChoiceType::class, ['required' => false, 'disabled' => $disabled, 'expanded' => true, 'data' => $defaults, 'mapped' => false, 'multiple' => true, 'choices' => $allCategories, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}])
             ->add('image', FileType::class, ['required' => false, 'disabled' => $disabled, 'data_class' => null, 'empty_data' => ''])
             ->add('save', SubmitType::class, ['disabled' => $disabled, 'label' => $translator->trans('global.save')]);
 

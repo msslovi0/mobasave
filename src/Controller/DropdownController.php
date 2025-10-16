@@ -204,10 +204,18 @@ class DropdownController extends AbstractController
 
         if($database=="subcategory") {
             $category       = $entityManager->getRepository(Category::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
-            $form->add('category', ChoiceType::class, ['choices' => $category, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}]);
+            $form->add('category', ChoiceType::class, ['disabled' => $disabled, 'choices' => $category, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}]);
+        }
+        if($database=="scaletrack") {
+            $scale       = $entityManager->getRepository(Scale::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+            $form->add('scale', ChoiceType::class, ['disabled' => $disabled, 'choices' => $scale, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}]);
+        }
+        if($database=="subepoch") {
+            $epoch       = $entityManager->getRepository(Epoch::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+            $form->add('epoch', ChoiceType::class, ['disabled' => $disabled, 'choices' => $epoch, 'choice_label' => 'name', 'choice_attr' => function ($choice) {return ['data-id' => $choice->getId()];}]);
         }
         if($database=="status") {
-            $form->add('color', ChoiceType::class, ['required' => false, 'choices' => [
+            $form->add('color', ChoiceType::class, ['disabled' => $disabled, 'required' => false, 'choices' => [
                 $translator->trans('red') => 'red',
                 $translator->trans('orange') => 'orange',
                 $translator->trans('amber') => 'amber',
