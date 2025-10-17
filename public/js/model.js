@@ -373,6 +373,8 @@ $(function() {
             case "2EG1":
             case "EMT6":
             case "COIL":
+            case "2FG1":
+            case "2NUV":
                 var length = "70.07"
                 break;
             case "45G1":
@@ -380,6 +382,7 @@ $(function() {
             case "4FG1":
             case "4EG1":
             case "42G1":
+            case "4EGB":
                 var length = "140.1"
                 break;
             case "C 715":
