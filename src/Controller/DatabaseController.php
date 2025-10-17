@@ -1038,10 +1038,10 @@ class DatabaseController extends AbstractController
             return $this->render('status/forbidden.html.twig', ["databases" => $databases], response: $response);
         }
 
-        $axle           = $entityManager->getRepository(Axle::class)->findBy(array("user" => [null, $user->getId()]));
-        $power          = $entityManager->getRepository(Power::class)->findBy(array("user" => [null, $user->getId()]));
-        $coupler        = $entityManager->getRepository(Coupler::class)->findBy(array("user" => [null, $user->getId()]));
-        $maker          = $model->getCategory()->getMakers();
+        $axle           = $entityManager->getRepository(Axle::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $power          = $entityManager->getRepository(Power::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $coupler        = $entityManager->getRepository(Coupler::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
+        $maker          = $entityManager->getRepository(Maker::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
 
         switch($model->getCategory()->getId()) {
             case 1:
@@ -1086,7 +1086,7 @@ class DatabaseController extends AbstractController
                     $detail = new Container();
                     $model->setCar($detail);
                 }
-                $containertype = $entityManager->getRepository(Containertype::class)->findBy(array("user" => [null, $user->getId()]));
+                $containertype = $entityManager->getRepository(Containertype::class)->findBy(array("user" => [null, $user->getId()]), ["name" => "ASC"]);
                 $template = "collection/".$model->getCategory()->getClass().".html.twig";
                 $form = $this->createFormBuilder($detail)
                     ->add('registration', TextType::class, ['required' => false])
